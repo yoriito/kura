@@ -1,0 +1,86 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# Copyright 2026 JASPAR
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Autotically Fix against the Linting Violations
+on:
+  push:
+    branches:
+        - "**"
+        - "*/*"
+        - "*!main*"
+        - "*!development*"
+
+permissions:
+  contents: write
+jobs:
+  fix-kura:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Github App Token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.RELEASE_BOT_ID }}
+          private-key: ${{ secrets.RELEASE_BOT_KEY }}
+          owner: ${{ github.repository_owner }}
+
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          token: ${{ steps.app-token.outputs.token }} # For submodules
+
+      - uses: arduino/setup-protoc@v3
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: run formatter
+        run: |
+          cd kura
+          cargo fix
+          cargo fmt
+
+      - name: fail if formatting changed files
+        run: |
+          git status --porcelain
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Formatting produced changes. Please run cargo fix/cargo fmt locally."
+            git --no-pager diff
+            exit 1
+          fi
+
+      - name: run clippy (deny warnings)
+        run: |
+          cd kura
+          cargo clippy -- -D warnings
+
+  fix-vshot:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: run formatter
+      run: |
+        pip install autopep8
+        autopep8 -r client/vshot/vshot --in-place
+
+    - name: fail if formatting changed files
+      run: |
+        git status --porcelain
+        if [ -n "$(git status --porcelain)" ]; then
+          echo "Formatting produced changes. Please run autopep8 locally."
+          git --no-pager diff
+          exit 1
+        fi

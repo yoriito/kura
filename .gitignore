@@ -1,0 +1,16 @@
+# ide
+.vscode
+
+# python
+__pycache__
+.venv/
+*.egg-info/
+*.py[cod]
+
+# directory specific
+/client/cc/build
+/client/vshot/build
+/kura/target
+
+# devcontainer
+/.devcontainer/docker-compose.auto.yml

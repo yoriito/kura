@@ -1,0 +1,3 @@
+[submodule "external/yoriito-viss"]
+	path = external/yoriito-viss
+	url = https://github.com/yoriito/yoriito-viss.git

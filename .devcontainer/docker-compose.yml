@@ -1,0 +1,7 @@
+services:
+  dev:
+    image: ${YORIITO_DEVCONTAINER}:${YORIITO_VERSION}
+    pull_policy: always
+    command: sleep infinity
+    volumes:
+      - ${ROOT_DIR}:/work
