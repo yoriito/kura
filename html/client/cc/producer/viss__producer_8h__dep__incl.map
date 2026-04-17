@@ -1,0 +1,9 @@
+<map id="/home/runner/work/kura/kura/client/cc/producer/inc/viss_producer.h" name="/home/runner/work/kura/kura/client/cc/producer/inc/viss_producer.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="212,5,389,60"/>
+<area shape="rect" id="Node000002" href="$databroker__producer__factory_8cc.html" title=" " alt="" coords="5,108,188,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="240,69,162,110,159,105,238,64"/>
+<area shape="rect" id="Node000003" href="$viss__producer__grpc_8cc.html" title=" " alt="" coords="212,108,389,177"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="303,74,303,108,298,108,298,74"/>
+<area shape="rect" id="Node000004" href="$viss__producer_8cc.html" title=" " alt="" coords="413,115,591,170"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="363,64,454,113,452,118,361,69"/>
+</map>
