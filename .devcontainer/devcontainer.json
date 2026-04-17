@@ -1,0 +1,36 @@
+{
+  "name": "yoriito dev container",
+  "dockerComposeFile": [
+    "./docker-compose.yml",
+    "./docker-compose.auto.yml"
+  ],
+  "service": "dev",
+  "workspaceFolder": "/work",
+  "initializeCommand": ".devcontainer/gen-compose.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",
+        "xaver.clang-format",
+        "llvm-vs-code-extensions.vscode-clangd",
+        "rust-lang.rust-analyzer",
+        "vadimcn.vscode-lldb",
+        "tamasfe.even-better-toml"
+      ]
+    },
+    "settings": {
+      "editor.formatOnSave": true,
+      "[cpp]": {
+       "editor.defaultFormatter": "xaver.clang-format"
+      },
+      "[rust]": {
+        "editor.defaultFormatter": "rust-lang.rust-analyzer"
+      },
+      "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+      "C_Cpp.codeAnalysis.clangTidy.path": "/usr/bin/clang-tidy",
+      "C_Cpp.codeAnalysis.clangTidy.config": "",
+      "C_Cpp.codeAnalysis.runAutomatically": true,
+      "C_Cpp.codeAnalysis.clangTidy.useBuildPath": true
+    }
+  }
+}

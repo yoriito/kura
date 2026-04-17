@@ -1,0 +1,73 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# Copyright 2026 JASPAR
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Build and Test
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: LargeSizeRunner
+    steps:
+    - name: Generate Github App Token
+      id: app-token
+      uses: actions/create-github-app-token@v2
+      with:
+        app-id: ${{ secrets.RELEASE_BOT_ID }}
+        private-key: ${{ secrets.RELEASE_BOT_KEY }}
+        owner: ${{ github.repository_owner }}
+
+    - uses: actions/checkout@v6
+      with:
+        token: ${{ steps.app-token.outputs.token }}
+        submodules: 'recursive'
+
+    - name: docker login
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: Build
+      run: |
+        docker container run --rm \
+          -v ${{ github.workspace }}:/work \
+          -w /work \
+          --entrypoint /init \
+          ${{ vars.DEVCONTAINER_IMAGE }} \
+          bash -lc '
+          set -euo pipefail
+          cmake -S ./client/cc -B ./client/cc/build -DENABLE_TESTS=ON
+          cmake --build  ./client/cc/build/'
+
+    - name: Test
+      run: |
+        # FIXME: currently, need to restart the container for test
+        docker container run --rm \
+          -v ${{ github.workspace }}:/work \
+          -w /work \
+          --entrypoint /init \
+          --cap-add NET_ADMIN \
+          ${{ vars.DEVCONTAINER_IMAGE }} \
+          bash -lc '
+          set -euo pipefail
+          for i in $(seq 1 ${{ vars.SERVICE_WAIT_SEC }}); do
+            if grep -q "0100007F:${{ vars.LISTEN_PORT_HEX }}" /proc/net/tcp 2>/dev/null; then
+              echo "Service ready (attempt $i)"
+              break
+            fi
+            sleep 1
+          done
+
+          ctest --test-dir ./client/cc/build/ --output-junit result.xml --output-on-failure --progress'

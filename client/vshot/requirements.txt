@@ -1,0 +1,7 @@
+textual 
+grpcio 
+protobuf 
+textual_autocomplete
+click < 8.2
+click-repl
+termcolor

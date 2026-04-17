@@ -1,0 +1,520 @@
+# ./producer/test/test_databroker_producer
+Running main() from ./_deps/googletest-src/googletest/src/gtest_main.cc
+[==========] Running 231 tests from 17 test suites.
+[----------] Global test environment set-up.
+[----------] 2 tests from TestProducerDefine
+[ RUN      ] TestProducerDefine.DefineUpdate
+[       OK ] TestProducerDefine.DefineUpdate (499 ms)
+[ RUN      ] TestProducerDefine.DefineInsert
+[       OK ] TestProducerDefine.DefineInsert (670 ms)
+[----------] 2 tests from TestProducerDefine (1170 ms total)
+
+[----------] 4 tests from TestProducerDelete
+[ RUN      ] TestProducerDelete.InvalidPath
+[       OK ] TestProducerDelete.InvalidPath (1 ms)
+[ RUN      ] TestProducerDelete.ValidNodePath
+[       OK ] TestProducerDelete.ValidNodePath (107 ms)
+[ RUN      ] TestProducerDelete.ValidBranchPath
+[       OK ] TestProducerDelete.ValidBranchPath (505 ms)
+[ RUN      ] TestProducerDelete.ValidMultiplePaths
+[       OK ] TestProducerDelete.ValidMultiplePaths (373 ms)
+[----------] 4 tests from TestProducerDelete (987 ms total)
+
+[----------] 2 tests from TestProducerGet
+[ RUN      ] TestProducerGet.GetInvalidPath
+[       OK ] TestProducerGet.GetInvalidPath (286 ms)
+[ RUN      ] TestProducerGet.GetNotSetValue
+[       OK ] TestProducerGet.GetNotSetValue (63 ms)
+[----------] 2 tests from TestProducerGet (350 ms total)
+
+[----------] 2 tests from TestProducerInspect
+[ RUN      ] TestProducerInspect.InspectInvalidPath
+[       OK ] TestProducerInspect.InspectInvalidPath (320 ms)
+[ RUN      ] TestProducerInspect.InspectPathFilter
+[       OK ] TestProducerInspect.InspectPathFilter (475 ms)
+[----------] 2 tests from TestProducerInspect (795 ms total)
+
+[----------] 6 tests from TestProducerSet
+[ RUN      ] TestProducerSet.SetInvalidPath
+[       OK ] TestProducerSet.SetInvalidPath (297 ms)
+[ RUN      ] TestProducerSet.SetActuatorPath
+[       OK ] TestProducerSet.SetActuatorPath (194 ms)
+[ RUN      ] TestProducerSet.SetMultiplePathsExistedExisted
+[       OK ] TestProducerSet.SetMultiplePathsExistedExisted (191 ms)
+[ RUN      ] TestProducerSet.SetMultiplePathsExistedNotExisted
+[       OK ] TestProducerSet.SetMultiplePathsExistedNotExisted (193 ms)
+[ RUN      ] TestProducerSet.SetSensorPathUnmatchType
+[       OK ] TestProducerSet.SetSensorPathUnmatchType (241 ms)
+[ RUN      ] TestProducerSet.SetBranchPath
+[       OK ] TestProducerSet.SetBranchPath (71 ms)
+[----------] 6 tests from TestProducerSet (1191 ms total)
+
+[----------] 7 tests from TestProducerSubscribe
+[ RUN      ] TestProducerSubscribe.SubscribeInvalidPath
+[       OK ] TestProducerSubscribe.SubscribeInvalidPath (237 ms)
+[ RUN      ] TestProducerSubscribe.SubscribeActuatorPathRetainedValue
+[       OK ] TestProducerSubscribe.SubscribeActuatorPathRetainedValue (105 ms)
+[ RUN      ] TestProducerSubscribe.SubscribeActuatorPathFilter
+[       OK ] TestProducerSubscribe.SubscribeActuatorPathFilter (1610 ms)
+[ RUN      ] TestProducerSubscribe.SubscribeActuatorPathFilterWildcard
+[       OK ] TestProducerSubscribe.SubscribeActuatorPathFilterWildcard (312 ms)
+[ RUN      ] TestProducerSubscribe.SubscribeActuatorTimeFilter
+[       OK ] TestProducerSubscribe.SubscribeActuatorTimeFilter (21190 ms)
+[ RUN      ] TestProducerSubscribe.SubscribeRepeatTest
+[       OK ] TestProducerSubscribe.SubscribeRepeatTest (27072 ms)
+[ RUN      ] TestProducerSubscribe.SubscribeAutoCloseTest
+[       OK ] TestProducerSubscribe.SubscribeAutoCloseTest (90 ms)
+[----------] 7 tests from TestProducerSubscribe (50619 ms total)
+
+[----------] 3 tests from TestProducerUnSubscribe
+[ RUN      ] TestProducerUnSubscribe.UnSubscribeIllegalCall
+[       OK ] TestProducerUnSubscribe.UnSubscribeIllegalCall (0 ms)
+[ RUN      ] TestProducerUnSubscribe.UnSubscribeNormalPattern
+[       OK ] TestProducerUnSubscribe.UnSubscribeNormalPattern (216 ms)
+[ RUN      ] TestProducerUnSubscribe.UnSubscribeDoubleUnSubscribe
+[       OK ] TestProducerUnSubscribe.UnSubscribeDoubleUnSubscribe (525 ms)
+[----------] 3 tests from TestProducerUnSubscribe (742 ms total)
+
+[----------] 30 tests from TestProducerGet/TestProducerGetWithParamSensor
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/0
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/0 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/1
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/1 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/2
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/2 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/3
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/3 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/4
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/4 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/5
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/5 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/6
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/6 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/7
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/7 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/8
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/8 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/9
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/9 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/10
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/10 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/11
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/11 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/12
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/12 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/13
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/13 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/14
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/14 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/15
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/15 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/16
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/16 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/17
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/17 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/18
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/18 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/19
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/19 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/20
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/20 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/21
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/21 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/22
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/22 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/23
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/23 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/24
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/24 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/25
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/25 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/26
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/26 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/27
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/27 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/28
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/28 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/29
+[       OK ] TestProducerGet/TestProducerGetWithParamSensor.GetValidPathSensor/29 (0 ms)
+[----------] 30 tests from TestProducerGet/TestProducerGetWithParamSensor (0 ms total)
+
+[----------] 16 tests from TestProducerGet/TestProducerGetWithParamActuator
+[ RUN      ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/0
+[       OK ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/0 (241 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/1
+[       OK ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/1 (109 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/2
+[       OK ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/2 (100 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/3
+[       OK ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/3 (106 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/4
+[       OK ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/4 (107 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/5
+[       OK ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/5 (174 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/6
+[       OK ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/6 (184 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/7
+[       OK ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/7 (138 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/8
+[       OK ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/8 (135 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/9
+[       OK ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/9 (110 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/10
+[       OK ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/10 (125 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/11
+[       OK ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/11 (185 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/12
+[       OK ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/12 (238 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/13
+[       OK ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/13 (110 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/14
+[       OK ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/14 (110 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/15
+[       OK ] TestProducerGet/TestProducerGetWithParamActuator.GetValidPathActuator/15 (105 ms)
+[----------] 16 tests from TestProducerGet/TestProducerGetWithParamActuator (2285 ms total)
+
+[----------] 24 tests from TestProducerGet/TestProducerGetWithParamAttribute
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/0
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/0 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/1
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/1 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/2
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/2 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/3
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/3 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/4
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/4 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/5
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/5 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/6
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/6 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/7
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/7 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/8
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/8 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/9
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/9 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/10
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/10 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/11
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/11 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/12
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/12 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/13
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/13 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/14
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/14 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/15
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/15 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/16
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/16 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/17
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/17 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/18
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/18 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/19
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/19 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/20
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/20 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/21
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/21 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/22
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/22 (0 ms)
+[ RUN      ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/23
+[       OK ] TestProducerGet/TestProducerGetWithParamAttribute.GetValidPathAttribute/23 (0 ms)
+[----------] 24 tests from TestProducerGet/TestProducerGetWithParamAttribute (0 ms total)
+
+[----------] 3 tests from TestProducerInspect/ProducerInspect_WithParamTest
+[ RUN      ] TestProducerInspect/ProducerInspect_WithParamTest.InspectVariousParameter/0
+[       OK ] TestProducerInspect/ProducerInspect_WithParamTest.InspectVariousParameter/0 (42 ms)
+[ RUN      ] TestProducerInspect/ProducerInspect_WithParamTest.InspectVariousParameter/1
+[       OK ] TestProducerInspect/ProducerInspect_WithParamTest.InspectVariousParameter/1 (43 ms)
+[ RUN      ] TestProducerInspect/ProducerInspect_WithParamTest.InspectVariousParameter/2
+[       OK ] TestProducerInspect/ProducerInspect_WithParamTest.InspectVariousParameter/2 (42 ms)
+[----------] 3 tests from TestProducerInspect/ProducerInspect_WithParamTest (129 ms total)
+
+[----------] 30 tests from TestProducerSet/TestProducerSetWithParamSensor
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/0
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/0 (105 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/1
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/1 (109 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/2
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/2 (108 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/3
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/3 (109 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/4
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/4 (103 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/5
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/5 (102 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/6
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/6 (128 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/7
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/7 (167 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/8
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/8 (173 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/9
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/9 (104 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/10
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/10 (161 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/11
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/11 (226 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/12
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/12 (146 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/13
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/13 (94 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/14
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/14 (100 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/15
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/15 (95 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/16
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/16 (122 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/17
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/17 (121 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/18
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/18 (140 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/19
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/19 (146 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/20
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/20 (210 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/21
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/21 (119 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/22
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/22 (174 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/23
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/23 (153 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/24
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/24 (172 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/25
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/25 (133 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/26
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/26 (120 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/27
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/27 (117 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/28
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/28 (174 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/29
+[       OK ] TestProducerSet/TestProducerSetWithParamSensor.SetSensorPath/29 (116 ms)
+[----------] 30 tests from TestProducerSet/TestProducerSetWithParamSensor (4061 ms total)
+
+[----------] 16 tests from TestProducerSet/TestProducerSetWithParamActuator
+[ RUN      ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/0
+[       OK ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/0 (99 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/1
+[       OK ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/1 (103 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/2
+[       OK ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/2 (102 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/3
+[       OK ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/3 (118 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/4
+[       OK ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/4 (111 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/5
+[       OK ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/5 (103 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/6
+[       OK ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/6 (103 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/7
+[       OK ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/7 (108 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/8
+[       OK ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/8 (103 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/9
+[       OK ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/9 (111 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/10
+[       OK ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/10 (116 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/11
+[       OK ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/11 (118 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/12
+[       OK ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/12 (146 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/13
+[       OK ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/13 (149 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/14
+[       OK ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/14 (104 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/15
+[       OK ] TestProducerSet/TestProducerSetWithParamActuator.SetActuatorPath/15 (114 ms)
+[----------] 16 tests from TestProducerSet/TestProducerSetWithParamActuator (1816 ms total)
+
+[----------] 16 tests from TestProducerSet/TestProducerSetWithParamAttribute
+[ RUN      ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/0
+[       OK ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/0 (104 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/1
+[       OK ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/1 (101 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/2
+[       OK ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/2 (104 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/3
+[       OK ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/3 (103 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/4
+[       OK ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/4 (113 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/5
+[       OK ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/5 (121 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/6
+[       OK ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/6 (167 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/7
+[       OK ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/7 (167 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/8
+[       OK ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/8 (137 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/9
+[       OK ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/9 (197 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/10
+[       OK ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/10 (125 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/11
+[       OK ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/11 (211 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/12
+[       OK ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/12 (216 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/13
+[       OK ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/13 (197 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/14
+[       OK ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/14 (199 ms)
+[ RUN      ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/15
+[       OK ] TestProducerSet/TestProducerSetWithParamAttribute.SetAttributePath/15 (151 ms)
+[----------] 16 tests from TestProducerSet/TestProducerSetWithParamAttribute (2423 ms total)
+
+[----------] 30 tests from TestProducerSubscribe/TestProducerSubscribeWithParamSensor
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/0
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/0 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/1
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/1 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/2
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/2 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/3
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/3 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/4
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/4 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/5
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/5 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/6
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/6 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/7
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/7 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/8
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/8 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/9
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/9 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/10
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/10 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/11
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/11 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/12
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/12 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/13
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/13 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/14
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/14 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/15
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/15 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/16
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/16 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/17
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/17 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/18
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/18 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/19
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/19 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/20
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/20 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/21
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/21 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/22
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/22 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/23
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/23 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/24
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/24 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/25
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/25 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/26
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/26 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/27
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/27 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/28
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/28 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/29
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamSensor.SubscribeValidPathSensor/29 (0 ms)
+[----------] 30 tests from TestProducerSubscribe/TestProducerSubscribeWithParamSensor (0 ms total)
+
+[----------] 16 tests from TestProducerSubscribe/TestProducerSubscribeWithParamActuator
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/0
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/0 (173 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/1
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/1 (128 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/2
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/2 (104 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/3
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/3 (117 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/4
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/4 (109 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/5
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/5 (170 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/6
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/6 (104 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/7
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/7 (106 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/8
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/8 (111 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/9
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/9 (172 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/10
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/10 (117 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/11
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/11 (117 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/12
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/12 (174 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/13
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/13 (103 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/14
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/14 (118 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/15
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamActuator.SubscribeValidPathActuator/15 (111 ms)
+[----------] 16 tests from TestProducerSubscribe/TestProducerSubscribeWithParamActuator (2043 ms total)
+
+[----------] 24 tests from TestProducerSubscribe/TestProducerSubscribeWithParamAttribute
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/0
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/0 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/1
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/1 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/2
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/2 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/3
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/3 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/4
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/4 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/5
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/5 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/6
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/6 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/7
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/7 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/8
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/8 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/9
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/9 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/10
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/10 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/11
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/11 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/12
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/12 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/13
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/13 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/14
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/14 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/15
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/15 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/16
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/16 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/17
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/17 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/18
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/18 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/19
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/19 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/20
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/20 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/21
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/21 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/22
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/22 (0 ms)
+[ RUN      ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/23
+[       OK ] TestProducerSubscribe/TestProducerSubscribeWithParamAttribute.SubscribeValidPathAttribute/23 (0 ms)
+[----------] 24 tests from TestProducerSubscribe/TestProducerSubscribeWithParamAttribute (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 231 tests from 17 test suites ran. (68616 ms total)
+[  PASSED  ] 231 tests.

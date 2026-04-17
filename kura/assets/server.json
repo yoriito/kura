@@ -1,0 +1,215 @@
+{
+    "Server": {
+        "children": {
+            "Config": {
+                "children": {
+                    "AccessControl": {
+                        "children": {
+                            "AgtsUrl": {
+                                "datatype": "string",
+                                "description": "Access Grant Token Server URL including port number and path.",
+                                "type": "attribute"
+                            },
+                            "AtsPortNum": {
+                                "datatype": "uint32",
+                                "description": "Access Token Server port number.",
+                                "type": "attribute"
+                            },
+                            "Flow": {
+                                "datatype": "string",
+                                "description": "Supported access control flows.",
+                                "type": "attribute"
+                            }
+                        },
+                        "description": "Access control configuration.",
+                        "type": "branch"
+                    },
+                    "Consent": {
+                        "children": {
+                            "Ecf": {
+                                "datatype": "string",
+                                "description": "External Consent Framework description.",
+                                "type": "attribute"
+                            }
+                        },
+                        "description": "Consent configuration.",
+                        "type": "branch"
+                    },
+                    "Protocol": {
+                        "children": {
+                            "Grpc": {
+                                "children": {
+                                    "Protobuf": {
+                                        "children": {
+                                            "PortNum": {
+                                                "datatype": "uint32",
+                                                "default": 50051,
+                                                "description": "gRPC port number for the protobuf encoded payload format.",
+                                                "type": "attribute"
+                                            }
+                                        },
+                                        "description": "gRPC configuration with the protobuf encoded payload format.",
+                                        "type": "branch"
+                                    }
+                                },
+                                "description": "Top branch for the server supported gRPC protocol.",
+                                "type": "branch"
+                            },
+                            "Http": {
+                                "children": {
+                                    "Primary": {
+                                        "children": {
+                                            "PortNum": {
+                                                "datatype": "uint32",
+                                                "description": "HTTP port number for the primary payload format.",
+                                                "type": "attribute"
+                                            }
+                                        },
+                                        "description": "HTTP configuration for the primary payload format.",
+                                        "type": "branch"
+                                    }
+                                },
+                                "description": "Top branch for the server supported HTTP protocol.",
+                                "type": "branch"
+                            },
+                            "Yoriito": {
+                                "children": {
+                                    "ConsumerPortNum": {
+                                        "datatype": "uint32",
+                                        "default": 50052,
+                                        "description": "gRPC port number for the protobuf encoded payload format.",
+                                        "type": "attribute"
+                                    },
+                                    "ProviderPortNum": {
+                                        "datatype": "uint32",
+                                        "default": 50053,
+                                        "description": "gRPC port number for the protobuf encoded payload format.",
+                                        "type": "attribute"
+                                    }
+                                },
+                                "description": "Top branch for the server supported gRPC protocol.",
+                                "type": "branch"
+                            },
+                            "Mqtt": {
+                                "children": {
+                                    "PortNum": {
+                                        "datatype": "uint32",
+                                        "description": "MQTT port number.",
+                                        "type": "attribute"
+                                    },
+                                    "Primary": {
+                                        "children": {
+                                            "Topic": {
+                                                "datatype": "string",
+                                                "description": "MQTT topic name for the primary payload format.",
+                                                "type": "attribute"
+                                            }
+                                        },
+                                        "description": "MQTT configuration for the primary payload format.",
+                                        "type": "branch"
+                                    },
+                                    "Protobuf": {
+                                        "children": {
+                                            "DataCompression": {
+                                                "datatype": "string[]",
+                                                "description": "List of supported data compression variants.",
+                                                "type": "attribute"
+                                            },
+                                            "Topic": {
+                                                "datatype": "string",
+                                                "description": "MQTT topic name for the protobuf encoded payload format.",
+                                                "type": "attribute"
+                                            }
+                                        },
+                                        "description": "MQTT configuration for the protobuf encoded payload format.",
+                                        "type": "branch"
+                                    }
+                                },
+                                "description": "Top branch for the server supported MQTT protocol.",
+                                "type": "branch"
+                            },
+                            "Websocket": {
+                                "children": {
+                                    "Primary": {
+                                        "children": {
+                                            "PortNum": {
+                                                "datatype": "uint32",
+                                                "default": 6443,
+                                                "description": "Websocket protocol port number for the primary payload format.",
+                                                "type": "attribute"
+                                            }
+                                        },
+                                        "description": "Websocket configuration for the primary payload format.",
+                                        "type": "branch"
+                                    },
+                                    "Protobuf": {
+                                        "children": {
+                                            "PortNum": {
+                                                "datatype": "uint32",
+                                                "description": "Websocket protocol port number for the protobuf encoded payload format.",
+                                                "type": "attribute"
+                                            }
+                                        },
+                                        "description": "Websocket configuration for the protobuf encoded payload format.",
+                                        "type": "branch"
+                                    }
+                                },
+                                "description": "Top branch for the server supported Websocket protocol.",
+                                "type": "branch"
+                            }
+                        },
+                        "description": "Top branch declaring the configuration of server supported protocols.",
+                        "type": "branch"
+                    }
+                },
+                "description": "Top branch declaring the configuration of server supported features.",
+                "type": "branch"
+            },
+            "Support": {
+                "children": {
+                    "DataCompression": {
+                        "datatype": "string[]",
+                        "description": "List of supported data compression features.",
+                        "type": "attribute"
+                    },
+                    "Encoding": {
+                        "datatype": "string[]",
+                        "default": [
+                            "protobuf"
+                        ],
+                        "description": "List of supported payload encoding features.",
+                        "type": "attribute"
+                    },
+                    "Filetransfer": {
+                        "datatype": "string[]",
+                        "description": "List of supported file transfer features.",
+                        "type": "attribute"
+                    },
+                    "Filter": {
+                        "datatype": "string[]",
+                        "description": "List of supported filter features.",
+                        "type": "attribute"
+                    },
+                    "Protocol": {
+                        "datatype": "string[]",
+                        "default": [
+                            "gRPC",
+                            "yoriito"
+                        ],
+                        "description": "List of supported transport protocols.",
+                        "type": "attribute"
+                    },
+                    "Security": {
+                        "datatype": "string[]",
+                        "description": "List of supported security related features.",
+                        "type": "attribute"
+                    }
+                },
+                "description": "Top branch declaring the server supported features.",
+                "type": "branch"
+            }
+        },
+        "description": "Root for the server capabilities.",
+        "type": "branch"
+    }
+}
