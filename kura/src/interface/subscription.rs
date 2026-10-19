@@ -16,8 +16,8 @@
 
 use globset::{Glob, GlobMatcher};
 
-use crate::interface::signal::Value;
-use tracing::error;
+use crate::interface::model;
+use crate::interface::result::{self, MapExternalToKuraResult};
 
 #[derive(Clone, Debug)]
 pub struct GetCondition {
@@ -35,41 +35,52 @@ pub struct SubscriptionCondition {
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Mode {
-    Current,
-    Target,
+    Actual,
+    Requested,
+}
+
+#[derive(Clone, Copy, Debug)]
+enum Scalar {
+    Bool(bool),
+    Int(i128),
+    Float(f64),
 }
 
 impl SubscriptionCondition {
-    pub fn is_match_path(&self, query_path: &String) -> bool {
-        let glob = if let Ok(glob) = Glob::new(self.path.as_str()) {
-            glob
-        } else {
-            return false;
-        };
+    pub fn is_match_path(&self, query_path: &String) -> result::KuraResult<bool> {
+        let glob = Glob::new(self.path.as_str()).to_kura_result(
+            result::KuraErrorCode::BadRequest,
+            result::KuraErrorReason::BadRequest,
+            format!("invalid glob pattern: {}", self.path),
+        )?;
         let matcher: GlobMatcher = glob.compile_matcher();
         if matcher.is_match(query_path) {
-            return true;
+            return Ok(true);
         }
 
         let paths_filter = match &self.paths_filter {
             Some(paths_filter) => paths_filter,
-            None => return false,
+            None => return Ok(false),
         };
 
         for path_filter in &paths_filter.paths {
             let regex = format!("{}.{}", self.path, path_filter);
-            let glob = Glob::new(regex.as_str()).unwrap();
+            let glob = Glob::new(regex.as_str()).to_kura_result(
+                result::KuraErrorCode::BadRequest,
+                result::KuraErrorReason::BadRequest,
+                format!("invalid glob pattern: {regex}"),
+            )?;
             let matcher: GlobMatcher = glob.compile_matcher();
             if matcher.is_match(query_path) {
-                return true;
+                return Ok(true);
             }
         }
 
-        false
+        Ok(false)
     }
-    pub fn get_matched_paths(&self, query_paths: &[String]) -> Vec<String> {
+    pub fn get_matched_paths(&self, query_paths: &[String]) -> result::KuraResult<Vec<String>> {
         let mut path_array: Vec<String> = vec![];
-        let matcher_array: Vec<GlobMatcher> = self.get_matcher_array();
+        let matcher_array: Vec<GlobMatcher> = self.get_matcher_array()?;
 
         for path in query_paths {
             for matcher in &matcher_array {
@@ -79,30 +90,34 @@ impl SubscriptionCondition {
                 }
             }
         }
-        path_array
+        Ok(path_array)
     }
-    pub fn get_matcher_array(&self) -> Vec<GlobMatcher> {
+    pub fn get_matcher_array(&self) -> result::KuraResult<Vec<GlobMatcher>> {
         let mut matcher_array: Vec<GlobMatcher> = vec![];
-        let glob = if let Ok(glob) = Glob::new(self.path.as_str()) {
-            glob
-        } else {
-            return matcher_array;
-        };
+        let glob = Glob::new(self.path.as_str()).to_kura_result(
+            result::KuraErrorCode::BadRequest,
+            result::KuraErrorReason::BadRequest,
+            format!("invalid glob pattern: {}", self.path),
+        )?;
         matcher_array.push(glob.compile_matcher());
 
         let paths_filter = match &self.paths_filter {
             Some(paths_filter) => paths_filter,
-            None => return matcher_array,
+            None => return Ok(matcher_array),
         };
 
         // TODO: create a matcher in advance
         for path_filter in &paths_filter.paths {
             let regex = format!("{}.{}", self.path, path_filter);
-            let glob = Glob::new(regex.as_str()).unwrap();
+            let glob = Glob::new(regex.as_str()).to_kura_result(
+                result::KuraErrorCode::BadRequest,
+                result::KuraErrorReason::BadRequest,
+                format!("invalid glob pattern: {regex}"),
+            )?;
             matcher_array.push(glob.compile_matcher());
         }
 
-        matcher_array
+        Ok(matcher_array)
     }
 
     pub fn check_tick_time_filter(&self, previous_time: u128, current_time: u128) -> bool {
@@ -120,11 +135,92 @@ impl SubscriptionCondition {
         current_time - previous_time > time_based_filter.interval as u128
     }
 
-    // TODO: refactor
+    fn to_scalar(value: &model::Value) -> Option<Scalar> {
+        match value.clone() {
+            model::Value::Bool(v) => Some(Scalar::Bool(v)),
+            model::Value::Int8(v) => Some(Scalar::Int(v as i128)),
+            model::Value::Int16(v) => Some(Scalar::Int(v as i128)),
+            model::Value::Int32(v) => Some(Scalar::Int(v as i128)),
+            model::Value::Int64(v) => Some(Scalar::Int(v as i128)),
+            model::Value::Uint8(v) => Some(Scalar::Int(v as i128)),
+            model::Value::Uint16(v) => Some(Scalar::Int(v as i128)),
+            model::Value::Uint32(v) => Some(Scalar::Int(v as i128)),
+            model::Value::Uint64(v) => Some(Scalar::Int(v as i128)),
+            model::Value::Float(v) => Some(Scalar::Float(v as f64)),
+            model::Value::Double(v) => Some(Scalar::Float(v)),
+            _ => None,
+        }
+    }
+
+    fn compare_bool(opcode: &Opcode, pre: bool, cur: bool) -> bool {
+        match opcode {
+            Opcode::Equal => pre == cur,
+            Opcode::NotEqual => pre != cur,
+            Opcode::GreaterThan => !pre && cur,
+            Opcode::LesserThan => pre && !cur,
+            _ => true,
+        }
+    }
+
+    fn compare_int(opcode: &Opcode, offset: i32, pre: i128, cur: i128) -> bool {
+        let adjusted = cur - offset as i128;
+        match opcode {
+            Opcode::Equal => adjusted == pre,
+            Opcode::NotEqual => adjusted != pre,
+            Opcode::GreaterThan => adjusted > pre,
+            Opcode::GreaterEqual => adjusted >= pre,
+            Opcode::LesserThan => adjusted < pre,
+            Opcode::LesserEqual => adjusted <= pre,
+            _ => true,
+        }
+    }
+
+    fn compare_float(opcode: &Opcode, offset: i32, pre: f64, cur: f64) -> bool {
+        let adjusted = cur - offset as f64;
+        match opcode {
+            Opcode::Equal => adjusted == pre,
+            Opcode::NotEqual => adjusted != pre,
+            Opcode::GreaterThan => adjusted > pre,
+            Opcode::GreaterEqual => adjusted >= pre,
+            Opcode::LesserThan => adjusted < pre,
+            Opcode::LesserEqual => adjusted <= pre,
+            _ => true,
+        }
+    }
+
+    fn is_changed(
+        &self,
+        opcode: &Opcode,
+        offset: i32,
+        pre_value: &model::Value,
+        cur_value: &model::Value,
+    ) -> bool {
+        match (Self::to_scalar(pre_value), Self::to_scalar(cur_value)) {
+            (Some(Scalar::Bool(pre)), Some(Scalar::Bool(cur))) => {
+                return Self::compare_bool(opcode, pre, cur);
+            }
+            (Some(Scalar::Int(pre)), Some(Scalar::Int(cur))) => {
+                return Self::compare_int(opcode, offset, pre, cur);
+            }
+            (Some(Scalar::Float(pre)), Some(Scalar::Float(cur))) => {
+                return Self::compare_float(opcode, offset, pre, cur);
+            }
+            _ => (),
+        }
+        match (pre_value, cur_value) {
+            (model::Value::Complex(a), model::Value::Complex(b)) => match opcode {
+                Opcode::Equal => a == b,
+                Opcode::NotEqual => a != b,
+                _ => true,
+            },
+            _ => true,
+        }
+    }
+
     pub fn check_change_filter(
         &self,
-        previous_notified_value: &Option<Value>,
-        current_value: &Value,
+        previous_notified_state: &Option<model::SignalState>,
+        current_state: &model::SignalState,
     ) -> bool {
         let misc_filter = if let Some(misc_filter) = &self.misc_filter {
             misc_filter
@@ -137,394 +233,26 @@ impl SubscriptionCondition {
             _ => return true,
         };
 
-        let previous_notified_value = if let Some(previous_notified_value) = previous_notified_value
+        let previous_notified_state = if let Some(previous_notified_state) = previous_notified_state
         {
-            previous_notified_value
+            previous_notified_state
         } else {
             return true;
         };
 
-        match previous_notified_value {
-            Value::Bool(previous_notified_value) => {
-                let Value::Bool(current_value) = current_value else {
-                    error!(
-                        "previous value and current value are not same type: {}, {}",
-                        previous_notified_value, current_value
-                    );
-                    return false;
-                };
-
-                match change_filter.opecode {
-                    Opecode::Equal => previous_notified_value == current_value,
-                    Opecode::NotEqual => previous_notified_value != current_value,
-                    Opecode::GreaterThan => !*previous_notified_value && *current_value,
-                    Opecode::LesserThan => *previous_notified_value && !*current_value,
-                    _ => true,
-                }
-            }
-            Value::Int8(previous_notified_value) => {
-                let Value::Int8(current_value) = current_value else {
-                    error!(
-                        "previous value and current value are not same type: {}, {}",
-                        previous_notified_value, current_value
-                    );
-                    return false;
-                };
-
-                let current_value = *current_value;
-                let previous_notified_value = *previous_notified_value;
-                match change_filter.opecode {
-                    Opecode::Equal => {
-                        (current_value as i32 - change_filter.offset)
-                            == previous_notified_value as i32
-                    }
-                    Opecode::NotEqual => {
-                        (current_value as i32 - change_filter.offset)
-                            != previous_notified_value as i32
-                    }
-                    Opecode::GreaterThan => {
-                        (current_value as i32 - change_filter.offset)
-                            > previous_notified_value as i32
-                    }
-                    Opecode::GreaterEqual => {
-                        (current_value as i32 - change_filter.offset)
-                            >= previous_notified_value as i32
-                    }
-                    Opecode::LesserThan => {
-                        (current_value as i32 - change_filter.offset)
-                            < previous_notified_value as i32
-                    }
-                    Opecode::LesserEqual => {
-                        (current_value as i32 - change_filter.offset)
-                            <= previous_notified_value as i32
-                    }
-                    _ => true,
-                }
-            }
-            Value::Int16(previous_notified_value) => {
-                let Value::Int16(current_value) = current_value else {
-                    error!(
-                        "previous value and current value are not same type: {}, {}",
-                        previous_notified_value, current_value
-                    );
-                    return false;
-                };
-
-                let current_value = *current_value;
-                let previous_notified_value = *previous_notified_value;
-                match change_filter.opecode {
-                    Opecode::Equal => {
-                        (current_value as i32 - change_filter.offset)
-                            == previous_notified_value as i32
-                    }
-                    Opecode::NotEqual => {
-                        (current_value as i32 - change_filter.offset)
-                            != previous_notified_value as i32
-                    }
-                    Opecode::GreaterThan => {
-                        (current_value as i32 - change_filter.offset)
-                            > previous_notified_value as i32
-                    }
-                    Opecode::GreaterEqual => {
-                        (current_value as i32 - change_filter.offset)
-                            >= previous_notified_value as i32
-                    }
-                    Opecode::LesserThan => {
-                        (current_value as i32 - change_filter.offset)
-                            < previous_notified_value as i32
-                    }
-                    Opecode::LesserEqual => {
-                        (current_value as i32 - change_filter.offset)
-                            <= previous_notified_value as i32
-                    }
-                    _ => true,
-                }
-            }
-            Value::Int32(previous_notified_value) => {
-                let Value::Int32(current_value) = current_value else {
-                    error!(
-                        "previous value and current value are not same type: {}, {}",
-                        previous_notified_value, current_value
-                    );
-                    return false;
-                };
-
-                let current_value = *current_value;
-                let previous_notified_value = *previous_notified_value;
-                match change_filter.opecode {
-                    Opecode::Equal => {
-                        (current_value - change_filter.offset) == previous_notified_value
-                    }
-                    Opecode::NotEqual => {
-                        (current_value - change_filter.offset) != previous_notified_value
-                    }
-                    Opecode::GreaterThan => {
-                        (current_value - change_filter.offset) > previous_notified_value
-                    }
-                    Opecode::GreaterEqual => {
-                        (current_value - change_filter.offset) >= previous_notified_value
-                    }
-                    Opecode::LesserThan => {
-                        (current_value - change_filter.offset) < previous_notified_value
-                    }
-                    Opecode::LesserEqual => {
-                        (current_value - change_filter.offset) <= previous_notified_value
-                    }
-                    _ => true,
-                }
-            }
-            Value::Int64(previous_notified_value) => {
-                let Value::Int64(current_value) = current_value else {
-                    error!(
-                        "previous value and current value are not same type: {}, {}",
-                        previous_notified_value, current_value
-                    );
-                    return false;
-                };
-
-                let current_value = *current_value;
-                let previous_notified_value = *previous_notified_value;
-                match change_filter.opecode {
-                    Opecode::Equal => {
-                        (current_value - change_filter.offset as i64) == previous_notified_value
-                    }
-                    Opecode::NotEqual => {
-                        (current_value - change_filter.offset as i64) != previous_notified_value
-                    }
-                    Opecode::GreaterThan => {
-                        (current_value - change_filter.offset as i64) > previous_notified_value
-                    }
-                    Opecode::GreaterEqual => {
-                        (current_value - change_filter.offset as i64) >= previous_notified_value
-                    }
-                    Opecode::LesserThan => {
-                        (current_value - change_filter.offset as i64) < previous_notified_value
-                    }
-                    Opecode::LesserEqual => {
-                        (current_value - change_filter.offset as i64) <= previous_notified_value
-                    }
-                    _ => true,
-                }
-            }
-            Value::Uint8(previous_notified_value) => {
-                let Value::Uint8(current_value) = current_value else {
-                    error!(
-                        "previous value and current value are not same type: {}, {}",
-                        previous_notified_value, current_value
-                    );
-                    return false;
-                };
-
-                let current_value = *current_value;
-                let previous_notified_value = *previous_notified_value;
-                match change_filter.opecode {
-                    Opecode::Equal => {
-                        (current_value as i32 - change_filter.offset)
-                            == previous_notified_value as i32
-                    }
-                    Opecode::NotEqual => {
-                        (current_value as i32 - change_filter.offset)
-                            != previous_notified_value as i32
-                    }
-                    Opecode::GreaterThan => {
-                        (current_value as i32 - change_filter.offset)
-                            > previous_notified_value as i32
-                    }
-                    Opecode::GreaterEqual => {
-                        (current_value as i32 - change_filter.offset)
-                            >= previous_notified_value as i32
-                    }
-                    Opecode::LesserThan => {
-                        (current_value as i32 - change_filter.offset)
-                            < previous_notified_value as i32
-                    }
-                    Opecode::LesserEqual => {
-                        (current_value as i32 - change_filter.offset)
-                            <= previous_notified_value as i32
-                    }
-                    _ => true,
-                }
-            }
-            Value::Uint16(previous_notified_value) => {
-                let Value::Uint16(current_value) = current_value else {
-                    error!(
-                        "previous value and current value are not same type: {}, {}",
-                        previous_notified_value, current_value
-                    );
-                    return false;
-                };
-
-                let current_value = *current_value;
-                let previous_notified_value = *previous_notified_value;
-                match change_filter.opecode {
-                    Opecode::Equal => {
-                        (current_value as i32 - change_filter.offset)
-                            == previous_notified_value as i32
-                    }
-                    Opecode::NotEqual => {
-                        (current_value as i32 - change_filter.offset)
-                            != previous_notified_value as i32
-                    }
-                    Opecode::GreaterThan => {
-                        (current_value as i32 - change_filter.offset)
-                            > previous_notified_value as i32
-                    }
-                    Opecode::GreaterEqual => {
-                        (current_value as i32 - change_filter.offset)
-                            >= previous_notified_value as i32
-                    }
-                    Opecode::LesserThan => {
-                        (current_value as i32 - change_filter.offset)
-                            < previous_notified_value as i32
-                    }
-                    Opecode::LesserEqual => {
-                        (current_value as i32 - change_filter.offset)
-                            <= previous_notified_value as i32
-                    }
-                    _ => true,
-                }
-            }
-            Value::Uint32(previous_notified_value) => {
-                let Value::Uint32(current_value) = current_value else {
-                    error!(
-                        "previous value and current value are not same type: {}, {}",
-                        previous_notified_value, current_value
-                    );
-                    return false;
-                };
-
-                let current_value = *current_value;
-                let previous_notified_value = *previous_notified_value;
-                match change_filter.opecode {
-                    Opecode::Equal => {
-                        (current_value - (change_filter.offset as u32)) == previous_notified_value
-                    }
-                    Opecode::NotEqual => {
-                        (current_value - (change_filter.offset as u32)) != previous_notified_value
-                    }
-                    Opecode::GreaterThan => {
-                        (current_value - (change_filter.offset as u32)) > previous_notified_value
-                    }
-                    Opecode::GreaterEqual => {
-                        (current_value - (change_filter.offset as u32)) >= previous_notified_value
-                    }
-                    Opecode::LesserThan => {
-                        (current_value - (change_filter.offset as u32)) < previous_notified_value
-                    }
-                    Opecode::LesserEqual => {
-                        (current_value - (change_filter.offset as u32)) <= previous_notified_value
-                    }
-                    _ => true,
-                }
-            }
-            Value::Uint64(previous_notified_value) => {
-                let Value::Uint64(current_value) = current_value else {
-                    error!(
-                        "previous value and current value are not same type: {}, {}",
-                        previous_notified_value, current_value
-                    );
-                    return false;
-                };
-
-                let current_value = *current_value;
-                let previous_notified_value = *previous_notified_value;
-                match change_filter.opecode {
-                    Opecode::Equal => {
-                        (current_value - (change_filter.offset as u64)) == previous_notified_value
-                    }
-                    Opecode::NotEqual => {
-                        (current_value - (change_filter.offset as u64)) != previous_notified_value
-                    }
-                    Opecode::GreaterThan => {
-                        (current_value - (change_filter.offset as u64)) > previous_notified_value
-                    }
-                    Opecode::GreaterEqual => {
-                        (current_value - (change_filter.offset as u64)) >= previous_notified_value
-                    }
-                    Opecode::LesserThan => {
-                        (current_value - (change_filter.offset as u64)) < previous_notified_value
-                    }
-                    Opecode::LesserEqual => {
-                        (current_value - (change_filter.offset as u64)) <= previous_notified_value
-                    }
-                    _ => true,
-                }
-            }
-            Value::Float(previous_notified_value) => {
-                let Value::Float(current_value) = current_value else {
-                    error!(
-                        "previous value and current value are not same type: {}, {}",
-                        previous_notified_value, current_value
-                    );
-                    return false;
-                };
-
-                let current_value = *current_value;
-                let previous_notified_value = *previous_notified_value;
-                match change_filter.opecode {
-                    Opecode::Equal => {
-                        (current_value - (change_filter.offset as f32)) == previous_notified_value
-                    }
-                    Opecode::NotEqual => {
-                        (current_value - (change_filter.offset as f32)) != previous_notified_value
-                    }
-                    Opecode::GreaterThan => {
-                        (current_value - (change_filter.offset as f32)) > previous_notified_value
-                    }
-                    Opecode::GreaterEqual => {
-                        (current_value - (change_filter.offset as f32)) >= previous_notified_value
-                    }
-                    Opecode::LesserThan => {
-                        (current_value - (change_filter.offset as f32)) < previous_notified_value
-                    }
-                    Opecode::LesserEqual => {
-                        (current_value - (change_filter.offset as f32)) <= previous_notified_value
-                    }
-                    _ => true,
-                }
-            }
-            Value::Double(previous_notified_value) => {
-                let Value::Double(current_value) = current_value else {
-                    error!(
-                        "previous value and current value are not same type: {}, {}",
-                        previous_notified_value, current_value
-                    );
-                    return false;
-                };
-
-                let current_value = *current_value;
-                let previous_notified_value = *previous_notified_value;
-                match change_filter.opecode {
-                    Opecode::Equal => {
-                        (current_value - (change_filter.offset as f64)) == previous_notified_value
-                    }
-                    Opecode::NotEqual => {
-                        (current_value - (change_filter.offset as f64)) != previous_notified_value
-                    }
-                    Opecode::GreaterThan => {
-                        (current_value - (change_filter.offset as f64)) > previous_notified_value
-                    }
-                    Opecode::GreaterEqual => {
-                        (current_value - (change_filter.offset as f64)) >= previous_notified_value
-                    }
-                    Opecode::LesserThan => {
-                        (current_value - (change_filter.offset as f64)) < previous_notified_value
-                    }
-                    Opecode::LesserEqual => {
-                        (current_value - (change_filter.offset as f64)) <= previous_notified_value
-                    }
-                    _ => true,
-                }
-            }
-            _ => true,
-        }
+        self.is_changed(
+            &change_filter.opcode,
+            change_filter.offset,
+            &previous_notified_state.value,
+            &current_state.value,
+        )
     }
 }
 
 impl GetCondition {
-    pub fn get_matched_paths(&self, query_paths: &[String]) -> Vec<String> {
+    pub fn get_matched_paths(&self, query_paths: &[String]) -> result::KuraResult<Vec<String>> {
         let mut path_array: Vec<String> = vec![];
-        let matcher_array: Vec<GlobMatcher> = self.get_matcher_array();
+        let matcher_array: Vec<GlobMatcher> = self.get_matcher_array()?;
 
         for path in query_paths {
             for matcher in &matcher_array {
@@ -534,29 +262,33 @@ impl GetCondition {
                 }
             }
         }
-        path_array
+        Ok(path_array)
     }
-    pub fn get_matcher_array(&self) -> Vec<GlobMatcher> {
+    pub fn get_matcher_array(&self) -> result::KuraResult<Vec<GlobMatcher>> {
         let mut matcher_array: Vec<GlobMatcher> = vec![];
-        let glob = if let Ok(glob) = Glob::new(self.path.as_str()) {
-            glob
-        } else {
-            return matcher_array;
-        };
+        let glob = Glob::new(self.path.as_str()).to_kura_result(
+            result::KuraErrorCode::BadRequest,
+            result::KuraErrorReason::BadRequest,
+            format!("invalid glob pattern: {}", self.path),
+        )?;
         matcher_array.push(glob.compile_matcher());
 
         let paths_filter = match &self.paths_filter {
             Some(paths_filter) => paths_filter,
-            None => return matcher_array,
+            None => return Ok(matcher_array),
         };
 
         for path_filter in &paths_filter.paths {
             let regex = format!("{}.{}", self.path, path_filter);
-            let glob = Glob::new(regex.as_str()).unwrap();
+            let glob = Glob::new(regex.as_str()).to_kura_result(
+                result::KuraErrorCode::BadRequest,
+                result::KuraErrorReason::BadRequest,
+                format!("invalid glob pattern: {regex}"),
+            )?;
             matcher_array.push(glob.compile_matcher());
         }
 
-        matcher_array
+        Ok(matcher_array)
     }
 }
 
@@ -596,13 +328,13 @@ pub struct RangeFilter {
 #[allow(dead_code)]
 #[derive(Clone, Debug)]
 pub struct RangeCondition {
-    pub opecode: Opecode,
+    pub opcode: Opcode,
     pub boundary: i32,
 }
 
 #[derive(Clone, Debug)]
 pub struct ChangeFilter {
-    pub opecode: Opecode,
+    pub opcode: Opcode,
     pub offset: i32,
 }
 
@@ -626,7 +358,7 @@ pub struct MetadataFilter {
 }
 
 #[derive(Clone, Debug)]
-pub enum Opecode {
+pub enum Opcode {
     Undefined = 0,
     Equal = 1,
     NotEqual = 2,

@@ -22,6 +22,7 @@ on:
 jobs:
   build:
     runs-on: LargeSizeRunner
+    timeout-minutes: 30
     steps:
     - name: Generate Github App Token
       id: app-token
@@ -49,7 +50,8 @@ jobs:
           bash -lc '
           set -euo pipefail
           cmake -S ./client/cc -B ./client/cc/build -DENABLE_TESTS=ON
-          cmake --build  ./client/cc/build/'
+          cmake --build  ./client/cc/build/
+          cd /work/kura && cargo build --release'
 
     - name: Test
       run: |
@@ -61,13 +63,18 @@ jobs:
           --cap-add NET_ADMIN \
           ${{ vars.DEVCONTAINER_IMAGE }} \
           bash -lc '
+          cd /work/client/cc/test_env
+          /work/kura/target/release/kura --config-file-path config.yml &
           set -euo pipefail
           for i in $(seq 1 ${{ vars.SERVICE_WAIT_SEC }}); do
-            if grep -q "0100007F:${{ vars.LISTEN_PORT_HEX }}" /proc/net/tcp 2>/dev/null; then
+            if grep -q "0100007F:EA94" /proc/net/tcp 2>/dev/null; then
               echo "Service ready (attempt $i)"
               break
             fi
             sleep 1
           done
-
+          export YORIITO_CONSUMER_ENDPOINT="127.0.0.1:60052"
+          export YORIITO_PRODUCER_ENDPOINT="127.0.0.1:60053"
+          cd /work
           ctest --test-dir ./client/cc/build/ --output-junit result.xml --output-on-failure --progress'
+

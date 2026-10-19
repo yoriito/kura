@@ -16,16 +16,17 @@
  * limitations under the License.
  */
 
-#ifndef KURA_CLIENT_CC_PRODUCER_INC_VISS_PRODUCER_H_
-#define KURA_CLIENT_CC_PRODUCER_INC_VISS_PRODUCER_H_
+#ifndef PRODUCER_INC_VISS_PRODUCER_H_
+#define PRODUCER_INC_VISS_PRODUCER_H_
 
 #include <cstdlib>
 #include <memory>
 #include <string>
 
 #include "databroker/databroker_producer.h"
-#include "viss_producer_factory.h"
-#include "viss_producer_impl.h"
+#include "producer/inc/viss_producer_factory.h"
+#include "producer/inc/viss_producer_impl.h"
+#include "yoriito/yoriito_log.h"
 
 namespace yoriito::databroker {
 class VissProducer : public DataBrokerProducer {
@@ -35,15 +36,18 @@ class VissProducer : public DataBrokerProducer {
     return static_cast<DataBrokerProducer*>(&instance);
   }
 
-  const std::string CONNECTION_INFO = "127.0.0.1:50053";
-  VissProducer() {
+  static constexpr const char* kConnectionInfo = "127.0.0.1:50053";
+
+  VissProducer() : DataBrokerProducer() {
     impl_ = VissProducerFactory::CreateProducer(
         VissProducerFactory::ProducerType::kGrpc);
     const char* grpc_target = std::getenv("YORIITO_PRODUCER_ENDPOINT");
-    if (grpc_target != nullptr && std::string(grpc_target).length() > 0) {
-      impl_->Connect(grpc_target);
-    } else {
-      impl_->Connect(CONNECTION_INFO);
+    if ((grpc_target == nullptr) || (std::string(grpc_target).length() == 0)) {
+      grpc_target = kConnectionInfo;
+    }
+    auto result = impl_->Connect(grpc_target);
+    if (result.IsErr()) {
+      YORIITO_LOG_ERROR("VissProducer", "Failed to connect to the server.");
     }
   }
   ~VissProducer() = default;
@@ -54,7 +58,8 @@ class VissProducer : public DataBrokerProducer {
   Result<yoriito::databroker::ProducerInspectResponse> Inspect(
       const yoriito::databroker::ProducerInspectRequest& request) override;
 
-  Result<void> Set(const yoriito::databroker::ProducerSetRequest& data) override;
+  Result<void> Set(
+      const yoriito::databroker::ProducerSetRequest& data) override;
 
   Result<std::unique_ptr<ProducerSubscribeContext>> Subscribe(
       const yoriito::databroker::ProducerSubscribeRequest& data) override;
@@ -73,4 +78,4 @@ class VissProducer : public DataBrokerProducer {
 };
 }  // namespace yoriito::databroker
 
-#endif  // KURA_CLIENT_CC_PRODUCER_INC_VISS_PRODUCER_H_
+#endif  // PRODUCER_INC_VISS_PRODUCER_H_

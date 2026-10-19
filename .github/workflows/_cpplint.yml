@@ -1,0 +1,57 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# Copyright 2026 JASPAR
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Run cpplint
+
+on:
+  workflow_call:
+
+jobs:
+  cpplint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+
+      - name: Run cpplint
+        run: |
+          pip install cpplint==2.0.2
+          cpplint --recursive --exclude=client/cc/build --exclude=client/cc/consumer/test --exclude=client/cc/producer/test --exclude=client/cc/test_fuzz --root=client/cc client/cc --config=CPPLINT.cfg 2> cpplint.log
+
+      - name: Parse cpplint results
+        if: always()
+        run: |
+          cd ${{github.workspace}}
+          if [ -s cpplint.log ]; then
+            python3 ./cpplint_parse.py
+          else
+            echo "No cpplint result found." >> summary.md
+          fi
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: cpplint-result
+          path: |
+            summary.md
+            cpplint.log
+          if-no-files-found: warn

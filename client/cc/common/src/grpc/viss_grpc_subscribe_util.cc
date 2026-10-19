@@ -14,13 +14,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "grpc/viss_grpc_subscribe_util.h"
+
 #include <cstdint>
+
+#include "yoriito/viss/v1/types/filter.pb.h"
 //
 #include "databroker/filter/change_filter.h"
 #include "databroker/filter/range_condition.h"
 #include "databroker/filter/subscribe_filter.h"
-#include "grpc/viss_grpc_subscribe_util.h"
-#include "yoriito/viss/v1/types/filter.pb.h"
 
 namespace yoriito::databroker {
 
@@ -48,13 +50,13 @@ void VissGrpcSubscribeUtil::SetFilter(
 
   } else {
     // Pattern3 MiscFilter(Range , TimedBase , Change)
-    auto misc_filter = filter.mutable_misc_parameter();
+    auto viss_misc_filter = filter.mutable_misc_parameter();
     if (std::holds_alternative<yoriito::databroker::filter::ChangeFilter>(
             data_filter.GetMiscFilter())) {
       //
       auto change_filter = std::get<yoriito::databroker::filter::ChangeFilter>(
           data_filter.GetMiscFilter());
-      auto change = misc_filter->mutable_change_parameter();
+      auto change = viss_misc_filter->mutable_change_parameter();
       auto logic_operator = change_filter.GetLogicOperator();
       switch (logic_operator) {
         case yoriito::databroker::filter::OperatorType::OPERATOR_UNDEFINED:
@@ -87,7 +89,7 @@ void VissGrpcSubscribeUtil::SetFilter(
       //
       auto& range_filter = std::get<yoriito::databroker::filter::RangeFilter>(
           data_filter.GetMiscFilter());
-      auto range = misc_filter->mutable_range_parameter();
+      auto range = viss_misc_filter->mutable_range_parameter();
       if (range_filter.IsSingleCondition()) {
         auto single_condition = range_filter.GetSingleCondition();
         auto single = range->mutable_single();
@@ -160,11 +162,14 @@ void VissGrpcSubscribeUtil::SetFilter(
     } else if (std::holds_alternative<
                    yoriito::databroker::filter::TimeBasedFilter>(
                    data_filter.GetMiscFilter())) {
-      auto& time_filter = std::get<yoriito::databroker::filter::TimeBasedFilter>(
-          data_filter.GetMiscFilter());
-      auto time_based_filter = misc_filter->mutable_timebased_parameter();
+      auto& time_filter =
+          std::get<yoriito::databroker::filter::TimeBasedFilter>(
+              data_filter.GetMiscFilter());
+      auto time_based_filter = viss_misc_filter->mutable_timebased_parameter();
 
       time_based_filter->set_period(time_filter.GetPeriod());
+    } else {
+      // do nothing
     }
   }
   return;

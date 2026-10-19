@@ -14,11 +14,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "viss_consumer.h"
+#include "consumer/inc/viss_consumer.h"
 
 #include <memory>
 #include <string>
 #include <utility>
+//
 
 namespace yoriito::databroker {
 yoriito::Result<ConsumerGetResponse> VissConsumer::Get(
@@ -35,8 +36,8 @@ yoriito::Result<void> VissConsumer::Set(const ConsumerSetRequest& data) {
 }
 
 yoriito::Result<std::unique_ptr<ConsumerSubscribeContext>>
-VissConsumer::Subscribe(const ConsumerSubscribeRequest& request) {
-  return impl_->Subscribe(request);
+VissConsumer::Subscribe(const ConsumerSubscribeRequest& data) {
+  return impl_->Subscribe(data);
 }
 
 yoriito::Result<void> VissConsumer::UnSubscribe(

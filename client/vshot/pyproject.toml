@@ -7,6 +7,17 @@ name = "vshot"
 version = "0.0.0"
 description = "kura client(cli and tui) for various usage"
 requires-python = ">=3.8"
+dependencies = [
+  "textual",
+  "grpcio>=1.62.0",
+  "protobuf>=4.25.0",
+  "grpcio-tools>=1.62.0",
+  "mypy-protobuf>=3.6.0",
+  "textual_autocomplete",
+  "click<8.2",
+  "click-repl",
+  "termcolor",
+]
 
 [tool.setuptools]
-packages = { find = {} }  
+packages = { find = {} }

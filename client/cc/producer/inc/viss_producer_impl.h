@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-#ifndef KURA_CLIENT_CC_PRODUCER_INC_VISS_PRODUCER_IMPL_H_
-#define KURA_CLIENT_CC_PRODUCER_INC_VISS_PRODUCER_IMPL_H_
+#ifndef PRODUCER_INC_VISS_PRODUCER_IMPL_H_
+#define PRODUCER_INC_VISS_PRODUCER_IMPL_H_
 
 #include <memory>
 #include <string>
@@ -27,6 +27,17 @@
 namespace yoriito::databroker {
 class VissProducerImpl {
  public:
+  VissProducerImpl() = default;
+  virtual ~VissProducerImpl() = default;
+
+  // Delete copy operations (prevent slicing in polymorphic base class)
+  VissProducerImpl(const VissProducerImpl&) = delete;
+  VissProducerImpl& operator=(const VissProducerImpl&) = delete;
+
+  // Delete move operations (prevent slicing in polymorphic base class)
+  VissProducerImpl(VissProducerImpl&&) = delete;
+  VissProducerImpl& operator=(VissProducerImpl&&) = delete;
+
   virtual Result<void> Connect(std::string target) = 0;
 
   virtual Result<yoriito::databroker::ProducerGetResponse> Get(
@@ -50,4 +61,4 @@ class VissProducerImpl {
       const yoriito::databroker::ProducerDeleteRequest& data) = 0;
 };
 }  // namespace yoriito::databroker
-#endif  // KURA_CLIENT_CC_PRODUCER_INC_VISS_PRODUCER_IMPL_H_
+#endif  // PRODUCER_INC_VISS_PRODUCER_IMPL_H_

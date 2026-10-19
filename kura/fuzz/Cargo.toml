@@ -1,0 +1,63 @@
+[package]
+name = "kura-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[build-dependencies]
+tonic-prost-build = "0.14.5"
+
+[dependencies]
+libfuzzer-sys = { version = "0.4", features = ["arbitrary-derive"] }
+kura = { path = ".." }
+tokio = { version = "1", features = ["full"] }
+tonic = "0.14"
+tonic-prost = "0.14"
+tokio-util = "0.7.18"
+prost = "0.14"
+prost-types = "0.14"
+
+[[bin]]
+name = "fuzz_value_type_conversion"
+path = "fuzz_targets/fuzz_value_type_conversion.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_glob_path_filter"
+path = "fuzz_targets/fuzz_glob_path_filter.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_mem_database_set"
+path = "fuzz_targets/fuzz_mem_database_set.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_get_condition_glob"
+path = "fuzz_targets/fuzz_get_condition_glob.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_change_filter"
+path = "fuzz_targets/fuzz_change_filter.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_grpc_consumer"
+path = "fuzz_targets/fuzz_grpc_consumer.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_grpc_producer"
+path = "fuzz_targets/fuzz_grpc_producer.rs"
+test = false
+doc = false

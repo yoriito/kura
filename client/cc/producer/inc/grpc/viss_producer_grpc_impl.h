@@ -16,24 +16,26 @@
  * limitations under the License.
  */
 
-#ifndef KURA_CLIENT_CC_PRODUCER_INC_GRPC_VISS_PRODUCER_GRPC_IMPL_H_
-#define KURA_CLIENT_CC_PRODUCER_INC_GRPC_VISS_PRODUCER_GRPC_IMPL_H_
+#ifndef PRODUCER_INC_GRPC_VISS_PRODUCER_GRPC_IMPL_H_
+#define PRODUCER_INC_GRPC_VISS_PRODUCER_GRPC_IMPL_H_
 
 #include <memory>
 #include <string>
 
 #include "grpcpp/grpcpp.h"
 #include "yoriito/viss/v1/producer.grpc.pb.h"
-#include "yoriito/viss/v1/producer.pb.h"
-#include "yoriito/viss/v1/types/value.grpc.pb.h"
-#include "viss_producer_impl.h"
+#include "yoriito/viss/v1/types/value.pb.h"
+//
+#include "producer/inc/viss_producer_impl.h"
+
+namespace yoriito::databroker {
 
 using yoriito::viss::v1::producer::VISS;
-namespace yoriito::databroker {
+
 class GrpcProducerImpl : public VissProducerImpl {
  public:
   GrpcProducerImpl() = default;
-  ~GrpcProducerImpl() = default;
+  ~GrpcProducerImpl() override = default;
   Result<void> Connect(std::string target) override;
 
   Result<yoriito::databroker::ProducerGetResponse> Get(
@@ -42,7 +44,8 @@ class GrpcProducerImpl : public VissProducerImpl {
   Result<yoriito::databroker::ProducerInspectResponse> Inspect(
       const yoriito::databroker::ProducerInspectRequest& request) override;
 
-  Result<void> Set(const yoriito::databroker::ProducerSetRequest& data) override;
+  Result<void> Set(
+      const yoriito::databroker::ProducerSetRequest& data) override;
 
   Result<std::unique_ptr<ProducerSubscribeContext>> Subscribe(
       const yoriito::databroker::ProducerSubscribeRequest& data) override;
@@ -60,4 +63,4 @@ class GrpcProducerImpl : public VissProducerImpl {
   std::unique_ptr<yoriito::viss::v1::producer::VISS::Stub> stub_;
 };
 }  // namespace yoriito::databroker
-#endif  // KURA_CLIENT_CC_PRODUCER_INC_GRPC_VISS_PRODUCER_GRPC_IMPL_H_
+#endif  // PRODUCER_INC_GRPC_VISS_PRODUCER_GRPC_IMPL_H_

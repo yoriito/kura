@@ -17,159 +17,148 @@
 #include "grpc/viss_grpc_value_util.h"
 
 #include <string>
+#include <type_traits>
 #include <vector>
 
-#include "viss_common_error.h"
-
-using yoriito::viss::v1::BoolArray;
-using yoriito::viss::v1::DoubleArray;
-using yoriito::viss::v1::FloatArray;
-using yoriito::viss::v1::Int16Array;
-using yoriito::viss::v1::Int32Array;
-using yoriito::viss::v1::Int64Array;
-using yoriito::viss::v1::Int8Array;
-using yoriito::viss::v1::StringArray;
-using yoriito::viss::v1::Uint16Array;
-using yoriito::viss::v1::Uint32Array;
-using yoriito::viss::v1::Uint64Array;
-using yoriito::viss::v1::Uint8Array;
+#include "common/inc/viss_common_error.h"
 
 namespace yoriito::databroker {
 
+template <typename T, typename Array>
+ValueType VissGrpcValueUtil::ConvertArray(const Array &array) {
+  std::vector<T> result;
+  result.reserve(array.values_size());
+  for (const auto &value : array.values()) {
+    result.push_back(static_cast<T>(value));
+  }
+  return ValueType(std::move(result));
+}
+
+void VissGrpcValueUtil::SetValueObject(
+    yoriito::viss::v1::ValueObject &value_object,
+    const StructData &struct_data) {
+  const auto &properties = struct_data.GetProperties();
+  for (const auto &elem : properties) {
+    auto *prop = value_object.add_properties();
+    prop->set_key(std::string(elem.first));
+    auto *mut_val = prop->mutable_value();
+    (void)VissGrpcValueUtil::SetDataPointValue(*mut_val, elem.second);
+  }
+}
+
+template <typename T, typename MutableArray>
+void VissGrpcValueUtil::SetArrayValue(
+    yoriito::viss::v1::ValueType &datapoint_value_type, const ValueType &value,
+    MutableArray mutable_array) {
+  auto *array = (datapoint_value_type.*mutable_array)();
+  for (const auto &element : std::get<std::vector<T>>(value)) {
+    array->add_values(
+        static_cast<std::decay_t<decltype(array->values(0))>>(element));
+  }
+}
+
+StructData VissGrpcValueUtil::ConvertValueObject(
+    const yoriito::viss::v1::ValueObject &value_object) {
+  StructData ret_value;
+
+  for (const auto &prop : value_object.properties()) {
+    ret_value.SetProperty(std::string(prop.key()),
+                          VissGrpcValueUtil::ConvertValueType(prop.value()));
+  }
+  return ret_value;
+}
+
+ValueType VissGrpcValueUtil::ConvertValueObjectArray(
+    const yoriito::viss::v1::ValueObjectArray &value_object_array) {
+  StructDataArray result;
+  result.reserve(value_object_array.values_size());
+  for (const auto &value : value_object_array.values()) {
+    result.push_back(std::make_unique<StructData>(ConvertValueObject(value)));
+  }
+  return ValueType(std::move(result));
+}
+
+// Notes on integer types in value.proto:
+// in value.proto, integer types smaller than int32 are defined as sint32.
+// Therefore, int8_t and int16_t are cast to int32_t when setting the value.
+
 Result<void> VissGrpcValueUtil::SetDataPointValue(
-    yoriito::viss::v1::ValueType &datapoint_value_type, ValueType value) {
+    yoriito::viss::v1::ValueType &datapoint_value_type,
+    const ValueType &value) {
   if (std::holds_alternative<std::string>(value)) {
-    // std::string,
-    std::string val = std::get<std::string>(value);
-    datapoint_value_type.set_string(val);
+    datapoint_value_type.set_string(std::get<std::string>(value));
   } else if (std::holds_alternative<bool>(value)) {
-    // bool,
-    bool val = std::get<bool>(value);
-    datapoint_value_type.set_bool_(val);
+    datapoint_value_type.set_bool_(std::get<bool>(value));
   } else if (std::holds_alternative<int8_t>(value)) {
-    // int8_t,
-    int8_t val = std::get<int8_t>(value);
-    datapoint_value_type.set_int8(val);
+    datapoint_value_type.set_int8(
+        static_cast<int32_t>(std::get<int8_t>(value)));
   } else if (std::holds_alternative<int16_t>(value)) {
-    // int16_t,
-    int16_t val = std::get<int16_t>(value);
-    datapoint_value_type.set_int16(val);
+    datapoint_value_type.set_int16(
+        static_cast<int32_t>(std::get<int16_t>(value)));
   } else if (std::holds_alternative<int32_t>(value)) {
-    // int32_t,
-    int32_t val = std::get<int32_t>(value);
-    datapoint_value_type.set_int32(val);
+    datapoint_value_type.set_int32(std::get<int32_t>(value));
   } else if (std::holds_alternative<int64_t>(value)) {
-    // int64_t,
-    int64_t val = std::get<int64_t>(value);
-    datapoint_value_type.set_int64(val);
+    datapoint_value_type.set_int64(std::get<int64_t>(value));
   } else if (std::holds_alternative<uint8_t>(value)) {
-    // uint8_t,
-    uint8_t val = std::get<uint8_t>(value);
-    datapoint_value_type.set_uint8(val);
+    datapoint_value_type.set_uint8(
+        static_cast<uint32_t>(std::get<uint8_t>(value)));
   } else if (std::holds_alternative<uint16_t>(value)) {
-    // uint16_t,
-    uint16_t val = std::get<uint16_t>(value);
-    datapoint_value_type.set_uint16(val);
+    datapoint_value_type.set_uint16(
+        static_cast<uint32_t>(std::get<uint16_t>(value)));
   } else if (std::holds_alternative<uint32_t>(value)) {
-    // uint32_t,
-    uint32_t val = std::get<uint32_t>(value);
-    datapoint_value_type.set_uint32(val);
+    datapoint_value_type.set_uint32(std::get<uint32_t>(value));
   } else if (std::holds_alternative<uint64_t>(value)) {
-    // uint64_t,
-    uint64_t val = std::get<uint64_t>(value);
-    datapoint_value_type.set_uint64(val);
+    datapoint_value_type.set_uint64(std::get<uint64_t>(value));
   } else if (std::holds_alternative<float>(value)) {
-    // float,
-    float val = std::get<float>(value);
-    datapoint_value_type.set_float_(val);
+    datapoint_value_type.set_float_(std::get<float>(value));
   } else if (std::holds_alternative<double>(value)) {
-    // double,
-    double val = std::get<double>(value);
-    datapoint_value_type.set_double_(val);
+    datapoint_value_type.set_double_(std::get<double>(value));
   } else if (std::holds_alternative<std::vector<std::string>>(value)) {
-    // std::vector<std::string>,
-    std::vector<std::string> val = std::get<std::vector<std::string>>(value);
-    auto *stringArray = datapoint_value_type.mutable_string_array();
-    for (const auto &elem : val) {
-      stringArray->add_values(elem);
-    }
+    SetArrayValue<std::string>(
+        datapoint_value_type, value,
+        &yoriito::viss::v1::ValueType::mutable_string_array);
   } else if (std::holds_alternative<std::vector<bool>>(value)) {
-    // std::vector<bool>,
-    std::vector<bool> val = std::get<std::vector<bool>>(value);
-    auto *boolArray = datapoint_value_type.mutable_bool_array();
-    for (const auto &elem : val) {
-      boolArray->add_values(elem);
-    }
+    SetArrayValue<bool>(datapoint_value_type, value,
+                        &yoriito::viss::v1::ValueType::mutable_bool_array);
   } else if (std::holds_alternative<std::vector<int8_t>>(value)) {
-    // std::vector<int8_t>,
-    std::vector<int8_t> val = std::get<std::vector<int8_t>>(value);
-    auto *int8Array = datapoint_value_type.mutable_int8_array();
-    for (const auto &elem : val) {
-      int8Array->add_values(elem);
-    }
+    SetArrayValue<int8_t>(datapoint_value_type, value,
+                          &yoriito::viss::v1::ValueType::mutable_int8_array);
   } else if (std::holds_alternative<std::vector<int16_t>>(value)) {
-    // std::vector<int16_t>,
-    std::vector<int16_t> val = std::get<std::vector<int16_t>>(value);
-    auto *int16Array = datapoint_value_type.mutable_int16_array();
-    for (const auto &elem : val) {
-      int16Array->add_values(elem);
-    }
+    SetArrayValue<int16_t>(datapoint_value_type, value,
+                           &yoriito::viss::v1::ValueType::mutable_int16_array);
   } else if (std::holds_alternative<std::vector<int32_t>>(value)) {
-    // std::vector<int32_t>
-    std::vector<int32_t> val = std::get<std::vector<int32_t>>(value);
-    auto *int32Array = datapoint_value_type.mutable_int32_array();
-    for (const auto &elem : val) {
-      int32Array->add_values(elem);
-    }
+    SetArrayValue<int32_t>(datapoint_value_type, value,
+                           &yoriito::viss::v1::ValueType::mutable_int32_array);
   } else if (std::holds_alternative<std::vector<int64_t>>(value)) {
-    // std::vector<int64_t>,
-    std::vector<int64_t> val = std::get<std::vector<int64_t>>(value);
-    auto *int64Array = datapoint_value_type.mutable_int64_array();
-    for (const auto &elem : val) {
-      int64Array->add_values(elem);
-    }
+    SetArrayValue<int64_t>(datapoint_value_type, value,
+                           &yoriito::viss::v1::ValueType::mutable_int64_array);
   } else if (std::holds_alternative<std::vector<uint8_t>>(value)) {
-    // std::vector<uint8_t>,
-    std::vector<uint8_t> val = std::get<std::vector<uint8_t>>(value);
-    auto *uint8Array = datapoint_value_type.mutable_uint8_array();
-    for (const auto &elem : val) {
-      uint8Array->add_values(elem);
-    }
+    SetArrayValue<uint8_t>(datapoint_value_type, value,
+                           &yoriito::viss::v1::ValueType::mutable_uint8_array);
   } else if (std::holds_alternative<std::vector<uint16_t>>(value)) {
-    // std::vector<uint16_t>,
-    std::vector<uint16_t> val = std::get<std::vector<uint16_t>>(value);
-    auto *uint16Array = datapoint_value_type.mutable_uint16_array();
-    for (const auto &elem : val) {
-      uint16Array->add_values(elem);
-    }
+    SetArrayValue<uint16_t>(
+        datapoint_value_type, value,
+        &yoriito::viss::v1::ValueType::mutable_uint16_array);
   } else if (std::holds_alternative<std::vector<uint32_t>>(value)) {
-    // std::vector<uint32_t>,
-    std::vector<uint32_t> val = std::get<std::vector<uint32_t>>(value);
-    auto *uint32Array = datapoint_value_type.mutable_uint32_array();
-    for (const auto &elem : val) {
-      uint32Array->add_values(elem);
-    }
+    SetArrayValue<uint32_t>(
+        datapoint_value_type, value,
+        &yoriito::viss::v1::ValueType::mutable_uint32_array);
   } else if (std::holds_alternative<std::vector<uint64_t>>(value)) {
-    // std::vector<uint64_t>,
-    std::vector<uint64_t> val = std::get<std::vector<uint64_t>>(value);
-    auto *uint64Array = datapoint_value_type.mutable_uint64_array();
-    for (const auto &elem : val) {
-      uint64Array->add_values(elem);
-    }
+    SetArrayValue<uint64_t>(
+        datapoint_value_type, value,
+        &yoriito::viss::v1::ValueType::mutable_uint64_array);
   } else if (std::holds_alternative<std::vector<float>>(value)) {
-    // std::vector<float>,
-    std::vector<float> val = std::get<std::vector<float>>(value);
-    auto *floatArray = datapoint_value_type.mutable_float_array();
-    for (const auto &elem : val) {
-      floatArray->add_values(elem);
-    }
+    SetArrayValue<float>(datapoint_value_type, value,
+                         &yoriito::viss::v1::ValueType::mutable_float_array);
   } else if (std::holds_alternative<std::vector<double>>(value)) {
-    // std::vector<double>
-    std::vector<double> val = std::get<std::vector<double>>(value);
-    auto *doubleArray = datapoint_value_type.mutable_double_array();
-    for (const auto &elem : val) {
-      doubleArray->add_values(elem);
-    }
+    SetArrayValue<double>(datapoint_value_type, value,
+                          &yoriito::viss::v1::ValueType::mutable_double_array);
+  } else if (std::holds_alternative<StructDataPtr>(value)) {
+    return SetStructDataValue(datapoint_value_type,
+                              std::get<StructDataPtr>(value));
+  } else if (std::holds_alternative<StructDataArray>(value)) {
+    return SetStructDataArrayValue(datapoint_value_type,
+                                   std::get<StructDataArray>(value));
   } else {
     return Result<void>::Err(
 
@@ -178,157 +167,92 @@ Result<void> VissGrpcValueUtil::SetDataPointValue(
   return Result<void>::Ok();
 }
 
-ValueType VissGrpcValueUtil::ConvertValueType(yoriito::viss::v1::ValueType val) {
-  ValueType ret;
+Result<void> VissGrpcValueUtil::SetStructDataValue(
+    yoriito::viss::v1::ValueType &datapoint_value_type,
+    const StructDataPtr &value) {
+  if (!value) {
+    return Result<void>::Err(
+        VissCommonError::CreateIllegalError("value type error"));
+  }
+  SetValueObject(*datapoint_value_type.mutable_value_object(), *value);
+  return Result<void>::Ok();
+}
+
+Result<void> VissGrpcValueUtil::SetStructDataArrayValue(
+    yoriito::viss::v1::ValueType &datapoint_value_type,
+    const StructDataArray &value) {
+  auto *value_object_array = datapoint_value_type.mutable_value_object_array();
+  for (const auto &element : value) {
+    if (!element) {
+      return Result<void>::Err(
+          VissCommonError::CreateIllegalError("value type error"));
+    }
+    SetValueObject(*value_object_array->add_values(), *element);
+  }
+  return Result<void>::Ok();
+}
+
+ValueType VissGrpcValueUtil::ConvertValueType(
+    yoriito::viss::v1::ValueType val) {
   switch (val.value_type_case()) {
     case yoriito::viss::v1::ValueType::kUint8:
-      ret = ValueType(static_cast<uint8_t>(val.uint8()));
-      break;
+      return ValueType(static_cast<uint8_t>(val.uint8()));
     case yoriito::viss::v1::ValueType::kUint16:
-      ret = ValueType(static_cast<uint16_t>(val.uint16()));
-      break;
+      return ValueType(static_cast<uint16_t>(val.uint16()));
     case yoriito::viss::v1::ValueType::kUint32:
-      ret = ValueType(static_cast<uint32_t>(val.uint32()));
-      break;
+      return ValueType(static_cast<uint32_t>(val.uint32()));
     case yoriito::viss::v1::ValueType::kUint64:
-      ret = ValueType(static_cast<uint64_t>(val.uint64()));
-      break;
+      return ValueType(static_cast<uint64_t>(val.uint64()));
     case yoriito::viss::v1::ValueType::kInt8:
-      ret = ValueType(static_cast<int8_t>(val.int8()));
-      break;
+      return ValueType(static_cast<int8_t>(val.int8()));
     case yoriito::viss::v1::ValueType::kInt16:
-      ret = ValueType(static_cast<int16_t>(val.int16()));
-      break;
+      return ValueType(static_cast<int16_t>(val.int16()));
     case yoriito::viss::v1::ValueType::kInt32:
-      ret = ValueType(static_cast<int32_t>(val.int32()));
-      break;
+      return ValueType(static_cast<int32_t>(val.int32()));
     case yoriito::viss::v1::ValueType::kInt64:
-      ret = ValueType(static_cast<int64_t>(val.int64()));
-      break;
+      return ValueType(static_cast<int64_t>(val.int64()));
     case yoriito::viss::v1::ValueType::kFloat:
-      ret = ValueType(val.float_());
-      break;
+      return ValueType(val.float_());
     case yoriito::viss::v1::ValueType::kDouble:
-      ret = ValueType(val.double_());
-      break;
+      return ValueType(val.double_());
     case yoriito::viss::v1::ValueType::kString:
-      ret = ValueType(val.string());
-      break;
+      return ValueType(val.string());
     case yoriito::viss::v1::ValueType::kBool:
-      ret = ValueType(val.bool_());
-      break;
-    case yoriito::viss::v1::ValueType::kUint8Array: {
-      const Uint8Array &uint8Array = val.uint8_array();
-      std::vector<uint8_t> retValue;
-      for (int i = 0; i < uint8Array.values_size(); ++i) {
-        retValue.push_back(static_cast<uint8_t>(uint8Array.values(i)));
-      }
-      ret = ValueType(retValue);
-      break;
+      return ValueType(val.bool_());
+    case yoriito::viss::v1::ValueType::kUint8Array:
+      return ConvertArray<uint8_t>(val.uint8_array());
+    case yoriito::viss::v1::ValueType::kUint16Array:
+      return ConvertArray<uint16_t>(val.uint16_array());
+    case yoriito::viss::v1::ValueType::kUint32Array:
+      return ConvertArray<uint32_t>(val.uint32_array());
+    case yoriito::viss::v1::ValueType::kUint64Array:
+      return ConvertArray<uint64_t>(val.uint64_array());
+    case yoriito::viss::v1::ValueType::kInt8Array:
+      return ConvertArray<int8_t>(val.int8_array());
+    case yoriito::viss::v1::ValueType::kInt16Array:
+      return ConvertArray<int16_t>(val.int16_array());
+    case yoriito::viss::v1::ValueType::kInt32Array:
+      return ConvertArray<int32_t>(val.int32_array());
+    case yoriito::viss::v1::ValueType::kInt64Array:
+      return ConvertArray<int64_t>(val.int64_array());
+    case yoriito::viss::v1::ValueType::kFloatArray:
+      return ConvertArray<float>(val.float_array());
+    case yoriito::viss::v1::ValueType::kDoubleArray:
+      return ConvertArray<double>(val.double_array());
+    case yoriito::viss::v1::ValueType::kStringArray:
+      return ConvertArray<std::string>(val.string_array());
+    case yoriito::viss::v1::ValueType::kBoolArray:
+      return ConvertArray<bool>(val.bool_array());
+    case yoriito::viss::v1::ValueType::kValueObject: {
+      return std::make_unique<yoriito::StructData>(
+          ConvertValueObject(val.value_object()));
     }
-    case yoriito::viss::v1::ValueType::kUint16Array: {
-      const Uint16Array &uint16Array = val.uint16_array();
-      std::vector<uint16_t> retValue;
-      for (int i = 0; i < uint16Array.values_size(); ++i) {
-        retValue.push_back(static_cast<uint16_t>(uint16Array.values(i)));
-      }
-      ret = ValueType(retValue);
-      break;
-    }
-    case yoriito::viss::v1::ValueType::kUint32Array: {
-      const Uint32Array &uint32Array = val.uint32_array();
-      std::vector<uint32_t> retValue;
-      for (int i = 0; i < uint32Array.values_size(); ++i) {
-        retValue.push_back(static_cast<uint32_t>(uint32Array.values(i)));
-      }
-      ret = ValueType(retValue);
-      break;
-    }
-    case yoriito::viss::v1::ValueType::kUint64Array: {
-      const Uint64Array &uint64Array = val.uint64_array();
-      std::vector<uint64_t> retValue;
-      for (int i = 0; i < uint64Array.values_size(); ++i) {
-        retValue.push_back(static_cast<uint64_t>(uint64Array.values(i)));
-      }
-      ret = ValueType(retValue);
-      break;
-    }
-    case yoriito::viss::v1::ValueType::kInt8Array: {
-      const Int8Array &int8Array = val.int8_array();
-      std::vector<int8_t> retValue;
-      for (int i = 0; i < int8Array.values_size(); ++i) {
-        retValue.push_back(static_cast<int8_t>(int8Array.values(i)));
-      }
-      ret = ValueType(retValue);
-      break;
-    }
-    case yoriito::viss::v1::ValueType::kInt16Array: {
-      const Int16Array &int16Array = val.int16_array();
-      std::vector<int16_t> retValue;
-      for (int i = 0; i < int16Array.values_size(); ++i) {
-        retValue.push_back(static_cast<int16_t>(int16Array.values(i)));
-      }
-      ret = ValueType(retValue);
-      break;
-    }
-    case yoriito::viss::v1::ValueType::kInt32Array: {
-      const Int32Array &int32Array = val.int32_array();
-      std::vector<int32_t> retValue;
-      for (int i = 0; i < int32Array.values_size(); ++i) {
-        retValue.push_back(static_cast<int32_t>(int32Array.values(i)));
-      }
-      ret = ValueType(retValue);
-      break;
-    }
-    case yoriito::viss::v1::ValueType::kInt64Array: {
-      const Int64Array &int64Array = val.int64_array();
-      std::vector<int64_t> retValue;
-      for (int i = 0; i < int64Array.values_size(); ++i) {
-        retValue.push_back(static_cast<int64_t>(int64Array.values(i)));
-      }
-      ret = ValueType(retValue);
-      break;
-    }
-    case yoriito::viss::v1::ValueType::kFloatArray: {
-      const FloatArray &floatArray = val.float_array();
-      std::vector<float> retValue;
-      for (int i = 0; i < floatArray.values_size(); ++i) {
-        retValue.push_back(floatArray.values(i));
-      }
-      ret = ValueType(retValue);
-      break;
-    }
-    case yoriito::viss::v1::ValueType::kDoubleArray: {
-      const DoubleArray &doubleArray = val.double_array();
-      std::vector<double> retValue;
-      for (int i = 0; i < doubleArray.values_size(); ++i) {
-        retValue.push_back(doubleArray.values(i));
-      }
-      ret = ValueType(retValue);
-      break;
-    }
-    case yoriito::viss::v1::ValueType::kStringArray: {
-      const StringArray &stringArray = val.string_array();
-      std::vector<std::string> retValue;
-      for (int i = 0; i < stringArray.values_size(); ++i) {
-        retValue.push_back(stringArray.values(i));
-      }
-      ret = ValueType(retValue);
-      break;
-    }
-    case yoriito::viss::v1::ValueType::kBoolArray: {
-      const BoolArray &boolArray = val.bool_array();
-      std::vector<bool> retValue;
-      for (int i = 0; i < boolArray.values_size(); ++i) {
-        retValue.push_back(boolArray.values(i));
-      }
-      ret = ValueType(retValue);
-      break;
-    }
+    case yoriito::viss::v1::ValueType::kValueObjectArray:
+      return ConvertValueObjectArray(val.value_object_array());
     default:
       break;
   }
-  return ret;
+  return ValueType();
 }
 
 }  // namespace yoriito::databroker

@@ -1,0 +1,5 @@
+# Set the language to C++
+Language: Cpp
+
+# Use Google's style guide as the base style
+BasedOnStyle: Google

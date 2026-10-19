@@ -37,13 +37,10 @@ use crate::controller::tick::Tick;
 
 #[cfg(feature = "memdb")]
 use crate::entity::mem_database::MemDatabase as Database;
-#[cfg(not(feature = "memdb"))]
-use crate::entity::sled_database::SledDatabase as Database;
 
+use crate::args::Args;
 use crate::interactor::InteractorImpl;
-use crate::interface::Interactor;
-use crate::interface::signal::{KuraError, KuraErrorCode, KuraErrorReason, KuraResult};
-use crate::{args::Args, interface::subscription::GetCondition};
+use crate::interface::{result, subscription, traits::Interactor};
 
 use tracing::error;
 use tracing_subscriber::{EnvFilter, FmtSubscriber, fmt::format::FmtSpan};
@@ -95,7 +92,7 @@ async fn main() -> Result<(), anyhow::Error> {
     };
 
     let cancel_token = CancellationToken::new();
-    let mut task_set: JoinSet<KuraResult<()>> = JoinSet::new();
+    let mut task_set: JoinSet<result::KuraResult<()>> = JoinSet::new();
 
     if let Err(error) = spawn_tick(
         config.tick_resolution,
@@ -116,7 +113,7 @@ async fn main() -> Result<(), anyhow::Error> {
     }
 
     #[cfg(feature = "fake_platform")]
-    if let Err(error) = spawn_fakeplatform(&args, &mut task_set, interactor, &cancel_token) {
+    if let Err(error) = spawn_fake_platform(&args, &mut task_set, interactor, &cancel_token) {
         error!("{error}");
         std::process::exit(1);
     }
@@ -141,7 +138,7 @@ async fn main() -> Result<(), anyhow::Error> {
 async fn initialize_db_by_vss_file(
     vss_file_paths: Vec<String>,
     interactor: Arc<InteractorImpl>,
-) -> KuraResult<()> {
+) -> result::KuraResult<()> {
     for vss_file_path in vss_file_paths {
         interactor.load_vss(&vss_file_path).await?;
     }
@@ -150,10 +147,10 @@ async fn initialize_db_by_vss_file(
 
 async fn spawn_tick(
     tick_resolution: u64,
-    task_set: &mut JoinSet<KuraResult<()>>,
+    task_set: &mut JoinSet<result::KuraResult<()>>,
     interactor: Arc<InteractorImpl>,
     cancel_token: &CancellationToken,
-) -> KuraResult<()> {
+) -> result::KuraResult<()> {
     let tick_provider = Arc::new(Tick::new(interactor.clone(), tick_resolution)?);
     let cancel_cloned = cancel_token.clone();
     task_set.spawn(async move { tick_provider.start(cancel_cloned).await });
@@ -162,39 +159,40 @@ async fn spawn_tick(
 
 #[cfg(feature = "yoriito")]
 async fn spawn_yoriito(
-    set: &mut JoinSet<KuraResult<()>>,
+    set: &mut JoinSet<result::KuraResult<()>>,
     interactor: Arc<InteractorImpl>,
     cancel: &CancellationToken,
-) -> KuraResult<()> {
-    let condition = GetCondition {
+) -> result::KuraResult<()> {
+    let condition = subscription::GetCondition {
         path: YORIITO_CONSUMER_PORT_PATH.to_string(),
         paths_filter: None,
     };
-    let signals = interactor.get_current_vehicle_data(condition)?;
+    let signals = interactor.get_actual_state(condition)?;
     if signals.len() != 1 {
-        return KuraResult::Err(KuraError {
-            number: KuraErrorCode::NotFound,
-            reason: KuraErrorReason::InvalidData,
+        return result::KuraResult::Err(result::KuraError {
+            number: result::KuraErrorCode::NotFound,
+            reason: result::KuraErrorReason::InvalidData,
             description: Some(format!("{YORIITO_CONSUMER_PORT_PATH} not found")),
         });
     }
     let signal = &signals[0];
-    let yoriito_consumer_addr = format!("127.0.0.1:{}", signal.current_datapoint.value);
+    let yoriito_consumer_addr = format!("127.0.0.1:{}", signal.state.value);
 
-    let condition = GetCondition {
+    let condition = subscription::GetCondition {
         path: YORIITO_PRODUCER_PORT_PATH.to_string(),
         paths_filter: None,
     };
-    let signals = interactor.get_current_vehicle_data(condition)?;
+    let signals = interactor.get_actual_state(condition)?;
     if signals.len() != 1 {
-        return KuraResult::Err(KuraError {
-            number: KuraErrorCode::NotFound,
-            reason: KuraErrorReason::InvalidData,
+        return result::KuraResult::Err(result::KuraError {
+            number: result::KuraErrorCode::NotFound,
+            reason: result::KuraErrorReason::InvalidData,
             description: Some(format!("{YORIITO_PRODUCER_PORT_PATH} not found")),
         });
     }
     let signal = &signals[0];
-    let yoriito_producer_addr = format!("127.0.0.1:{}", signal.current_datapoint.value);
+    let yoriito_producer_addr = format!("127.0.0.1:{}", signal.state.value);
+
     let yoriito_consumer_server = Arc::new(YoriitoConsumerServer::new(
         &yoriito_consumer_addr,
         interactor.clone(),
@@ -211,12 +209,12 @@ async fn spawn_yoriito(
 }
 
 #[cfg(feature = "fake_platform")]
-fn spawn_fakeplatform(
+fn spawn_fake_platform(
     args: &Args,
-    set: &mut JoinSet<KuraResult<()>>,
+    set: &mut JoinSet<result::KuraResult<()>>,
     interactor: Arc<InteractorImpl>,
     cancel: &CancellationToken,
-) -> KuraResult<()> {
+) -> result::KuraResult<()> {
     if !args.fake_platform {
         return Ok(());
     }

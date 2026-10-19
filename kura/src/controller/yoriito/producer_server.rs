@@ -14,16 +14,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::common::get_time;
 use crate::controller::yoriito::converter::FilterUtil;
 use crate::controller::yoriito::converter::VissErrorExt;
-use crate::interface::Interactor;
-use crate::interface::Subscriber;
-use crate::interface::signal as internal_signal;
-use crate::interface::signal::MapExternalToKuraResult;
-use crate::interface::signal::MapOptionToKuraError;
-use crate::interface::subscription as internal_subscription;
+use crate::interface::{
+    model,
+    result::{self, MapExternalToKuraResult, MapOptionToKuraError},
+    subscription, traits,
+};
 
-use std::time::{SystemTime, UNIX_EPOCH};
 use tokio::sync::mpsc;
 use tokio::sync::mpsc::Sender;
 use tokio_stream::wrappers::ReceiverStream;
@@ -44,7 +43,7 @@ use crate::controller::yoriito::common::viss::producer::viss_server::Viss;
 #[derive(Clone)]
 pub struct YoriitoProducerServer {
     addr: String,
-    interactor: Arc<dyn Interactor + Send + Sync>,
+    interactor: Arc<dyn traits::Interactor + Send + Sync>,
 }
 
 impl std::fmt::Debug for YoriitoProducerServer {
@@ -58,27 +57,27 @@ impl std::fmt::Debug for YoriitoProducerServer {
 impl YoriitoProducerServer {
     pub fn new(
         addr: &str,
-        interactor: Arc<dyn Interactor + Send + Sync>,
-    ) -> internal_signal::KuraResult<Self> {
+        interactor: Arc<dyn traits::Interactor + Send + Sync>,
+    ) -> result::KuraResult<Self> {
         Ok(Self {
             addr: addr.to_string(),
             interactor,
         })
     }
-    pub async fn start(&self, cancel: CancellationToken) -> internal_signal::KuraResult<()> {
+    pub async fn start(&self, cancel: CancellationToken) -> result::KuraResult<()> {
         let addr = self.addr.clone();
         let viss_server_impl: producer_viss::viss_server::VissServer<YoriitoProducerServer> =
             producer_viss::viss_server::VissServer::new(self.clone());
         let server = tonic::transport::Server::builder().add_service(viss_server_impl);
         let addr = addr.parse().to_kura_result(
-            internal_signal::KuraErrorCode::BadGateway,
-            internal_signal::KuraErrorReason::BadGateway,
+            result::KuraErrorCode::BadGateway,
+            result::KuraErrorReason::BadGateway,
             format!("parse {addr} failed"),
         )?;
         tokio::select! {
             res = server.serve_with_shutdown(addr, cancel.cancelled()) => res.to_kura_result(
-                internal_signal::KuraErrorCode::Unspecified,
-                internal_signal::KuraErrorReason::Unspecified,
+                result::KuraErrorCode::Unspecified,
+                result::KuraErrorReason::Unspecified,
                 "shutdown failed".to_string(),
             )?,
             _ = cancel.cancelled() => {}
@@ -90,16 +89,212 @@ impl YoriitoProducerServer {
         &self,
         _request: &producer_viss::SetCurrentRequest,
         data_package: &common_viss::DataPackageCurrent,
-    ) -> internal_signal::KuraResult<()> {
+    ) -> result::KuraResult<()> {
         let path = data_package.path.clone();
         let datapoint = data_package.dp.first().to_kura_result(
-            internal_signal::KuraErrorCode::Unspecified,
-            internal_signal::KuraErrorReason::Unspecified,
+            result::KuraErrorCode::Unspecified,
+            result::KuraErrorReason::Unspecified,
             "invalid value: None".to_string(),
         )?;
         self.interactor
-            .set_current_vehicle_data(path, datapoint.into())
+            .set_actual_state(path, datapoint.into())
             .await
+    }
+
+    async fn define_metadata_entries(
+        &self,
+        metadata_entries: Vec<common_viss::MetadataEntry>,
+    ) -> producer_viss::define_response::Result {
+        let mut result = producer_viss::define_response::Result::Success(());
+        for entry in metadata_entries {
+            let condition = subscription::GetCondition {
+                path: entry.path.clone(),
+                paths_filter: None, // define filters are defined, but not used in the proto.
+            };
+            let metadata_views = match self.interactor.get_metadata(condition).to_viss_error() {
+                Ok(signals) => signals,
+                Err(_) => [].to_vec(),
+            };
+
+            let leaf_type = model::LeafType::try_from(entry.r#type)
+                .map_err(|error| common_viss::Error::from(&error));
+            let leaf_type = match leaf_type {
+                Ok(leaf_type) => leaf_type,
+                Err(error) => {
+                    result = producer_viss::define_response::Result::Error(error);
+                    break;
+                }
+            };
+
+            let data_type = match common_viss::DataType::try_from(entry.datatype) {
+                Ok(data_type) => data_type,
+                Err(_) => {
+                    let error = result::KuraError {
+                        number: result::KuraErrorCode::BadRequest,
+                        reason: result::KuraErrorReason::InvalidData,
+                        description: Some(format!("invalid data type: {}", entry.datatype)),
+                    };
+                    result = producer_viss::define_response::Result::Error(
+                        common_viss::Error::from(&error),
+                    );
+                    break;
+                }
+            };
+            let data_type = match model::ValueType::try_from((entry.datatype_path, data_type)) {
+                Ok(data_type) => data_type,
+                Err(error) => {
+                    result = producer_viss::define_response::Result::Error(
+                        common_viss::Error::from(&error),
+                    );
+                    break;
+                }
+            };
+            let array_size = entry.arraysize;
+
+            let mut single_metadata = match metadata_views.first() {
+                Some(metadata) => metadata.metadata.clone(),
+                None => model::SignalMetadata {
+                    leaf_type,
+                    data_type,
+                    deprecation: entry.deprecated,
+                    unit: entry.unit,
+                    min: entry.min.as_ref().map(model::Value::from),
+                    max: entry.max.as_ref().map(model::Value::from),
+                    description: Some(entry.description.clone()),
+                    comment: entry.comment.clone(),
+                    allowd: match entry.allowed.clone() {
+                        Some(allowd) => Some(allowd.values),
+                        None => None,
+                    },
+                    default: entry.default.clone().map(|default| (&default).into()),
+                    array_size,
+                    user_defined_items: None,
+                    pattern: None,
+                },
+            };
+
+            // NOTE: users not allowed to overlay these configs
+            // config.leaf_type
+            // config.data_type
+            // config.deprecation
+            // config.unit
+            single_metadata.min = entry.min.as_ref().map(model::Value::from);
+            single_metadata.max = entry.max.as_ref().map(model::Value::from);
+            single_metadata.description = Some(entry.description);
+            single_metadata.comment = entry.comment;
+            single_metadata.allowd = match entry.allowed {
+                Some(allowd) => Some(allowd.values),
+                None => None,
+            };
+            single_metadata.default = entry.default.map(|default| (&default).into());
+            result = match self
+                .interactor
+                .update_metadata(&entry.path, &single_metadata)
+                .await
+                .map_err(|error| common_viss::Error::from(&error))
+            {
+                Ok(_) => producer_viss::define_response::Result::Success(()),
+                Err(error) => producer_viss::define_response::Result::Error(error),
+            };
+        }
+        result
+    }
+
+    async fn define_struct_metadata_entries(
+        &self,
+        struct_metadata_entries: Vec<common_viss::StructMetadataEntry>,
+        mut result: producer_viss::define_response::Result,
+    ) -> producer_viss::define_response::Result {
+        if !struct_metadata_entries.is_empty() {
+            let mut structs_to_register: Vec<model::VSSUserDefinedType> = Vec::new();
+
+            for entry in struct_metadata_entries {
+                let mut children = std::collections::HashMap::new();
+
+                for prop_entry in &entry.properties {
+                    let property_path = format!("{}.{}", entry.path, prop_entry.name);
+                    let data_type = match common_viss::DataType::try_from(prop_entry.datatype) {
+                        Ok(data_type) => data_type,
+                        Err(_) => {
+                            let error = result::KuraError {
+                                number: result::KuraErrorCode::BadRequest,
+                                reason: result::KuraErrorReason::InvalidData,
+                                description: Some(format!(
+                                    "invalid data type: {}",
+                                    prop_entry.datatype
+                                )),
+                            };
+                            result = producer_viss::define_response::Result::Error(
+                                common_viss::Error::from(&error),
+                            );
+                            break;
+                        }
+                    };
+                    let data_type = match model::ValueType::try_from((
+                        prop_entry.datatype_path.clone(),
+                        data_type,
+                    )) {
+                        Ok(dt) => dt,
+                        Err(error) => {
+                            result = producer_viss::define_response::Result::Error(
+                                common_viss::Error::from(&error),
+                            );
+                            break;
+                        }
+                    };
+
+                    if matches!(result, producer_viss::define_response::Result::Error(_)) {
+                        break;
+                    }
+
+                    let metadata = model::PropertyMetadata {
+                        leaf_type: model::LeafType::Attribute,
+                        data_type,
+                        deprecation: prop_entry.deprecated.clone(),
+                        unit: prop_entry.unit.clone(),
+                        min: prop_entry.min.as_ref().map(model::Value::from),
+                        max: prop_entry.max.as_ref().map(model::Value::from),
+                        description: Some(prop_entry.description.clone()),
+                        comment: prop_entry.comment.clone(),
+                        allowd: prop_entry.allowed.as_ref().map(|a| a.values.clone()),
+                        default: prop_entry.default.as_ref().map(model::Value::from),
+                        array_size: prop_entry.arraysize,
+                        user_defined_items: None,
+                        pattern: None,
+                    };
+
+                    children.insert(property_path, metadata);
+                }
+
+                if matches!(result, producer_viss::define_response::Result::Error(_)) {
+                    break;
+                }
+
+                let struct_metadata = model::VSSUserDefinedType {
+                    name: entry.path.clone(),
+                    children,
+                    description: None,
+                    deprecation: None,
+                    comment: None,
+                };
+
+                structs_to_register.push(struct_metadata);
+            }
+            if !matches!(result, producer_viss::define_response::Result::Error(_))
+                && !structs_to_register.is_empty()
+            {
+                result = match self
+                    .interactor
+                    .initialize_vss_user_defined_types(structs_to_register)
+                    .await
+                    .map_err(|error| common_viss::Error::from(&error))
+                {
+                    Ok(_) => producer_viss::define_response::Result::Success(()),
+                    Err(error) => producer_viss::define_response::Result::Error(error),
+                };
+            }
+        }
+        result
     }
 }
 
@@ -113,11 +308,11 @@ impl Viss for YoriitoProducerServer {
     ) -> std::result::Result<tonic::Response<producer_viss::GetTargetResponse>, tonic::Status> {
         let inner = request.into_inner();
         let paths_filter = inner.filter.as_ref().and_then(|v| v.to_paths_filter());
-        let condition = internal_subscription::GetCondition {
+        let condition = subscription::GetCondition {
             path: inner.path.clone(),
             paths_filter,
         };
-        let signals = self.interactor.get_target_vehicle_data(condition);
+        let signals = self.interactor.get_requested_state(condition);
         let signals = match signals {
             Ok(signals) => signals,
             Err(error) => {
@@ -148,7 +343,7 @@ impl Viss for YoriitoProducerServer {
             return Ok(tonic::Response::new(result));
         }
 
-        let data_packages_target: internal_signal::KuraResult<Vec<common_viss::DataPackageTarget>> =
+        let data_packages_target: result::KuraResult<Vec<common_viss::DataPackageTarget>> =
             signals.iter().map(|signal| signal.try_into()).collect();
         let data_packages_target = data_packages_target
             .map(|value| common_viss::DataPackagesTarget { data: value })
@@ -219,28 +414,41 @@ impl Viss for YoriitoProducerServer {
     ) -> std::result::Result<tonic::Response<common_viss::InspectResponse>, tonic::Status> {
         let inner = request.into_inner();
         let paths_filter = inner.filter.as_ref().and_then(|v| v.to_paths_filter());
-        let condition = internal_subscription::GetCondition {
+        let condition = subscription::GetCondition {
             path: inner.path.clone(),
             paths_filter,
         };
-        let signals = self.interactor.get_current_vehicle_data(condition);
+        let signals = self.interactor.get_metadata(condition);
         let signals = signals.map_err(|error| common_viss::Error::from(&error));
-        let metadata: Result<
-            internal_signal::KuraResult<Vec<common_viss::MetadataEntry>>,
-            common_viss::Error,
-        > = signals.map(|values| {
-            values
-                .iter()
-                .map(common_viss::MetadataEntry::try_from)
-                .collect()
-        });
-        let metadata = metadata.and_then(|v| v.map_err(|error| common_viss::Error::from(&error)));
+        let result = match signals {
+            Ok(values) => {
+                let filtered_defined_types = self
+                    .interactor
+                    .get_vss_user_defined_types_referenced_by(&values)
+                    .unwrap_or_default();
 
-        let result = match metadata {
-            Ok(metadata) => {
-                common_viss::inspect_response::Result::Metadata(common_viss::MetadataEntries {
-                    entries: metadata,
-                })
+                let metadata = values
+                    .iter()
+                    .map(common_viss::MetadataEntry::try_from)
+                    .collect::<result::KuraResult<Vec<_>>>()
+                    .map_err(|error| common_viss::Error::from(&error));
+
+                match metadata {
+                    Ok(metadata) => {
+                        match common_viss::MetadataEntries::try_from(&filtered_defined_types) {
+                            Ok(struct_entries) => common_viss::inspect_response::Result::Metadata(
+                                common_viss::MetadataEntries {
+                                    metadata_entries: metadata,
+                                    struct_metadata_entries: struct_entries.struct_metadata_entries,
+                                },
+                            ),
+                            Err(error) => common_viss::inspect_response::Result::Error(
+                                common_viss::Error::from(&error),
+                            ),
+                        }
+                    }
+                    Err(error) => common_viss::inspect_response::Result::Error(error),
+                }
             }
             Err(error) => common_viss::inspect_response::Result::Error(error),
         };
@@ -258,88 +466,28 @@ impl Viss for YoriitoProducerServer {
         request: tonic::Request<producer_viss::DefineRequest>,
     ) -> std::result::Result<tonic::Response<producer_viss::DefineResponse>, tonic::Status> {
         let inner: producer_viss::DefineRequest = request.into_inner();
-        let mut result = producer_viss::define_response::Result::Success(());
-        for entry in inner.entries.unwrap().entries {
-            let condition = internal_subscription::GetCondition {
-                path: entry.path.clone(),
-                paths_filter: None, // define filters are defined, but not used in the proto.
-            };
-            let signals = match self
-                .interactor
-                .get_current_vehicle_data(condition)
-                .to_viss_error()
-            {
-                Ok(signals) => signals,
-                Err(_) => [].to_vec(),
-            };
-
-            let leaf_type = internal_signal::LeafType::try_from(entry.r#type)
-                .map_err(|error| common_viss::Error::from(&error));
-            let leaf_type = match leaf_type {
-                Ok(leaf_type) => leaf_type,
-                Err(error) => {
-                    result = producer_viss::define_response::Result::Error(error);
-                    break;
-                }
-            };
-            let data_type = internal_signal::ValueType::try_from(entry.datatype);
-            let data_type = match data_type {
-                Ok(data_type) => data_type,
-                Err(error) => {
-                    result = producer_viss::define_response::Result::Error(
-                        common_viss::Error::from(&error),
-                    );
-                    break;
-                }
-            };
-
-            let array_size = entry.arraysize;
-
-            let mut config: internal_signal::Config = match signals.first() {
-                Some(signal) => signal.config.clone(),
-                None => internal_signal::Config {
-                    leaf_type,
-                    data_type,
-                    deprecation: entry.deprecated,
-                    unit: entry.unit,
-                    min: entry.min.map(internal_signal::Value::Int32),
-                    max: entry.max.map(internal_signal::Value::Int32),
-                    description: Some(entry.description.clone()),
-                    comment: entry.comment.clone(),
-                    allowd: match entry.allowed.clone() {
-                        Some(allowd) => Some(allowd.values),
-                        None => None,
-                    },
-                    default: entry.default.clone().map(|default| (&default).into()),
-                    array_size,
-                    user_defined_items: None,
-                },
-            };
-
-            // NOTE: users not allowed to overlay these configs
-            // config.leaf_type
-            // config.data_type
-            // config.deprecation
-            // config.unit
-            config.min = entry.min.map(internal_signal::Value::Int32);
-            config.max = entry.max.map(internal_signal::Value::Int32);
-            config.description = Some(entry.description);
-            config.comment = entry.comment;
-            config.allowd = match entry.allowed {
-                Some(allowd) => Some(allowd.values),
-                None => None,
-            };
-            config.default = entry.default.map(|default| (&default).into());
-            result = match self
-                .interactor
-                .update_metadata(&entry.path, &config)
-                .await
-                .map_err(|error| common_viss::Error::from(&error))
-            {
-                Ok(_) => producer_viss::define_response::Result::Success(()),
-                Err(error) => producer_viss::define_response::Result::Error(error),
-            };
-        }
+        let entries = match inner.entries {
+            Some(entries) => entries,
+            None => {
+                let error = result::KuraError {
+                    number: result::KuraErrorCode::BadRequest,
+                    reason: result::KuraErrorReason::InvalidData,
+                    description: Some("metadata entries are required".to_string()),
+                };
+                let result =
+                    producer_viss::define_response::Result::Error(common_viss::Error::from(&error));
+                return Ok(tonic::Response::new(producer_viss::DefineResponse {
+                    ts: get_time() as i64,
+                    result: Some(result),
+                }));
+            }
+        };
+        let mut result = self
+            .define_metadata_entries(entries.metadata_entries.clone())
+            .await;
+        result = self
+            .define_struct_metadata_entries(entries.struct_metadata_entries, result)
+            .await;
 
         Ok(tonic::Response::new(producer_viss::DefineResponse {
             ts: get_time() as i64,
@@ -396,11 +544,11 @@ impl Viss for YoriitoProducerServer {
             .interactor
             .subscribe(
                 Arc::new(()),
-                Arc::new(SubscribrYoriito {
+                Arc::new(SubscriberYoriito {
                     sender: sender.clone(),
                 }),
-                internal_subscription::SubscriptionCondition {
-                    mode: internal_subscription::Mode::Target,
+                subscription::SubscriptionCondition {
+                    mode: subscription::Mode::Requested,
                     path: inner.path,
                     paths_filter,
                     misc_filter,
@@ -460,15 +608,15 @@ impl Viss for YoriitoProducerServer {
 }
 
 #[derive(Debug)]
-struct SubscribrYoriito {
+struct SubscriberYoriito {
     sender: Sender<Result<producer_viss::SubscribeTargetResponse, Status>>,
 }
 
 #[async_trait]
-impl Subscriber for SubscribrYoriito {
+impl traits::Subscriber for SubscriberYoriito {
     #[tracing::instrument(name = "args", level = "trace")]
     #[tracing::instrument(
-        name = "notify_subscribe_result(SubscribrYoriito)",
+        name = "notify_subscribe_result(SubscriberYoriito)",
         level = "info",
         skip_all
     )]
@@ -477,7 +625,7 @@ impl Subscriber for SubscribrYoriito {
         _object: Arc<dyn Any + Send + Sync>,
         subscription_id: String,
         ret: bool,
-    ) -> internal_signal::KuraResult<()> {
+    ) -> result::KuraResult<()> {
         let message_type = if ret {
             let message = producer_viss::subscribe_target_response::MessageType::Success(
                 common_viss::SubscribeSuccess { subscription_id },
@@ -501,21 +649,21 @@ impl Subscriber for SubscribrYoriito {
         };
 
         self.sender.send(Ok(response)).await.to_kura_result(
-            internal_signal::KuraErrorCode::Unspecified,
-            internal_signal::KuraErrorReason::Unspecified,
+            result::KuraErrorCode::Unspecified,
+            result::KuraErrorReason::Unspecified,
             "send failed".to_string(),
         )
     }
 
     #[tracing::instrument(name = "args", level = "trace")]
-    #[tracing::instrument(name = "notify_signals(SubscribrYoriito)", level = "info", skip_all)]
+    #[tracing::instrument(name = "notify_signals(SubscriberYoriito)", level = "info", skip_all)]
     async fn notify_signals(
         &self,
         _object: Arc<dyn Any + Send + Sync>,
         subscription_id: String,
-        signals: &[crate::interface::signal::Signal],
-    ) -> internal_signal::KuraResult<()> {
-        let data: internal_signal::KuraResult<Vec<common_viss::DataPackageTarget>> = signals
+        signals: &[model::SignalStateView],
+    ) -> result::KuraResult<()> {
+        let data: result::KuraResult<Vec<common_viss::DataPackageTarget>> = signals
             .iter()
             .map(common_viss::DataPackageTarget::try_from)
             .collect();
@@ -531,15 +679,86 @@ impl Subscriber for SubscribrYoriito {
         };
 
         self.sender.send(Ok(event)).await.to_kura_result(
-            internal_signal::KuraErrorCode::Unspecified,
-            internal_signal::KuraErrorReason::Unspecified,
+            result::KuraErrorCode::Unspecified,
+            result::KuraErrorReason::Unspecified,
             "send failed".to_string(),
         )
     }
 }
 
-fn get_time() -> u64 {
-    let now = SystemTime::now();
-    let duration_since_epoch = now.duration_since(UNIX_EPOCH).unwrap();
-    duration_since_epoch.as_secs()
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::entity::mem_database::MemDatabase;
+    use crate::interactor::InteractorImpl;
+
+    fn create_server() -> YoriitoProducerServer {
+        let database = Arc::new(
+            MemDatabase::create()
+                .unwrap_or_else(|error| panic!("database creation should succeed: {error}")),
+        );
+        let interactor: Arc<dyn traits::Interactor + Send + Sync> = Arc::new(
+            InteractorImpl::new(database)
+                .unwrap_or_else(|error| panic!("interactor creation should succeed: {error}")),
+        );
+        YoriitoProducerServer::new("127.0.0.1:0", interactor)
+            .unwrap_or_else(|error| panic!("server creation should succeed: {error}"))
+    }
+
+    fn assert_bad_request(result: Option<producer_viss::define_response::Result>) {
+        let error = match result {
+            Some(producer_viss::define_response::Result::Error(error)) => error,
+            Some(producer_viss::define_response::Result::Success(())) => {
+                panic!("define request should be rejected")
+            }
+            None => panic!("define response should contain a result"),
+        };
+        assert_eq!(error.number, common_viss::ErrorCode::ErrorBadRequest as i32);
+        assert_eq!(
+            error.reason,
+            common_viss::ErrorReason::ReasonInvalidData as i32
+        );
+    }
+
+    #[tokio::test]
+    async fn rejects_define_without_entries() {
+        let server = create_server();
+        let request = producer_viss::DefineRequest { entries: None };
+
+        let response = server
+            .define(tonic::Request::new(request))
+            .await
+            .unwrap_or_else(|status| panic!("define should return a response: {status}"))
+            .into_inner();
+
+        assert_bad_request(response.result);
+    }
+
+    #[tokio::test]
+    async fn rejects_define_with_invalid_struct_property_data_type() {
+        let server = create_server();
+        let property = common_viss::PropertyMetadataEntry {
+            datatype: i32::MAX,
+            ..Default::default()
+        };
+        let struct_metadata = common_viss::StructMetadataEntry {
+            path: "Vehicle.FuzzStruct".to_string(),
+            properties: vec![property],
+            ..Default::default()
+        };
+        let request = producer_viss::DefineRequest {
+            entries: Some(common_viss::MetadataEntries {
+                metadata_entries: Vec::new(),
+                struct_metadata_entries: vec![struct_metadata],
+            }),
+        };
+
+        let response = server
+            .define(tonic::Request::new(request))
+            .await
+            .unwrap_or_else(|status| panic!("define should return a response: {status}"))
+            .into_inner();
+
+        assert_bad_request(response.result);
+    }
 }

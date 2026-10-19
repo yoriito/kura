@@ -16,29 +16,30 @@
  * limitations under the License.
  */
 
-#ifndef KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_GRPC_INSPECT_IMPL_H_
-#define KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_GRPC_INSPECT_IMPL_H_
+#ifndef CONSUMER_INC_GRPC_VISS_GRPC_INSPECT_IMPL_H_
+#define CONSUMER_INC_GRPC_VISS_GRPC_INSPECT_IMPL_H_
 
+#include <map>
+#include <memory>
 #include <string>
+#include <vector>
 
 #include "databroker/consumer_inspect_request.h"
 #include "databroker/consumer_inspect_response.h"
-#include "result.h"
+#include "yoriito/result.h"
 //
 #include "grpcpp/grpcpp.h"
-#include "yoriito/viss/v1/common.grpc.pb.h"
+#include "yoriito/viss/v1/common.pb.h"
 #include "yoriito/viss/v1/consumer.grpc.pb.h"
-#include "yoriito/viss/v1/consumer.pb.h"
-//
 
-using yoriito::viss::v1::consumer::VISS;
+namespace yoriito::databroker::consumer {
 
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::ClientReader;
 using grpc::Status;
 
-namespace yoriito::databroker::consumer {
+using yoriito::viss::v1::consumer::VISS;
 
 class VissGrpcInspectImpl {
  public:
@@ -47,17 +48,24 @@ class VissGrpcInspectImpl {
   ~VissGrpcInspectImpl() = default;
 
   void CreateInspectRequest(yoriito::viss::v1::InspectRequest& request,
-                            const ConsumerInspectRequest& data);
-  //
+                            const ConsumerInspectRequest& data) const;
   grpc::Status Execute(ClientContext& context,
-                       yoriito::viss::v1::InspectRequest& request,
-                       yoriito::viss::v1::InspectResponse& response);
+                       const yoriito::viss::v1::InspectRequest& request,
+                       yoriito::viss::v1::InspectResponse& response) const;
   Result<ConsumerInspectResponse> ConvertInspectResponse(
-      grpc::Status status, yoriito::viss::v1::InspectResponse& response,
-      const ConsumerInspectRequest& data);
+      grpc::Status status, const yoriito::viss::v1::InspectResponse& response,
+      const ConsumerInspectRequest& data) const;
 
  private:
+  void BuildInspectDataList(
+      const yoriito::viss::v1::InspectResponse& response,
+      const std::map<std::string,
+                     std::shared_ptr<yoriito::databroker::StructType>>&
+          struct_type_map,
+      std::vector<yoriito::databroker::ConsumerInspectData>& inspect_data_list)
+      const;
+
   yoriito::viss::v1::consumer::VISS::Stub* stub_;
 };
 }  // namespace yoriito::databroker::consumer
-#endif  // KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_GRPC_INSPECT_IMPL_H_
+#endif  // CONSUMER_INC_GRPC_VISS_GRPC_INSPECT_IMPL_H_

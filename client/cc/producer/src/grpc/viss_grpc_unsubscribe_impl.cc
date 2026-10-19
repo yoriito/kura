@@ -16,47 +16,46 @@
 
 #include "grpc/viss_grpc_unsubscribe_impl.h"
 
-#include "grpcpp/grpcpp.h"
-#include "yoriito/viss/v1/common.grpc.pb.h"
-#include "yoriito/viss/v1/common.pb.h"
-#include "yoriito/viss/v1/types/value.grpc.pb.h"
-#include "viss_common_error.h"
-#include "viss_common_log.h"
-//
+#include "common/inc/viss_common_error.h"
+#include "yoriito/yoriito_log.h"
+
+namespace yoriito::databroker::producer {
+
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::ClientReader;
 using grpc::Status;
 
-namespace yoriito::databroker::producer {
-
 void VissGrpcUnSubscribeImpl::CreateUnsubscribeRequest(
-    VissGrpcSubscribeContext& viss_context,
-    yoriito::viss::v1::UnsubscribeRequest& request) {
+    const VissGrpcSubscribeContext& viss_context,
+    yoriito::viss::v1::UnsubscribeRequest& request) const {
   request.set_subscription_id(viss_context.GetSubscriptionId());
   return;
 }
 
 grpc::Status VissGrpcUnSubscribeImpl::Execute(
-    ClientContext& context, yoriito::viss::v1::UnsubscribeRequest& request,
-    yoriito::viss::v1::UnsubscribeResponse& response) {
+    ClientContext& context,
+    const yoriito::viss::v1::UnsubscribeRequest& request,
+    yoriito::viss::v1::UnsubscribeResponse& response) const {
   return stub_->Unsubscribe(&context, request, &response);
 }
 Result<void> VissGrpcUnSubscribeImpl::ConvertUnsubscribeResponse(
-    grpc::Status status, yoriito::viss::v1::UnsubscribeResponse& response) {
+    grpc::Status status,
+    const yoriito::viss::v1::UnsubscribeResponse& response) const {
   if (status.ok()) {
     if (response.has_error()) {
       // VISS Error
-      auto error = response.error().description();
-      auto code = response.error().number();
-      auto message = error + " Code:" + std::to_string(code);
-      VISS_LOG_ERROR("PRDR_UNSUBSCRIBE", message);
+      const std::string& error = response.error().description();
+      const int32_t code = static_cast<int32_t>(response.error().number());
+      const std::string& message = error + " Code:" + std::to_string(code);
+
+      YORIITO_LOG_ERROR("PRDR_UNSUBSCRIBE", message);
       return Result<void>::Err(VissCommonError::CreateVissError(code, error));
     }
   } else {
     // GRPC Error
     auto error = status.error_message();
-    VISS_LOG_ERROR("PRDR_UNSUBSCRIBE", error);
+    YORIITO_LOG_ERROR("PRDR_UNSUBSCRIBE", error);
     return Result<void>::Err(VissCommonError::CreateProtocolError(error));
   }
   return Result<void>::Ok();

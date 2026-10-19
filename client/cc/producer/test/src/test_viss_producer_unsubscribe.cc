@@ -22,10 +22,10 @@
 #include <vector>
 
 #include "databroker/databroker_producer_factory.h"
-#include "databroker_type.h"
-#include "error.h"
-#include "yoriito_log.h"
-#include "test_consumer_stub.h"
+#include "producer/test/src/test_consumer_stub.h"
+#include "yoriito/databroker_type.h"
+#include "yoriito/error.h"
+#include "yoriito/yoriito_log.h"
 
 //
 using ::testing::AllOf;
@@ -46,7 +46,7 @@ class TestProducerUnSubscribe : public testing::Test {
   }
   void TearDown() override {}
 
-  yoriito::databroker::DataBrokerProducer* producer;
+  yoriito::databroker::DataBrokerProducer *producer;
 };
 
 TEST_F(TestProducerUnSubscribe, UnSubscribeIllegalCall) {
@@ -59,7 +59,7 @@ TEST_F(TestProducerUnSubscribe, UnSubscribeIllegalCall) {
 }
 
 TEST_F(TestProducerUnSubscribe, UnSubscribeNormalPattern) {
-  std::string target_path = "Vehicle.Speed";
+  std::string target_path = "Vehicle.Test.ActuatorFloatValue";
   float target_value = 200.0f;
   {
     yoriito::databroker::test_stub::ConsumerStub stub;
@@ -79,7 +79,7 @@ TEST_F(TestProducerUnSubscribe, UnSubscribeNormalPattern) {
   }
 }
 TEST_F(TestProducerUnSubscribe, UnSubscribeDoubleUnSubscribe) {
-  std::string target_path = "Vehicle.Speed";
+  std::string target_path = "Vehicle.Test.ActuatorFloatValue";
   float target_value = 200.0f;
   {
     yoriito::databroker::test_stub::ConsumerStub stub;
@@ -103,6 +103,7 @@ TEST_F(TestProducerUnSubscribe, UnSubscribeDoubleUnSubscribe) {
     auto error = ret.TakeErr();
     auto error_code = error.get()->ErrorCode();
     auto error_message = error.get()->Message();
-    ASSERT_EQ(static_cast<uint32_t>(yoriito::ErrorCode::ERROR_INVAL), error_code);
+    ASSERT_EQ(static_cast<uint32_t>(yoriito::ErrorCode::ERROR_INVAL),
+              error_code);
   }
 }

@@ -22,7 +22,7 @@ ENTRYPOINT=vshot.main:main
 build:
 	@mkdir -p build
 	@pip install shiv
-	@shiv -o build/$(APP_NAME) -e $(ENTRYPOINT) -r requirements.txt -p "/usr/bin/env python3" ./
+	@shiv -o build/$(APP_NAME) -e $(ENTRYPOINT) -p "/usr/bin/env python3" ./
 
 install:
 	@cp build/vshot /usr/local/bin

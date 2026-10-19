@@ -21,17 +21,17 @@
 #include <utility>
 #include <vector>
 
+#include "common/inc/viss_common_error.h"
 #include "grpc/viss_grpc_inspect_util.h"
 #include "grpc/viss_grpc_value_util.h"
-#include "result.h"
-#include "viss_common_error.h"
-#include "viss_common_log.h"
+#include "yoriito/yoriito_log.h"
 
 namespace yoriito::databroker::producer {
 Result<ProducerGetResponse> VissGrpcSubscribeContext::Messages() {
   yoriito::viss::v1::producer::SubscribeTargetResponse response;
 
   if (subscribe_response_ == nullptr) {
+    YORIITO_LOG_ERROR("PRDR_SUBSCRIBE_CONTEXT", "subscribe sequence error");
     return yoriito::Result<ProducerGetResponse>::Err(
         VissCommonError::CreateIllegalError("subscribe sequence error"));
   }
@@ -40,27 +40,34 @@ Result<ProducerGetResponse> VissGrpcSubscribeContext::Messages() {
   if (ret) {
     if (response.has_error()) {
       // VISS Error
-      auto error = response.error().error().description();
-      auto code = response.error().error().number();
-      auto message = error + " Code:" + std::to_string(code);
-      VISS_LOG_ERROR("PRDR_SUBSCRIBE_CONTEXT", message);
+      const std::string& error = response.error().error().description();
+      const int32_t code =
+          static_cast<int32_t>(response.error().error().number());
+      const std::string& message = error + " Code:" + std::to_string(code);
+      YORIITO_LOG_ERROR("PRDR_SUBSCRIBE_CONTEXT", message);
       return yoriito::Result<ProducerGetResponse>::Err(
           VissCommonError::CreateVissError(code, error));
     }
     if (response.has_event()) {
       // Illegal Response Error Check
       if (response.event().data().data_size() == 0) {
-        VISS_LOG_ERROR("PRDR_SUBSCRIBE_CONTEXT", "No data in event");
+        YORIITO_LOG_ERROR("PRDR_SUBSCRIBE_CONTEXT", "No data in event");
         return yoriito::Result<yoriito::databroker::ProducerGetResponse>::Err(
             VissCommonError::CreateIllegalError("No data in event"));
       }
-      for (const auto& datapoint : response.event().data().data()) {
+      const auto& datapoints = response.event().data().data();
+      for (const auto& datapoint : datapoints) {
         std::string path = datapoint.path();
         for (const auto& dp : datapoint.dp()) {
-          ValueType value = VissGrpcValueUtil::ConvertValueType(dp.value());
-          vec.push_back(yoriito::databroker::ProducerGetDataPoint(path, value));
+          vec.push_back(yoriito::databroker::ProducerGetDataPoint(
+              path, VissGrpcValueUtil::ConvertValueType(dp.value())));
         }
       }
+    } else {
+      // Illegal Response Error Check
+      YORIITO_LOG_ERROR("PRDR_SUBSCRIBE_CONTEXT", "No event in response");
+      return yoriito::Result<yoriito::databroker::ProducerGetResponse>::Err(
+          VissCommonError::CreateIllegalError("No event in response"));
     }
   } else {
     auto status = subscribe_response_->Finish();
@@ -68,7 +75,7 @@ Result<ProducerGetResponse> VissGrpcSubscribeContext::Messages() {
       // Cancel return ok with no data
     } else {
       auto error = status.error_message();
-      VISS_LOG_ERROR("PRDR_SUBSCRIBE_CONTEXT", error);
+      YORIITO_LOG_ERROR("PRDR_SUBSCRIBE_CONTEXT", error);
       return yoriito::Result<yoriito::databroker::ProducerGetResponse>::Err(
           VissCommonError::CreateIllegalError(error));
     }

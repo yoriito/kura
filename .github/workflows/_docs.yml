@@ -47,10 +47,12 @@ jobs:
     - name: Generate Documentation
       run: |
         cmake -S ./client/cc -B ./client/cc/build \
+          -DBUILD_VISS=OFF  \
           -DBUILD_COMMON=OFF \
           -DBUILD_CONSUMER=OFF \
           -DBUILD_PRODUCER=OFF \
           -DENABLE_TESTS=OFF \
+          -DENABLE_FUZZ_TESTS=OFF \
           -DENABLE_DOCS=ON
         cmake --build ./client/cc/build --target docs
 

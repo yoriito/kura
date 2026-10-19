@@ -16,29 +16,29 @@
  * limitations under the License.
  */
 
-#ifndef KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_GRPC_SET_IMPL_H_
-#define KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_GRPC_SET_IMPL_H_
+#ifndef CONSUMER_INC_GRPC_VISS_GRPC_SET_IMPL_H_
+#define CONSUMER_INC_GRPC_VISS_GRPC_SET_IMPL_H_
 
 #include <memory>
 #include <utility>
 //
 #include "databroker/consumer_set_request.h"
-#include "grpc/viss_grpc_value_util.h"
-
+#include "yoriito/result.h"
 //
 #include "grpcpp/grpcpp.h"
 #include "yoriito/viss/v1/common.grpc.pb.h"
 #include "yoriito/viss/v1/consumer.grpc.pb.h"
 #include "yoriito/viss/v1/consumer.pb.h"
 
-using yoriito::viss::v1::consumer::VISS;
+namespace yoriito::databroker::consumer {
 
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::ClientReader;
 using grpc::Status;
 
-namespace yoriito::databroker::consumer {
+using yoriito::viss::v1::consumer::VISS;
+
 class VissGrpcSetImpl {
  public:
   explicit VissGrpcSetImpl(yoriito::viss::v1::consumer::VISS::Stub *channel)
@@ -46,19 +46,19 @@ class VissGrpcSetImpl {
   ~VissGrpcSetImpl() = default;
 
   void CreateSetRequest(yoriito::viss::v1::consumer::SetTargetRequest &request,
-                        const ConsumerSetRequest &data);
-
-  grpc::Status Execute(ClientContext &context,
-                       yoriito::viss::v1::consumer::SetTargetRequest &request,
-                       yoriito::viss::v1::consumer::SetTargetResponse &response);
+                        const ConsumerSetRequest &data) const;
+  grpc::Status Execute(
+      ClientContext &context,
+      const yoriito::viss::v1::consumer::SetTargetRequest &request,
+      yoriito::viss::v1::consumer::SetTargetResponse &response) const;
 
   Result<void> ConvertSetResponse(
       grpc::Status status,
-      yoriito::viss::v1::consumer::SetTargetResponse &response,
-      const ConsumerSetRequest &data);
+      const yoriito::viss::v1::consumer::SetTargetResponse &response,
+      const ConsumerSetRequest &data) const;
 
  private:
   yoriito::viss::v1::consumer::VISS::Stub *stub_;
 };
 }  // namespace yoriito::databroker::consumer
-#endif  // KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_GRPC_SET_IMPL_H_
+#endif  // CONSUMER_INC_GRPC_VISS_GRPC_SET_IMPL_H_

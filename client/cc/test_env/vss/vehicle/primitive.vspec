@@ -1,0 +1,758 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# Copyright 2026 JASPAR
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+Vehicle.Test.SensorBooleanValue:
+  type: sensor
+  description: "Boolean property"
+  deprecation: ""
+  comment: "metadata test"
+  allowed: [true, false]
+  pattern: ""
+  datatype: boolean
+
+Vehicle.Test.ActuatorBooleanValue:
+  type: actuator
+  description: "Boolean property"
+  deprecation: ""
+  comment: "metadata test"
+  allowed: [true, false]
+  pattern: ""
+  datatype: boolean
+
+Vehicle.Test.SensorStringValue:
+  type: sensor
+  description: "String property"
+  deprecation: ""
+  comment: "metadata test"
+  allowed: ["", "sample", "abc"]
+  pattern: "^[A-Za-z0-9_]*$"
+  datatype: string
+
+Vehicle.Test.ActuatorStringValue:
+  type: actuator
+  description: "String property"
+  deprecation: ""
+  comment: "metadata test"
+  allowed: ["", "sample", "abc"]
+  pattern: "^[A-Za-z0-9_]*$"
+  datatype: string
+
+Vehicle.Test.SensorInt8Value:
+  type: sensor
+  description: "Int8 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -128
+  max: 127
+  pattern: ""
+  datatype: int8
+
+Vehicle.Test.ActuatorInt8Value:
+  type: actuator
+  description: "Int8 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -128
+  max: 127
+  pattern: ""
+  datatype: int8
+
+Vehicle.Test.SensorInt16Value:
+  type: sensor
+  description: "Int16 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -32768
+  max: 32767
+  pattern: ""
+  datatype: int16
+
+Vehicle.Test.ActuatorInt16Value:
+  type: actuator
+  description: "Int16 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -32768
+  max: 32767
+  pattern: ""
+  datatype: int16
+
+Vehicle.Test.SensorInt32Value:
+  type: sensor
+  description: "Int32 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -2147483648
+  max: 2147483647
+  pattern: ""
+  datatype: int32
+
+Vehicle.Test.ActuatorInt32Value:
+  type: actuator
+  description: "Int32 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -2147483648
+  max: 2147483647
+  pattern: ""
+  datatype: int32
+
+Vehicle.Test.SensorInt64Value:
+  type: sensor
+  description: "Int64 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -9223372036854775808
+  max: 9223372036854775807
+  pattern: ""
+  datatype: int64
+
+Vehicle.Test.ActuatorInt64Value:
+  type: actuator
+  description: "Int64 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -9223372036854775808
+  max: 9223372036854775807
+  pattern: ""
+  datatype: int64
+
+Vehicle.Test.SensorUint8Value:
+  type: sensor
+  description: "Uint8 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: 0
+  max: 255
+  pattern: ""
+  datatype: uint8
+
+Vehicle.Test.ActuatorUint8Value:
+  type: actuator
+  description: "Uint8 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: 0
+  max: 255
+  pattern: ""
+  datatype: uint8
+
+Vehicle.Test.SensorUint16Value:
+  type: sensor
+  description: "Uint16 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: 0
+  max: 65535
+  pattern: ""
+  datatype: uint16
+
+Vehicle.Test.ActuatorUint16Value:
+  type: actuator
+  description: "Uint16 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: 0
+  max: 65535
+  pattern: ""
+  datatype: uint16
+
+Vehicle.Test.SensorUint32Value:
+  type: sensor
+  description: "Uint32 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: 0
+  max: 4294967295
+  pattern: ""
+  datatype: uint32
+
+Vehicle.Test.ActuatorUint32Value:
+  type: actuator
+  description: "Uint32 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: 0
+  max: 4294967295
+  pattern: ""
+  datatype: uint32
+
+Vehicle.Test.SensorUint64Value:
+  type: sensor
+  description: "Uint64 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: 0
+  max: 18446744073709551615
+  pattern: ""
+  datatype: uint64
+
+Vehicle.Test.ActuatorUint64Value:
+  type: actuator
+  description: "Uint64 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: 0
+  max: 18446744073709551615
+  pattern: ""
+  datatype: uint64
+
+Vehicle.Test.SensorFloatValue:
+  type: sensor
+  description: "Float property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -1000.0
+  max: 1000.0
+  pattern: ""
+  datatype: float
+
+Vehicle.Test.ActuatorFloatValue:
+  type: actuator
+  description: "Float property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -1000.0
+  max: 1000.0
+  pattern: ""
+  datatype: float
+
+Vehicle.Test.SensorDoubleValue:
+  type: sensor
+  description: "Double property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -1000000.0
+  max: 1000000.0
+  pattern: ""
+  datatype: double
+
+Vehicle.Test.ActuatorDoubleValue:
+  type: actuator
+  description: "Double property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -1000000.0
+  max: 1000000.0
+  pattern: ""
+  datatype: double
+
+Vehicle.Test.SensorBoolArrayValue:
+  type: sensor
+  description: "Boolean array property"
+  deprecation: ""
+  comment: "metadata test"
+  pattern: ""
+  datatype: boolean[]
+
+Vehicle.Test.ActuatorBoolArrayValue:
+  type: actuator
+  description: "Boolean array property"
+  deprecation: ""
+  comment: "metadata test"
+  pattern: ""
+  datatype: boolean[]
+
+Vehicle.Test.SensorStringArrayValue:
+  type: sensor
+  description: "String array property"
+  deprecation: ""
+  comment: "metadata test"
+  pattern: "^[A-Za-z0-9_]*$"
+  datatype: string[]
+
+Vehicle.Test.ActuatorStringArrayValue:
+  type: actuator
+  description: "String array property"
+  deprecation: ""
+  comment: "metadata test"
+  pattern: "^[A-Za-z0-9_]*$"
+  datatype: string[]
+
+Vehicle.Test.SensorInt8ArrayValue:
+  type: sensor
+  description: "Int8 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: int8[]
+
+Vehicle.Test.ActuatorInt8ArrayValue:
+  type: actuator
+  description: "Int8 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: int8[]
+
+Vehicle.Test.SensorInt16ArrayValue:
+  type: sensor
+  description: "Int16 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: int16[]
+
+Vehicle.Test.ActuatorInt16ArrayValue:
+  type: actuator
+  description: "Int16 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: int16[]
+
+Vehicle.Test.SensorInt32ArrayValue:
+  type: sensor
+  description: "Int32 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: int32[]
+
+Vehicle.Test.ActuatorInt32ArrayValue:
+  type: actuator
+  description: "Int32 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: int32[]
+
+Vehicle.Test.SensorInt64ArrayValue:
+  type: sensor
+  description: "Int64 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: int64[]
+
+Vehicle.Test.ActuatorInt64ArrayValue:
+  type: actuator
+  description: "Int64 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: int64[]
+
+Vehicle.Test.SensorUint8ArrayValue:
+  type: sensor
+  description: "Uint8 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: uint8[]
+
+Vehicle.Test.ActuatorUint8ArrayValue:
+  type: actuator
+  description: "Uint8 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: uint8[]
+
+Vehicle.Test.SensorUint16ArrayValue:
+  type: sensor
+  description: "Uint16 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: uint16[]
+
+Vehicle.Test.ActuatorUint16ArrayValue:
+  type: actuator
+  description: "Uint16 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: uint16[]
+
+Vehicle.Test.SensorUint32ArrayValue:
+  type: sensor
+  description: "Uint32 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: uint32[]
+
+Vehicle.Test.ActuatorUint32ArrayValue:
+  type: actuator
+  description: "Uint32 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: uint32[]
+
+Vehicle.Test.SensorUint64ArrayValue:
+  type: sensor
+  description: "Uint64 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: uint64[]
+
+Vehicle.Test.ActuatorUint64ArrayValue:
+  type: actuator
+  description: "Uint64 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: uint64[]
+
+Vehicle.Test.SensorFloatArrayValue:
+  type: sensor
+  description: "Float array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: float[]
+
+Vehicle.Test.ActuatorFloatArrayValue:
+  type: actuator
+  description: "Float array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: float[]
+
+Vehicle.Test.SensorDoubleArrayValue:
+  type: sensor
+  description: "Double array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: double[]
+
+Vehicle.Test.ActuatorDoubleArrayValue:
+  type: actuator
+  description: "Double array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: double[]
+
+Vehicle.Test.AttributeBooleanValue:
+  type: attribute
+  description: "Boolean property"
+  deprecation: ""
+  comment: "metadata test"
+  allowed: [true, false]
+  pattern: ""
+  datatype: boolean
+
+Vehicle.Test.AttributeStringValue:
+  type: attribute
+  description: "String property"
+  deprecation: ""
+  comment: "metadata test"
+  allowed: ["", "sample", "abc"]
+  pattern: "^[A-Za-z0-9_]*$"
+  datatype: string
+
+Vehicle.Test.AttributeInt8Value:
+  type: attribute
+  description: "Int8 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -128
+  max: 127
+  pattern: ""
+  datatype: int8
+
+Vehicle.Test.AttributeInt16Value:
+  type: attribute
+  description: "Int16 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -32768
+  max: 32767
+  pattern: ""
+  datatype: int16
+
+Vehicle.Test.AttributeInt32Value:
+  type: attribute
+  description: "Int32 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -2147483648
+  max: 2147483647
+  pattern: ""
+  datatype: int32
+
+Vehicle.Test.AttributeInt64Value:
+  type: attribute
+  description: "Int64 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -9223372036854775808
+  max: 9223372036854775807
+  pattern: ""
+  datatype: int64
+
+Vehicle.Test.AttributeUint8Value:
+  type: attribute
+  description: "Uint8 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: 0
+  max: 255
+  pattern: ""
+  datatype: uint8
+
+Vehicle.Test.AttributeUint16Value:
+  type: attribute
+  description: "Uint16 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: 0
+  max: 65535
+  pattern: ""
+  datatype: uint16
+
+Vehicle.Test.AttributeUint32Value:
+  type: attribute
+  description: "Uint32 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: 0
+  max: 4294967295
+  pattern: ""
+  datatype: uint32
+
+Vehicle.Test.AttributeUint64Value:
+  type: attribute
+  description: "Uint64 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: 0
+  max: 18446744073709551615
+  pattern: ""
+  datatype: uint64
+
+Vehicle.Test.AttributeFloatValue:
+  type: attribute
+  description: "Float property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -1000.0
+  max: 1000.0
+  pattern: ""
+  datatype: float
+
+Vehicle.Test.AttributeDoubleValue:
+  type: attribute
+  description: "Double property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -1000000.0
+  max: 1000000.0
+  pattern: ""
+  datatype: double
+
+Vehicle.Test.AttributeBoolArrayValue:
+  type: attribute
+  description: "Boolean array property"
+  deprecation: ""
+  comment: "metadata test"
+  pattern: ""
+  datatype: boolean[]
+
+Vehicle.Test.AttributeStringArrayValue:
+  type: attribute
+  description: "String array property"
+  deprecation: ""
+  comment: "metadata test"
+  pattern: "^[A-Za-z0-9_]*$"
+  datatype: string[]
+
+Vehicle.Test.AttributeInt8ArrayValue:
+  type: attribute
+  description: "Int8 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: int8[]
+
+Vehicle.Test.AttributeInt16ArrayValue:
+  type: attribute
+  description: "Int16 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: int16[]
+
+Vehicle.Test.AttributeInt32ArrayValue:
+  type: attribute
+  description: "Int32 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: int32[]
+
+Vehicle.Test.AttributeInt64ArrayValue:
+  type: attribute
+  description: "Int64 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: int64[]
+
+Vehicle.Test.AttributeUint8ArrayValue:
+  type: attribute
+  description: "Uint8 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: uint8[]
+
+Vehicle.Test.AttributeUint16ArrayValue:
+  type: attribute
+  description: "Uint16 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: uint16[]
+
+Vehicle.Test.AttributeUint32ArrayValue:
+  type: attribute
+  description: "Uint32 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: uint32[]
+
+Vehicle.Test.AttributeUint64ArrayValue:
+  type: attribute
+  description: "Uint64 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: uint64[]
+
+Vehicle.Test.AttributeFloatArrayValue:
+  type: attribute
+  description: "Float array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: float[]
+
+Vehicle.Test.AttributeDoubleArrayValue:
+  type: attribute
+  description: "Double array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: double[]
+
+# UnSet Signal
+Vehicle.Test.SensorNotSetBooleanValue:
+  type: sensor
+  description: "Boolean property"
+  deprecation: ""
+  comment: "metadata test"
+  allowed: [true, false]
+  pattern: ""
+  datatype: boolean
+
+Vehicle.Test.ActuatorNotSetBooleanValue:
+  type: actuator
+  description: "Boolean property"
+  deprecation: ""
+  comment: "metadata test"
+  allowed: [true, false]
+  pattern: ""
+  datatype: boolean
+
+# Availability Signal
+Vehicle.Test.ActuatorAvailabilityBooleanValue:
+  type: actuator
+  description: "Boolean property"
+  deprecation: ""
+  comment: "metadata test"
+  allowed: [true, false]
+  pattern: ""
+  datatype: boolean
+
+
+# Availability Signal
+Vehicle.Test.SensorBoolArrayValueAvailabilityBooleanValue:
+  type: sensor
+  description: "Boolean property"
+  deprecation: ""
+  comment: "metadata test"
+  allowed: [true, false]
+  pattern: ""
+  datatype: boolean

@@ -14,8 +14,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::interface::Interactor;
-use crate::interface::signal::KuraResult;
+use crate::interface::{result, traits};
 use tokio::time::{self, Duration};
 use tokio_util::sync::CancellationToken;
 
@@ -27,29 +26,29 @@ use tracing::error;
 
 #[derive(Clone)]
 pub struct Tick {
-    interactor: Arc<dyn Interactor + Send + Sync>,
+    interactor: Arc<dyn traits::Interactor + Send + Sync>,
     tick_resolution: u64,
 }
 
 impl Tick {
     pub fn new(
-        interactor: Arc<dyn Interactor + Send + Sync>,
+        interactor: Arc<dyn traits::Interactor + Send + Sync>,
         tick_resolution: u64,
-    ) -> KuraResult<Self> {
+    ) -> result::KuraResult<Self> {
         Ok(Self {
             interactor,
             tick_resolution,
         })
     }
 
-    pub async fn start(&self, cancel: CancellationToken) -> KuraResult<()> {
+    pub async fn start(&self, cancel: CancellationToken) -> result::KuraResult<()> {
         tokio::select! {
             res = self.tick(&cancel) => res,
             _ = cancel.cancelled() => Ok(())
         }
     }
 
-    async fn tick(&self, cancel: &CancellationToken) -> KuraResult<()> {
+    async fn tick(&self, cancel: &CancellationToken) -> result::KuraResult<()> {
         let mut interval = time::interval(Duration::from_millis(self.tick_resolution));
 
         while !cancel.is_cancelled() {

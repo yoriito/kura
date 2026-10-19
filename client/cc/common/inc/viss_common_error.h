@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 
-#ifndef KURA_CLIENT_CC_COMMON_INC_VISS_COMMON_ERROR_H_
-#define KURA_CLIENT_CC_COMMON_INC_VISS_COMMON_ERROR_H_
+#ifndef COMMON_INC_VISS_COMMON_ERROR_H_
+#define COMMON_INC_VISS_COMMON_ERROR_H_
 
 #include <memory>
 #include <string>
 
-#include "error.h"
+#include "yoriito/error.h"
 
 namespace yoriito::databroker {
 class VissCommonError {
@@ -37,6 +37,9 @@ class VissCommonError {
       const std::string& msg);
   static std::unique_ptr<yoriito::CommonError> CreateProtocolError(
       const std::string& msg);
+
+ private:
+  static yoriito::ErrorCode ConvertVissErrorCode(int32_t code);
 };
 }  // namespace yoriito::databroker
-#endif  // KURA_CLIENT_CC_COMMON_INC_VISS_COMMON_ERROR_H_
+#endif  // COMMON_INC_VISS_COMMON_ERROR_H_

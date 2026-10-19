@@ -14,8 +14,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-pub mod signal;
+pub mod model;
+pub mod result;
 pub mod subscription;
-mod traits;
-
-pub use traits::{Database, Interactor, Subscriber};
+pub mod traits;

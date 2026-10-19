@@ -16,27 +16,21 @@
 
 #include "grpc/viss_grpc_set_impl.h"
 
-//
+#include "common/inc/viss_common_error.h"
 #include "grpc/viss_grpc_value_util.h"
-#include "viss_common_error.h"
-#include "viss_common_log.h"
-//
-#include "grpcpp/grpcpp.h"
-#include "yoriito/viss/v1/common.grpc.pb.h"
-#include "yoriito/viss/v1/common.pb.h"
-#include "yoriito/viss/v1/producer.pb.h"
-#include "yoriito/viss/v1/types/value.grpc.pb.h"
-//
+#include "yoriito/yoriito_log.h"
+
+namespace yoriito::databroker::producer {
 
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::ClientReader;
 using grpc::Status;
 
-namespace yoriito::databroker::producer {
 void VissGrpcSetImpl::CreateSetRequest(
     yoriito::viss::v1::producer::SetCurrentRequest &request,
-    const ProducerSetRequest &data) {
+    const ProducerSetRequest &data) const {
+  // producer specific logic
   auto now = std::chrono::system_clock::now();
   std::time_t unix_timestamp = std::chrono::system_clock::to_time_t(now);
   for (const auto &data_point : data.GetDataPoints()) {
@@ -46,9 +40,14 @@ void VissGrpcSetImpl::CreateSetRequest(
     auto dp = dpk_p->add_dp();
     dp->set_is_available_sensor(data_point.IsAvailableSensor());
     dp->set_is_available_actuator(data_point.IsAvailableActuator());
-    VissGrpcValueUtil::SetDataPointValue(*dp->mutable_value(),
-                                         data_point.GetData());
-    // set timestamps
+    const auto &result = VissGrpcValueUtil::SetDataPointValue(
+        *dp->mutable_value(), data_point.GetData());
+    if (result.IsErr()) {
+      YORIITO_LOG_ERROR("PRDR_SET",
+                        "VissGrpcValueUtil::SetDataPointValue failed");
+    }
+    // producer specific logic
+    //  set timestamps
     if (data_point.GetProducedTimestamp().has_value()) {
       dp->set_producedtimestamp(data_point.GetProducedTimestamp().value());
     }
@@ -59,28 +58,29 @@ void VissGrpcSetImpl::CreateSetRequest(
 
 grpc::Status VissGrpcSetImpl::Execute(
     ClientContext &context,
-    yoriito::viss::v1::producer::SetCurrentRequest &request,
-    yoriito::viss::v1::producer::SetCurrentResponse &response) {
+    const yoriito::viss::v1::producer::SetCurrentRequest &request,
+    yoriito::viss::v1::producer::SetCurrentResponse &response) const {
   return stub_->SetCurrent(&context, request, &response);
 }
 
 Result<void> VissGrpcSetImpl::ConvertSetResponse(
     grpc::Status status,
-    yoriito::viss::v1::producer::SetCurrentResponse &response) {
+    const yoriito::viss::v1::producer::SetCurrentResponse &response,
+    [[maybe_unused]] const ProducerSetRequest &data) const {
   if (status.ok()) {
     if (response.has_error()) {
       // VISS Error
-      auto error = response.error().description();
-      auto code = response.error().number();
-      auto message = error + " Code:" + std::to_string(code);
-      VISS_LOG_ERROR("PRDR_SET", message);
+      const std::string &error = response.error().description();
+      const int32_t code = static_cast<int32_t>(response.error().number());
+      const std::string &message = error + " Code:" + std::to_string(code);
+      YORIITO_LOG_ERROR("PRDR_SET", message);
       return Result<void>::Err(VissCommonError::CreateVissError(code, error));
     }
 
   } else {
     // GRPC Error
     auto error = status.error_message();
-    VISS_LOG_ERROR("PRDR_SET", error);
+    YORIITO_LOG_ERROR("PRDR_SET", error);
     return Result<void>::Err(VissCommonError::CreateProtocolError(error));
   }
   return Result<void>::Ok();

@@ -14,37 +14,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <string>
-#include <utility>
-#include <vector>
-//
 #include "grpc/viss_grpc_get_impl.h"
-#include "grpc/viss_grpc_inspect_util.h"
-#include "grpc/viss_grpc_value_util.h"
-#include "viss_common_error.h"
-#include "viss_common_log.h"
 
-//
-#include "grpcpp/grpcpp.h"
-#include "yoriito/viss/v1/common.grpc.pb.h"
-#include "yoriito/viss/v1/common.pb.h"
-#include "yoriito/viss/v1/types/value.grpc.pb.h"
-//
+#include "common/inc/viss_common_error.h"
+#include "grpc/viss_grpc_value_util.h"
+#include "yoriito/yoriito_log.h"
+
+namespace yoriito::databroker::producer {
+
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::ClientReader;
 using grpc::Status;
 
-namespace yoriito::databroker::producer {
-
 void VissGrpcGetImpl::CreateGetRequest(
     yoriito::viss::v1::producer::GetTargetRequest& request,
-    const ProducerGetRequest& data) {
+    const ProducerGetRequest& data) const {
   request.set_path(data.GetPath());
   auto get_filter = request.mutable_filter();
   auto path_filter = get_filter->mutable_paths_parameter();
   if (data.GetFilter().has_value()) {
-    auto paths = data.GetFilter().value().GetPaths();
+    const auto& paths = data.GetFilter().value().GetPaths();
     for (const std::string& path : paths) {
       path_filter->add_paths(path);
     }
@@ -54,44 +44,44 @@ void VissGrpcGetImpl::CreateGetRequest(
 
 grpc::Status VissGrpcGetImpl::Execute(
     ClientContext& context,
-    yoriito::viss::v1::producer::GetTargetRequest& request,
-    yoriito::viss::v1::producer::GetTargetResponse& response) {
+    const yoriito::viss::v1::producer::GetTargetRequest& request,
+    yoriito::viss::v1::producer::GetTargetResponse& response) const {
   auto ret = stub_->GetTarget(&context, request, &response);
   return ret;
 }
 
 Result<ProducerGetResponse> VissGrpcGetImpl::ConvertGetResponse(
     grpc::Status status,
-    yoriito::viss::v1::producer::GetTargetResponse& response,
-    const ProducerGetRequest& data) {
+    const yoriito::viss::v1::producer::GetTargetResponse& response,
+    const ProducerGetRequest& data) const {
   std::vector<yoriito::databroker::ProducerGetDataPoint> datapoints;
   if (status.ok()) {
     // VISS Error
     if (response.has_error()) {
-      auto error = response.error().description();
-      auto code = response.error().number();
-      auto message = error + " Code:" + std::to_string(code);
-      VISS_LOG_ERROR("PRDR_GET", message);
+      const std::string& error = response.error().description();
+      const int32_t code = static_cast<int32_t>(response.error().number());
+      const std::string& message = error + " Code:" + std::to_string(code);
+      YORIITO_LOG_ERROR("PRDR_GET", message);
       return Result<ProducerGetResponse>::Err(
           VissCommonError::CreateVissError(code, error));
     }
     if (!response.has_data()) {
       // Illegal Response: No Data( actually return viss error )
-      VISS_LOG_ERROR("PRDR_GET", "Not Found " + data.GetPath());
+      YORIITO_LOG_ERROR("PRDR_GET", "Not Found " + data.GetPath());
       return Result<ProducerGetResponse>::Err(
           VissCommonError::CreateNotFoundError(data.GetPath()));
     }
 
-    for (const auto& package : response.data().data()) {
+    const auto& packages = response.data().data();
+    for (const auto& package : packages) {
       for (const auto& dp : package.dp()) {
-        ValueType value = VissGrpcValueUtil::ConvertValueType(dp.value());
-        datapoints.push_back(
-            yoriito::databroker::ProducerGetDataPoint(package.path(), value));
+        datapoints.push_back(yoriito::databroker::ProducerGetDataPoint(
+            package.path(), VissGrpcValueUtil::ConvertValueType(dp.value())));
       }
     }
   } else {
     auto error = status.error_message();
-    VISS_LOG_ERROR("PRDR_GET", error);
+    YORIITO_LOG_ERROR("PRDR_GET", error);
     return Result<ProducerGetResponse>::Err(
         VissCommonError::CreateProtocolError(error));
   }

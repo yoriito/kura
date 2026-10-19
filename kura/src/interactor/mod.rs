@@ -14,7 +14,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-pub mod converter;
 mod core;
+mod struct_filter;
+mod vss_loader;
 
 pub use core::InteractorImpl;

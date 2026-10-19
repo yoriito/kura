@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-#ifndef KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_CONSUMER_GRPC_IMPL_H_
-#define KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_CONSUMER_GRPC_IMPL_H_
+#ifndef CONSUMER_INC_GRPC_VISS_CONSUMER_GRPC_IMPL_H_
+#define CONSUMER_INC_GRPC_VISS_CONSUMER_GRPC_IMPL_H_
 #include <memory>
 #include <string>
 
-#include "viss_consumer_impl.h"
+#include "consumer/inc/viss_consumer_impl.h"
 //
 
 #include "grpcpp/grpcpp.h"
@@ -29,13 +29,14 @@
 #include "yoriito/viss/v1/consumer.pb.h"
 #include "yoriito/viss/v1/types/value.grpc.pb.h"
 
-using yoriito::viss::v1::consumer::VISS;
 namespace yoriito::databroker {
+
+using yoriito::viss::v1::consumer::VISS;
 
 class GrpcConsumerImpl : public VissConsumerImpl {
  public:
   GrpcConsumerImpl() = default;
-  ~GrpcConsumerImpl() = default;
+  ~GrpcConsumerImpl() override = default;
   Result<void> Connect(std::string target) override;
   Result<ConsumerGetResponse> Get(const ConsumerGetRequest& request) override;
 
@@ -45,7 +46,7 @@ class GrpcConsumerImpl : public VissConsumerImpl {
   Result<void> Set(const ConsumerSetRequest& data) override;
 
   Result<std::unique_ptr<ConsumerSubscribeContext>> Subscribe(
-      const ConsumerSubscribeRequest& request) override;
+      const ConsumerSubscribeRequest& data) override;
   Result<void> UnSubscribe(
       std::unique_ptr<ConsumerSubscribeContext> subscription_id) override;
 
@@ -53,4 +54,4 @@ class GrpcConsumerImpl : public VissConsumerImpl {
   std::unique_ptr<yoriito::viss::v1::consumer::VISS::Stub> stub_;
 };
 }  // namespace yoriito::databroker
-#endif  // KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_CONSUMER_GRPC_IMPL_H_
+#endif  // CONSUMER_INC_GRPC_VISS_CONSUMER_GRPC_IMPL_H_

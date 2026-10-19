@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-#ifndef KURA_CLIENT_CC_COMMON_INC_GRPC_GRPC_INTERCEPTOR_FACTORY_H_
-#define KURA_CLIENT_CC_COMMON_INC_GRPC_GRPC_INTERCEPTOR_FACTORY_H_
+#ifndef COMMON_INC_GRPC_GRPC_INTERCEPTOR_FACTORY_H_
+#define COMMON_INC_GRPC_GRPC_INTERCEPTOR_FACTORY_H_
 
 #include <grpcpp/support/client_interceptor.h>
 
@@ -29,15 +29,18 @@ class GrpcInterceptorFactory
     : public grpc::experimental::ClientInterceptorFactoryInterface {
  public:
   explicit GrpcInterceptorFactory(DataBrokerType databrokerType)
-      : databrokerType_(databrokerType) {}
+      : grpc::experimental::ClientInterceptorFactoryInterface(),
+        databrokerType_(databrokerType) {}
 
   grpc::experimental::Interceptor* CreateClientInterceptor(
       grpc::experimental::ClientRpcInfo* info) override {
-    return new VissGrpcInterceptor(databrokerType_, *info);
+    auto interceptor =
+        std::make_unique<VissGrpcInterceptor>(databrokerType_, *info);
+    return interceptor.release();
   }
 
  private:
   DataBrokerType databrokerType_;
 };
 }  // namespace yoriito::databroker
-#endif  // KURA_CLIENT_CC_COMMON_INC_GRPC_GRPC_INTERCEPTOR_FACTORY_H_
+#endif  // COMMON_INC_GRPC_GRPC_INTERCEPTOR_FACTORY_H_

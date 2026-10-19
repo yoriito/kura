@@ -44,7 +44,10 @@ jobs:
           token: ${{ steps.app-token.outputs.token }} # For submodules
 
       - uses: arduino/setup-protoc@v3
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.88.0"
+          components: rustfmt, clippy
 
       - name: run formatter
         run: |

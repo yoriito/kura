@@ -16,28 +16,28 @@
  * limitations under the License.
  */
 
-#ifndef KURA_CLIENT_CC_PRODUCER_INC_GRPC_VISS_GRPC_DEFINE_IMPL_H_
-#define KURA_CLIENT_CC_PRODUCER_INC_GRPC_VISS_GRPC_DEFINE_IMPL_H_
+#ifndef PRODUCER_INC_GRPC_VISS_GRPC_DEFINE_IMPL_H_
+#define PRODUCER_INC_GRPC_VISS_GRPC_DEFINE_IMPL_H_
 
 #include <memory>
 #include <utility>
-
-#include "databroker/producer_define_request.h"
-#include "result.h"
 //
 #include "grpcpp/grpcpp.h"
-#include "yoriito/viss/v1/common.grpc.pb.h"
+#include "yoriito/viss/v1/common.pb.h"
 #include "yoriito/viss/v1/producer.grpc.pb.h"
-#include "yoriito/viss/v1/producer.pb.h"
+//
+#include "databroker/producer_define_request.h"
+#include "yoriito/result.h"
 
-using yoriito::viss::v1::producer::VISS;
+namespace yoriito::databroker::producer {
 
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::ClientReader;
 using grpc::Status;
 
-namespace yoriito::databroker::producer {
+using yoriito::viss::v1::producer::VISS;
+
 class VissGrpcDefineImpl {
  public:
   explicit VissGrpcDefineImpl(yoriito::viss::v1::producer::VISS::Stub* channel)
@@ -45,17 +45,18 @@ class VissGrpcDefineImpl {
   ~VissGrpcDefineImpl() = default;
 
   void CreateDefineRequest(yoriito::viss::v1::producer::DefineRequest& request,
-                           const ProducerDefineRequest& data);
-  grpc::Status Execute(ClientContext& context,
-                       yoriito::viss::v1::producer::DefineRequest& request,
-                       yoriito::viss::v1::producer::DefineResponse& response);
+                           const ProducerDefineRequest& data) const;
+  grpc::Status Execute(
+      ClientContext& context,
+      const yoriito::viss::v1::producer::DefineRequest& request,
+      yoriito::viss::v1::producer::DefineResponse& response) const;
 
   Result<void> ConvertDefineResponse(
       grpc::Status status,
-      yoriito::viss::v1::producer::DefineResponse& response);
+      const yoriito::viss::v1::producer::DefineResponse& response) const;
 
  private:
   yoriito::viss::v1::producer::VISS::Stub* stub_;
 };
 }  // namespace yoriito::databroker::producer
-#endif  // KURA_CLIENT_CC_PRODUCER_INC_GRPC_VISS_GRPC_DEFINE_IMPL_H_
+#endif  // PRODUCER_INC_GRPC_VISS_GRPC_DEFINE_IMPL_H_

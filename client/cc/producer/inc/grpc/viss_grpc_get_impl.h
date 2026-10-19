@@ -16,29 +16,28 @@
  * limitations under the License.
  */
 
-#ifndef KURA_CLIENT_CC_PRODUCER_INC_GRPC_VISS_GRPC_GET_IMPL_H_
-#define KURA_CLIENT_CC_PRODUCER_INC_GRPC_VISS_GRPC_GET_IMPL_H_
-#include "result.h"
+#ifndef PRODUCER_INC_GRPC_VISS_GRPC_GET_IMPL_H_
+#define PRODUCER_INC_GRPC_VISS_GRPC_GET_IMPL_H_
+
+//
+#include "grpcpp/grpcpp.h"
+#include "yoriito/viss/v1/common.pb.h"
+#include "yoriito/viss/v1/producer.grpc.pb.h"
 //
 #include "databroker/producer_get_datapoint.h"
 #include "databroker/producer_get_request.h"
 #include "databroker/producer_get_response.h"
+#include "yoriito/result.h"
 
-//
-#include "grpcpp/grpcpp.h"
-#include "yoriito/viss/v1/common.grpc.pb.h"
-#include "yoriito/viss/v1/producer.grpc.pb.h"
-#include "yoriito/viss/v1/producer.pb.h"
-//
-
-using yoriito::viss::v1::producer::VISS;
+namespace yoriito::databroker::producer {
 
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::ClientReader;
 using grpc::Status;
 
-namespace yoriito::databroker::producer {
+using yoriito::viss::v1::producer::VISS;
+
 class VissGrpcGetImpl {
  public:
   explicit VissGrpcGetImpl(yoriito::viss::v1::producer::VISS::Stub* channel)
@@ -46,19 +45,20 @@ class VissGrpcGetImpl {
   ~VissGrpcGetImpl() = default;
 
   void CreateGetRequest(yoriito::viss::v1::producer::GetTargetRequest& request,
-                        const ProducerGetRequest& data);
+                        const ProducerGetRequest& data) const;
 
-  grpc::Status Execute(ClientContext& context,
-                       yoriito::viss::v1::producer::GetTargetRequest& request,
-                       yoriito::viss::v1::producer::GetTargetResponse& response);
+  grpc::Status Execute(
+      ClientContext& context,
+      const yoriito::viss::v1::producer::GetTargetRequest& request,
+      yoriito::viss::v1::producer::GetTargetResponse& response) const;
 
   Result<ProducerGetResponse> ConvertGetResponse(
       grpc::Status status,
-      yoriito::viss::v1::producer::GetTargetResponse& response,
-      const ProducerGetRequest& data);
+      const yoriito::viss::v1::producer::GetTargetResponse& response,
+      const ProducerGetRequest& data) const;
 
  private:
   yoriito::viss::v1::producer::VISS::Stub* stub_;
 };
 }  // namespace yoriito::databroker::producer
-#endif  // KURA_CLIENT_CC_PRODUCER_INC_GRPC_VISS_GRPC_GET_IMPL_H_
+#endif  // PRODUCER_INC_GRPC_VISS_GRPC_GET_IMPL_H_

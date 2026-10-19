@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-#ifndef KURA_CLIENT_CC_CONSUMER_INC_VISS_CONSUMER_IMPL_H_
-#define KURA_CLIENT_CC_CONSUMER_INC_VISS_CONSUMER_IMPL_H_
+#ifndef CONSUMER_INC_VISS_CONSUMER_IMPL_H_
+#define CONSUMER_INC_VISS_CONSUMER_IMPL_H_
 #include <memory>
 #include <string>
 
@@ -26,6 +26,17 @@
 namespace yoriito::databroker {
 class VissConsumerImpl {
  public:
+  VissConsumerImpl() = default;
+  virtual ~VissConsumerImpl() = default;
+
+  // Delete copy operations (prevent slicing in polymorphic base class)
+  VissConsumerImpl(const VissConsumerImpl&) = delete;
+  VissConsumerImpl& operator=(const VissConsumerImpl&) = delete;
+
+  // Delete move operations (prevent slicing in polymorphic base class)
+  VissConsumerImpl(VissConsumerImpl&&) = delete;
+  VissConsumerImpl& operator=(VissConsumerImpl&&) = delete;
+
   virtual Result<void> Connect(std::string target) = 0;
   virtual Result<ConsumerGetResponse> Get(
       const ConsumerGetRequest& request) = 0;
@@ -33,9 +44,9 @@ class VissConsumerImpl {
       const ConsumerInspectRequest& request) = 0;
   virtual Result<void> Set(const ConsumerSetRequest& data) = 0;
   virtual Result<std::unique_ptr<ConsumerSubscribeContext>> Subscribe(
-      const ConsumerSubscribeRequest& request) = 0;
+      const ConsumerSubscribeRequest& data) = 0;
   virtual Result<void> UnSubscribe(
       std::unique_ptr<ConsumerSubscribeContext> subscription_id) = 0;
 };
 }  // namespace yoriito::databroker
-#endif  // KURA_CLIENT_CC_CONSUMER_INC_VISS_CONSUMER_IMPL_H_
+#endif  // CONSUMER_INC_VISS_CONSUMER_IMPL_H_

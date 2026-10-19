@@ -17,9 +17,9 @@ cargo build --release
 ## Usage
 
 ```sh
-cargo run --release -- --config_file_path config.yml
+cargo run --release -- --config-file-path config.yml
 # if you want to see verbose log
-cargo run --release -- --config_file_path config.yml --verbose
+cargo run --release -- --config-file-path config.yml --verbose
 ```
 
 # Architecture

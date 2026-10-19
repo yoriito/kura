@@ -16,16 +16,17 @@
  * limitations under the License.
  */
 
-#ifndef KURA_CLIENT_CC_CONSUMER_INC_VISS_CONSUMER_H_
-#define KURA_CLIENT_CC_CONSUMER_INC_VISS_CONSUMER_H_
+#ifndef CONSUMER_INC_VISS_CONSUMER_H_
+#define CONSUMER_INC_VISS_CONSUMER_H_
 
 #include <cstdlib>
 #include <memory>
 #include <string>
 
+#include "consumer/inc/viss_consumer_factory.h"
+#include "consumer/inc/viss_consumer_impl.h"
 #include "databroker/databroker_consumer.h"
-#include "viss_consumer_factory.h"
-#include "viss_consumer_impl.h"
+#include "yoriito/yoriito_log.h"
 
 namespace yoriito::databroker {
 class VissConsumer : public DataBrokerConsumer {
@@ -35,15 +36,18 @@ class VissConsumer : public DataBrokerConsumer {
     return static_cast<DataBrokerConsumer*>(&instance);
   }
 
-  const std::string CONNECTION_INFO = "127.0.0.1:50052";
-  VissConsumer() {
-    impl_ = VissConsumerFactory::CreateConsumer(
-        VissConsumerFactory::ConsumerType::kGrpc);
+  static constexpr const char* kConnectionInfo = "127.0.0.1:50052";
+  VissConsumer()
+      : DataBrokerConsumer(),
+        impl_(VissConsumerFactory::CreateConsumer(
+            VissConsumerFactory::ConsumerType::kGrpc)) {
     const char* grpc_target = std::getenv("YORIITO_CONSUMER_ENDPOINT");
-    if (grpc_target != nullptr && std::string(grpc_target).length() > 0) {
-      impl_->Connect(grpc_target);
-    } else {
-      impl_->Connect(CONNECTION_INFO);
+    if ((grpc_target == nullptr) || (std::string(grpc_target).length() == 0)) {
+      grpc_target = kConnectionInfo;
+    }
+    auto result = impl_->Connect(grpc_target);
+    if (result.IsErr()) {
+      YORIITO_LOG_ERROR("VissConsumer", "Failed to connect to the server.");
     }
   }
   ~VissConsumer() = default;
@@ -127,7 +131,7 @@ class VissConsumer : public DataBrokerConsumer {
    * @code -
    */
   Result<std::unique_ptr<ConsumerSubscribeContext>> Subscribe(
-      const yoriito::databroker::ConsumerSubscribeRequest& request) override;
+      const yoriito::databroker::ConsumerSubscribeRequest& data) override;
 
   /**
    * @ingroup consumer
@@ -154,4 +158,4 @@ class VissConsumer : public DataBrokerConsumer {
 };
 }  // namespace yoriito::databroker
 
-#endif  // KURA_CLIENT_CC_CONSUMER_INC_VISS_CONSUMER_H_
+#endif  // CONSUMER_INC_VISS_CONSUMER_H_

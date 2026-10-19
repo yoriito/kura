@@ -16,95 +16,77 @@
 
 #include "grpc/viss_grpc_get_impl.h"
 
+#include "common/inc/viss_common_error.h"
+#include "grpc/viss_grpc_datapoint_util.h"
 #include "grpc/viss_grpc_value_util.h"
-#include "viss_common_error.h"
-#include "viss_common_log.h"
+#include "yoriito/yoriito_log.h"
 
-// grpc header
-#include "grpcpp/grpcpp.h"
-#include "yoriito/viss/v1/common.pb.h"
-#include "yoriito/viss/v1/types/value.grpc.pb.h"
-//
+namespace yoriito::databroker::consumer {
+
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::ClientReader;
 using grpc::Status;
 
-namespace yoriito::databroker::consumer {
-
 void VissGrpcGetImpl::CreateGetRequest(
     yoriito::viss::v1::consumer::GetCurrentRequest& request,
-    const ConsumerGetRequest& data) {
+    const ConsumerGetRequest& data) const {
   request.set_path(data.GetPath());
   auto get_filter = request.mutable_filter();
   auto path_filter = get_filter->mutable_paths_parameter();
   if (data.GetFilter().has_value()) {
-    for (const std::string& path : data.GetFilter().value().GetPaths()) {
+    const auto& paths = data.GetFilter().value().GetPaths();
+    for (const std::string& path : paths) {
       path_filter->add_paths(path);
     }
   }
   return;
 }
+
 grpc::Status VissGrpcGetImpl::Execute(
     ClientContext& context,
-    yoriito::viss::v1::consumer::GetCurrentRequest& request,
-    yoriito::viss::v1::consumer::GetCurrentResponse& response) {
+    const yoriito::viss::v1::consumer::GetCurrentRequest& request,
+    yoriito::viss::v1::consumer::GetCurrentResponse& response) const {
   auto ret = stub_->GetCurrent(&context, request, &response);
   return ret;
 }
 
 Result<ConsumerGetResponse> VissGrpcGetImpl::ConvertGetResponse(
     grpc::Status status,
-    yoriito::viss::v1::consumer::GetCurrentResponse& response,
-    const ConsumerGetRequest& data) {
+    const yoriito::viss::v1::consumer::GetCurrentResponse& response,
+    const ConsumerGetRequest& data) const {
   std::vector<yoriito::databroker::ConsumerGetDataPoint> datapoints;
   if (status.ok()) {
-    {
-      if (response.has_error()) {
-        // VISS Error
-        auto error = response.error().description();
-        auto code = response.error().number();
-        auto message = error + " Code:" + std::to_string(code);
-        VISS_LOG_ERROR("CNSR_GET", message);
-        return Result<ConsumerGetResponse>::Err(
-            VissCommonError::CreateVissError(code, error));
-      }
+    // VISS Error
+    if (response.has_error()) {
+      const std::string& error = response.error().description();
+      const int32_t code = static_cast<int32_t>(response.error().number());
+      const std::string& message = error + " Code:" + std::to_string(code);
+      YORIITO_LOG_ERROR("CNSR_GET", message);
+      return Result<ConsumerGetResponse>::Err(
+          VissCommonError::CreateVissError(code, error));
+    }
+    if (!response.has_data()) {
+      // Illegal Response: No Data( actually return viss error )
+      YORIITO_LOG_ERROR("CNSR_GET", "Not Found " + data.GetPath());
+      return Result<ConsumerGetResponse>::Err(
+          VissCommonError::CreateNotFoundError(data.GetPath()));
+    }
 
-      if (!response.has_data()) {
-        // Illegal Response: No Data( actually return viss error )
-        VISS_LOG_ERROR("CNSR_GET", "Not Found " + data.GetPath());
-        return Result<ConsumerGetResponse>::Err(
-            VissCommonError::CreateNotFoundError(data.GetPath()));
-      }
-
-      for (const auto& package : response.data().data()) {
-        for (const auto& dp : package.dp()) {
-          ValueType value = VissGrpcValueUtil::ConvertValueType(dp.value());
-
-          int64_t timestamp = dp.storedtimestamp();
-          std::optional<int64_t> produced_timestamp = std::nullopt;
-          if (dp.has_producedtimestamp()) {
-            produced_timestamp = dp.producedtimestamp();
-          }
-
-          auto actuator_availability = dp.is_available_actuator();
-          auto sensor_availability = dp.is_available_sensor();
-
-          datapoints.push_back(yoriito::databroker::ConsumerGetDataPoint(
-              package.path(), value, sensor_availability, actuator_availability,
-              timestamp, produced_timestamp));
-        }
+    const auto& packages = response.data().data();
+    for (const auto& package : packages) {
+      for (const auto& dp : package.dp()) {
+        datapoints.push_back(
+            VissGrpcDataPointUtil::ConvertDataPoint(dp, package.path()));
       }
     }
   } else {
-    // GRPC Error
     auto error = status.error_message();
-    VISS_LOG_ERROR("CNSR_GET", error);
+    YORIITO_LOG_ERROR("CNSR_GET", error);
     return Result<ConsumerGetResponse>::Err(
         VissCommonError::CreateProtocolError(error));
   }
   return Result<ConsumerGetResponse>::Ok(
       ConsumerGetResponse(std::move(datapoints)));
 }
-
 }  // namespace yoriito::databroker::consumer

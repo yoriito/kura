@@ -16,52 +16,53 @@
  * limitations under the License.
  */
 
-#ifndef KURA_CLIENT_CC_PRODUCER_INC_GRPC_VISS_GRPC_SUBSCRIBE_IMPL_H_
-#define KURA_CLIENT_CC_PRODUCER_INC_GRPC_VISS_GRPC_SUBSCRIBE_IMPL_H_
+#ifndef PRODUCER_INC_GRPC_VISS_GRPC_SUBSCRIBE_IMPL_H_
+#define PRODUCER_INC_GRPC_VISS_GRPC_SUBSCRIBE_IMPL_H_
 
 #include <memory>
 //
+#include "grpcpp/grpcpp.h"
+#include "yoriito/viss/v1/common.pb.h"
+#include "yoriito/viss/v1/producer.grpc.pb.h"
+//
 #include "databroker/producer_subscribe_context.h"
 #include "databroker/producer_subscribe_request.h"
-//
-#include "grpcpp/grpcpp.h"
-#include "yoriito/viss/v1/common.grpc.pb.h"
-#include "yoriito/viss/v1/producer.grpc.pb.h"
-#include "yoriito/viss/v1/producer.pb.h"
-//
+#include "yoriito/result.h"
 
-using yoriito::viss::v1::producer::VISS;
+namespace yoriito::databroker::producer {
 
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::ClientReader;
 using grpc::Status;
 
-namespace yoriito::databroker::producer {
+using yoriito::viss::v1::producer::VISS;
+
 class VissGrpcSubscribeImpl {
  public:
   explicit VissGrpcSubscribeImpl(
       yoriito::viss::v1::producer::VISS::Stub* channel)
       : stub_(channel) {}
   ~VissGrpcSubscribeImpl() = default;
+
   void CreateSubscribeRequest(
       yoriito::viss::v1::producer::SubscribeTargetRequest& request,
-      const ProducerSubscribeRequest& data);
+      const ProducerSubscribeRequest& data) const;
 
-  //
   std::unique_ptr<
       grpc::ClientReader<yoriito::viss::v1::producer::SubscribeTargetResponse>>
-  Execute(ClientContext& context,
-          yoriito::viss::v1::producer::SubscribeTargetRequest& request);
-  //
+  Execute(
+      ClientContext& context,
+      const yoriito::viss::v1::producer::SubscribeTargetRequest& request) const;
   Result<std::unique_ptr<ProducerSubscribeContext>> ConvertSubscribeResponse(
-      std::unique_ptr<grpc::ClientContext>& client_context,
+      std::unique_ptr<grpc::ClientContext>& context,
       std::unique_ptr<grpc::ClientReader<
           yoriito::viss::v1::producer::SubscribeTargetResponse>>
-          reader);
+          reader,
+      const ProducerSubscribeRequest& data) const;
 
  private:
   yoriito::viss::v1::producer::VISS::Stub* stub_;
 };
 }  // namespace yoriito::databroker::producer
-#endif  // KURA_CLIENT_CC_PRODUCER_INC_GRPC_VISS_GRPC_SUBSCRIBE_IMPL_H_
+#endif  // PRODUCER_INC_GRPC_VISS_GRPC_SUBSCRIBE_IMPL_H_

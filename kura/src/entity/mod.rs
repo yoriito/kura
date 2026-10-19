@@ -15,4 +15,3 @@
 // limitations under the License.
 
 pub mod mem_database;
-pub mod sled_database;
