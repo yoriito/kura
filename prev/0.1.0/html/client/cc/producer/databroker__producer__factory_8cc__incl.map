@@ -1,0 +1,28 @@
+<map id="/home/runner/work/kura/kura/client/cc/producer/src/databroker_producer_factory.cc" name="/home/runner/work/kura/kura/client/cc/producer/src/databroker_producer_factory.cc">
+<area shape="rect" id="Node000001" title=" " alt="" coords="223,5,405,75"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,123,172,163"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="239,77,144,120,142,115,237,72"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="197,130,277,155"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="290,77,256,120,252,117,286,74"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="761,365,838,390"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="406,45,501,59,609,88,664,110,717,137,766,169,809,209,827,233,835,255,835,280,830,310,814,354,809,352,825,309,830,280,829,256,822,235,805,212,763,174,714,141,662,115,608,94,500,65,405,50"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="281,357,448,397"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="322,75,362,343,357,344,317,76"/>
+<area shape="rect" id="Node000006" href="$viss__producer_8h.html" title=" " alt="" coords="425,130,547,155"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="373,73,456,121,453,125,370,77"/>
+<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="548,147,613,155,683,168,744,185,768,196,784,209,795,225,804,243,811,282,811,320,807,352,802,351,806,320,806,282,798,245,791,228,780,213,765,201,742,190,682,173,612,160,547,152"/>
+<area shape="poly" id="edge9_Node000006_Node000005" title=" " alt="" coords="476,157,454,181,432,212,399,282,376,345,371,343,394,280,428,209,450,178,472,154"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="453,211,519,236"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="489,156,489,197,483,197,483,156"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="569,365,627,390"/>
+<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="497,154,532,209,551,259,567,308,588,351,583,353,562,310,546,260,528,212,493,157"/>
+<area shape="rect" id="Node000009" href="$viss__producer__factory_8h.html" title=" " alt="" coords="595,211,769,236"/>
+<area shape="poly" id="edge10_Node000006_Node000009" title=" " alt="" coords="515,153,642,203,640,208,514,158"/>
+<area shape="rect" id="Node000010" href="$viss__producer__impl_8h.html" title=" " alt="" coords="577,284,737,309"/>
+<area shape="poly" id="edge16_Node000006_Node000010" title=" " alt="" coords="474,157,459,174,444,194,437,215,438,225,443,234,461,248,490,260,566,279,564,284,488,265,458,253,439,238,433,227,432,215,439,192,454,170,471,154"/>
+<area shape="poly" id="edge11_Node000009_Node000004" title=" " alt="" coords="699,234,725,255,751,282,774,317,791,351,787,353,769,320,747,286,721,259,696,238"/>
+<area shape="poly" id="edge12_Node000009_Node000010" title=" " alt="" coords="680,237,668,272,663,270,675,235"/>
+<area shape="poly" id="edge13_Node000010_Node000004" title=" " alt="" coords="679,307,768,356,765,360,676,312"/>
+<area shape="poly" id="edge15_Node000010_Node000005" title=" " alt="" coords="615,312,449,356,447,351,614,307"/>
+<area shape="poly" id="edge14_Node000010_Node000008" title=" " alt="" coords="650,311,617,355,613,352,646,308"/>
+</map>
