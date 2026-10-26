@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Yoriito VISS Consumer API Reference For Kura: /home/runner/work/kura/kura/client/cc/consumer/inc/viss_consumer.h Source File</title>
+<title>Yoriito VISS Consumer API Reference For Kura: /work/client/cc/consumer/inc/viss_consumer.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -117,59 +117,63 @@ $(document).ready(function(){initNavTree('viss__consumer_8h_source.html',''); in
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment"> * limitations under the License.</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#ifndef KURA_CLIENT_CC_CONSUMER_INC_VISS_CONSUMER_H_</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#define KURA_CLIENT_CC_CONSUMER_INC_VISS_CONSUMER_H_</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#ifndef CONSUMER_INC_VISS_CONSUMER_H_</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#define CONSUMER_INC_VISS_CONSUMER_H_</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;cstdlib&gt;</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;databroker/databroker_consumer.h&quot;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;<a class="code" href="viss__consumer__factory_8h.html">viss_consumer_factory.h</a>&quot;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;<a class="code" href="viss__consumer__impl_8h.html">viss_consumer_impl.h</a>&quot;</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceyoriito_1_1databroker.html">yoriito::databroker</a> {</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">class </span>VissConsumer : <span class="keyword">public</span> DataBrokerConsumer {</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keyword">static</span> DataBrokerConsumer* GetInstance() {</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">static</span> VissConsumer instance;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>DataBrokerConsumer*<span class="keyword">&gt;</span>(&amp;instance);</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  }</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keyword">const</span> std::string CONNECTION_INFO = <span class="stringliteral">&quot;127.0.0.1:50052&quot;</span>;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  VissConsumer() {</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    impl_ = VissConsumerFactory::CreateConsumer(</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        VissConsumerFactory::ConsumerType::kGrpc);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* grpc_target = std::getenv(<span class="stringliteral">&quot;YORIITO_CONSUMER_ENDPOINT&quot;</span>);</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordflow">if</span> (grpc_target != <span class="keyword">nullptr</span> &amp;&amp; std::string(grpc_target).length() &gt; 0) {</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>      impl_-&gt;Connect(grpc_target);</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      impl_-&gt;Connect(CONNECTION_INFO);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;<a class="code" href="viss__consumer__factory_8h.html">consumer/inc/viss_consumer_factory.h</a>&quot;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;<a class="code" href="viss__consumer__impl_8h.html">consumer/inc/viss_consumer_impl.h</a>&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;databroker/databroker_consumer.h&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;yoriito/yoriito_log.h&quot;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceyoriito_1_1databroker.html">yoriito::databroker</a> {</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">class </span>VissConsumer : <span class="keyword">public</span> DataBrokerConsumer {</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keyword">static</span> DataBrokerConsumer* GetInstance() {</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keyword">static</span> VissConsumer instance;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>DataBrokerConsumer*<span class="keyword">&gt;</span>(&amp;instance);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  }</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* kConnectionInfo = <span class="stringliteral">&quot;127.0.0.1:50052&quot;</span>;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  VissConsumer()</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>      : DataBrokerConsumer(),</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        impl_(VissConsumerFactory::CreateConsumer(</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            VissConsumerFactory::ConsumerType::kGrpc)) {</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* grpc_target = std::getenv(<span class="stringliteral">&quot;YORIITO_CONSUMER_ENDPOINT&quot;</span>);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordflow">if</span> ((grpc_target == <span class="keyword">nullptr</span>) || (std::string(grpc_target).length() == 0)) {</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      grpc_target = kConnectionInfo;</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    }</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  }</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  ~VissConsumer() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  Result&lt;ConsumerGetResponse&gt; Get(<span class="keyword">const</span> ConsumerGetRequest&amp; request) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  Result&lt;ConsumerInspectResponse&gt; Inspect(</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>      <span class="keyword">const</span> ConsumerInspectRequest&amp; request) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  Result&lt;void&gt; Set(<span class="keyword">const</span> ConsumerSetRequest&amp; data) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>  Result&lt;std::unique_ptr&lt;ConsumerSubscribeContext&gt;&gt; Subscribe(</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>      <span class="keyword">const</span> yoriito::databroker::ConsumerSubscribeRequest&amp; request) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  Result&lt;void&gt; UnSubscribe(</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>      std::unique_ptr&lt;yoriito::databroker::ConsumerSubscribeContext&gt;</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>          subscription_id) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>  std::unique_ptr&lt;VissConsumerImpl&gt; impl_;</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>};</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>}  <span class="comment">// namespace yoriito::databroker</span></div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span><span class="preprocessor">#endif  </span><span class="comment">// KURA_CLIENT_CC_CONSUMER_INC_VISS_CONSUMER_H_</span></div>
-<div class="ttc" id="anamespaceyoriito_1_1databroker_html"><div class="ttname"><a href="namespaceyoriito_1_1databroker.html">yoriito::databroker</a></div><div class="ttdef"><b>Definition</b> <a href="viss__consumer__grpc__impl_8h_source.html#l00033">viss_consumer_grpc_impl.h:33</a></div></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keyword">auto</span> result = impl_-&gt;Connect(grpc_target);</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordflow">if</span> (result.IsErr()) {</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>      YORIITO_LOG_ERROR(<span class="stringliteral">&quot;VissConsumer&quot;</span>, <span class="stringliteral">&quot;Failed to connect to the server.&quot;</span>);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    }</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  }</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  ~VissConsumer() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  Result&lt;ConsumerGetResponse&gt; Get(<span class="keyword">const</span> ConsumerGetRequest&amp; request) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  Result&lt;ConsumerInspectResponse&gt; Inspect(</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>      <span class="keyword">const</span> ConsumerInspectRequest&amp; request) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>  Result&lt;void&gt; Set(<span class="keyword">const</span> ConsumerSetRequest&amp; data) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>  Result&lt;std::unique_ptr&lt;ConsumerSubscribeContext&gt;&gt; Subscribe(</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>      <span class="keyword">const</span> yoriito::databroker::ConsumerSubscribeRequest&amp; data) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>  Result&lt;void&gt; UnSubscribe(</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>      std::unique_ptr&lt;yoriito::databroker::ConsumerSubscribeContext&gt;</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>          subscription_id) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  std::unique_ptr&lt;VissConsumerImpl&gt; impl_;</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>};</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>}  <span class="comment">// namespace yoriito::databroker</span></div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span><span class="preprocessor">#endif  </span><span class="comment">// CONSUMER_INC_VISS_CONSUMER_H_</span></div>
+<div class="ttc" id="anamespaceyoriito_1_1databroker_html"><div class="ttname"><a href="namespaceyoriito_1_1databroker.html">yoriito::databroker</a></div><div class="ttdef"><b>Definition</b> <a href="viss__consumer__grpc__impl_8h_source.html#l00032">viss_consumer_grpc_impl.h:32</a></div></div>
 <div class="ttc" id="aviss__consumer__factory_8h_html"><div class="ttname"><a href="viss__consumer__factory_8h.html">viss_consumer_factory.h</a></div></div>
 <div class="ttc" id="aviss__consumer__impl_8h_html"><div class="ttname"><a href="viss__consumer__impl_8h.html">viss_consumer_impl.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

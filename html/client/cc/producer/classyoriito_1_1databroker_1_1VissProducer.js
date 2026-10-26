@@ -10,5 +10,5 @@ var classyoriito_1_1databroker_1_1VissProducer =
     [ "Set", "classyoriito_1_1databroker_1_1VissProducer.html#a9bde612f2d25a95d4206f4975d288c26", null ],
     [ "Subscribe", "classyoriito_1_1databroker_1_1VissProducer.html#a8b787fa52873801fea72a184f34db955", null ],
     [ "UnSubscribe", "classyoriito_1_1databroker_1_1VissProducer.html#a84b00491938edde9561fd9fcc3002874", null ],
-    [ "CONNECTION_INFO", "classyoriito_1_1databroker_1_1VissProducer.html#afc827af88878521bcfd60021480b334a", null ]
+    [ "kConnectionInfo", "classyoriito_1_1databroker_1_1VissProducer.html#ab32a7f41350839b424a556b4dbb814e5", null ]
 ];

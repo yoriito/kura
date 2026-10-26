@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['connection_5finfo_0',['CONNECTION_INFO',['../classyoriito_1_1databroker_1_1VissProducer.html#afc827af88878521bcfd60021480b334a',1,'yoriito::databroker::VissProducer']]]
+  ['kconnectioninfo_0',['kConnectionInfo',['../classyoriito_1_1databroker_1_1VissProducer.html#ab32a7f41350839b424a556b4dbb814e5',1,'yoriito::databroker::VissProducer']]]
 ];

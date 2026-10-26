@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Yoriito VISS Producer API Reference For Kura: /home/runner/work/kura/kura/client/cc/producer/src/viss_producer.cc Source File</title>
+<title>Yoriito VISS Producer API Reference For Kura: /work/client/cc/producer/src/viss_producer.cc Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -115,69 +115,66 @@ $(document).ready(function(){initNavTree('viss__producer_8cc_source.html',''); i
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">// See the License for the specific language governing permissions and</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">// limitations under the License.</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;<a class="code" href="viss__producer_8h.html">viss_producer.h</a>&quot;</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;ostream&gt;</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceyoriito_1_1databroker.html">yoriito::databroker</a> {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="foldopen" id="foldopen00027" data-start="{" data-end="}">
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1VissProducer.html#af3afde03d305c055ec33af130f98a09d">   27</a></span>Result&lt;yoriito::databroker::ProducerGetResponse&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1VissProducer.html#af3afde03d305c055ec33af130f98a09d">VissProducer::Get</a>(</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keyword">const</span> yoriito::databroker::ProducerGetRequest&amp; request) {</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <span class="keywordflow">return</span> impl_-&gt;Get(request);</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>}</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;<a class="code" href="viss__producer_8h.html">producer/inc/viss_producer.h</a>&quot;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">//</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceyoriito_1_1databroker.html">yoriito::databroker</a> {</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="foldopen" id="foldopen00024" data-start="{" data-end="}">
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1VissProducer.html#af3afde03d305c055ec33af130f98a09d">   24</a></span>Result&lt;yoriito::databroker::ProducerGetResponse&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1VissProducer.html#af3afde03d305c055ec33af130f98a09d">VissProducer::Get</a>(</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keyword">const</span> yoriito::databroker::ProducerGetRequest&amp; request) {</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="keywordflow">return</span> impl_-&gt;Get(request);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>}</div>
 </div>
-<div class="foldopen" id="foldopen00031" data-start="{" data-end="}">
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1VissProducer.html#a4f2ec2e2123973814d0d9c9733994e80">   31</a></span>Result&lt;ProducerInspectResponse&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1VissProducer.html#a4f2ec2e2123973814d0d9c9733994e80">VissProducer::Inspect</a>(</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keyword">const</span> yoriito::databroker::ProducerInspectRequest&amp; request) {</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keywordflow">return</span> impl_-&gt;Inspect(request);</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>}</div>
+<div class="foldopen" id="foldopen00028" data-start="{" data-end="}">
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1VissProducer.html#a4f2ec2e2123973814d0d9c9733994e80">   28</a></span>Result&lt;ProducerInspectResponse&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1VissProducer.html#a4f2ec2e2123973814d0d9c9733994e80">VissProducer::Inspect</a>(</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keyword">const</span> yoriito::databroker::ProducerInspectRequest&amp; request) {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keywordflow">return</span> impl_-&gt;Inspect(request);</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>}</div>
 </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="foldopen" id="foldopen00036" data-start="{" data-end="}">
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1VissProducer.html#a9bde612f2d25a95d4206f4975d288c26">   36</a></span>Result&lt;void&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1VissProducer.html#a9bde612f2d25a95d4206f4975d288c26">VissProducer::Set</a>(</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">const</span> yoriito::databroker::ProducerSetRequest&amp; data) {</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keywordflow">return</span> impl_-&gt;Set(data);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>}</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="foldopen" id="foldopen00033" data-start="{" data-end="}">
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1VissProducer.html#a9bde612f2d25a95d4206f4975d288c26">   33</a></span>Result&lt;void&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1VissProducer.html#a9bde612f2d25a95d4206f4975d288c26">VissProducer::Set</a>(</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">const</span> yoriito::databroker::ProducerSetRequest&amp; data) {</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keywordflow">return</span> impl_-&gt;Set(data);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>}</div>
 </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="foldopen" id="foldopen00041" data-start="{" data-end="}">
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1VissProducer.html#a8b787fa52873801fea72a184f34db955">   41</a></span>Result&lt;std::unique_ptr&lt;ProducerSubscribeContext&gt;&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1VissProducer.html#a8b787fa52873801fea72a184f34db955">VissProducer::Subscribe</a>(</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">const</span> yoriito::databroker::ProducerSubscribeRequest&amp; data) {</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <span class="keywordflow">return</span> impl_-&gt;Subscribe(data);</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>}</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="foldopen" id="foldopen00038" data-start="{" data-end="}">
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1VissProducer.html#a8b787fa52873801fea72a184f34db955">   38</a></span>Result&lt;std::unique_ptr&lt;ProducerSubscribeContext&gt;&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1VissProducer.html#a8b787fa52873801fea72a184f34db955">VissProducer::Subscribe</a>(</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keyword">const</span> yoriito::databroker::ProducerSubscribeRequest&amp; data) {</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="keywordflow">return</span> impl_-&gt;Subscribe(data);</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>}</div>
 </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="foldopen" id="foldopen00046" data-start="{" data-end="}">
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1VissProducer.html#a84b00491938edde9561fd9fcc3002874">   46</a></span>Result&lt;void&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1VissProducer.html#a84b00491938edde9561fd9fcc3002874">VissProducer::UnSubscribe</a>(</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    std::unique_ptr&lt;ProducerSubscribeContext&gt; subscription_id) {</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keywordflow">return</span> impl_-&gt;UnSubscribe(std::move(subscription_id));</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>}</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="foldopen" id="foldopen00043" data-start="{" data-end="}">
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1VissProducer.html#a84b00491938edde9561fd9fcc3002874">   43</a></span>Result&lt;void&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1VissProducer.html#a84b00491938edde9561fd9fcc3002874">VissProducer::UnSubscribe</a>(</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    std::unique_ptr&lt;ProducerSubscribeContext&gt; subscription_id) {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keywordflow">return</span> impl_-&gt;UnSubscribe(std::move(subscription_id));</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>}</div>
 </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="foldopen" id="foldopen00048" data-start="{" data-end="}">
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1VissProducer.html#ac412658a939f66324249361b6b4855a8">   48</a></span>Result&lt;void&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1VissProducer.html#ac412658a939f66324249361b6b4855a8">VissProducer::Define</a>(<span class="keyword">const</span> ProducerDefineRequest&amp; data) {</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keywordflow">return</span> impl_-&gt;Define(data);</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>}</div>
+</div>
 <div class="foldopen" id="foldopen00051" data-start="{" data-end="}">
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1VissProducer.html#ac412658a939f66324249361b6b4855a8">   51</a></span>Result&lt;void&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1VissProducer.html#ac412658a939f66324249361b6b4855a8">VissProducer::Define</a>(<span class="keyword">const</span> ProducerDefineRequest&amp; data) {</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keywordflow">return</span> impl_-&gt;Define(data);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1VissProducer.html#a6772a5ce5036dcfea57c3f7dd4203a9b">   51</a></span>Result&lt;void&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1VissProducer.html#a6772a5ce5036dcfea57c3f7dd4203a9b">VissProducer::Delete</a>(<span class="keyword">const</span> ProducerDeleteRequest&amp; data) {</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keywordflow">return</span> impl_-&gt;Delete(data);</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>}</div>
 </div>
-<div class="foldopen" id="foldopen00054" data-start="{" data-end="}">
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1VissProducer.html#a6772a5ce5036dcfea57c3f7dd4203a9b">   54</a></span>Result&lt;void&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1VissProducer.html#a6772a5ce5036dcfea57c3f7dd4203a9b">VissProducer::Delete</a>(<span class="keyword">const</span> ProducerDeleteRequest&amp; data) {</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  <span class="keywordflow">return</span> impl_-&gt;Delete(data);</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>}</div>
-</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>}  <span class="comment">// namespace yoriito::databroker</span></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1VissProducer_html_a4f2ec2e2123973814d0d9c9733994e80"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissProducer.html#a4f2ec2e2123973814d0d9c9733994e80">yoriito::databroker::VissProducer::Inspect</a></div><div class="ttdeci">Result&lt; yoriito::databroker::ProducerInspectResponse &gt; Inspect(const yoriito::databroker::ProducerInspectRequest &amp;request) override</div><div class="ttdef"><b>Definition</b> <a href="viss__producer_8cc_source.html#l00031">viss_producer.cc:31</a></div></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1VissProducer_html_a6772a5ce5036dcfea57c3f7dd4203a9b"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissProducer.html#a6772a5ce5036dcfea57c3f7dd4203a9b">yoriito::databroker::VissProducer::Delete</a></div><div class="ttdeci">Result&lt; void &gt; Delete(const yoriito::databroker::ProducerDeleteRequest &amp;data) override</div><div class="ttdef"><b>Definition</b> <a href="viss__producer_8cc_source.html#l00054">viss_producer.cc:54</a></div></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1VissProducer_html_a84b00491938edde9561fd9fcc3002874"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissProducer.html#a84b00491938edde9561fd9fcc3002874">yoriito::databroker::VissProducer::UnSubscribe</a></div><div class="ttdeci">Result&lt; void &gt; UnSubscribe(std::unique_ptr&lt; ProducerSubscribeContext &gt; subscription_id) override</div><div class="ttdef"><b>Definition</b> <a href="viss__producer_8cc_source.html#l00046">viss_producer.cc:46</a></div></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1VissProducer_html_a8b787fa52873801fea72a184f34db955"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissProducer.html#a8b787fa52873801fea72a184f34db955">yoriito::databroker::VissProducer::Subscribe</a></div><div class="ttdeci">Result&lt; std::unique_ptr&lt; ProducerSubscribeContext &gt; &gt; Subscribe(const yoriito::databroker::ProducerSubscribeRequest &amp;data) override</div><div class="ttdef"><b>Definition</b> <a href="viss__producer_8cc_source.html#l00041">viss_producer.cc:41</a></div></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1VissProducer_html_a9bde612f2d25a95d4206f4975d288c26"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissProducer.html#a9bde612f2d25a95d4206f4975d288c26">yoriito::databroker::VissProducer::Set</a></div><div class="ttdeci">Result&lt; void &gt; Set(const yoriito::databroker::ProducerSetRequest &amp;data) override</div><div class="ttdef"><b>Definition</b> <a href="viss__producer_8cc_source.html#l00036">viss_producer.cc:36</a></div></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1VissProducer_html_ac412658a939f66324249361b6b4855a8"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissProducer.html#ac412658a939f66324249361b6b4855a8">yoriito::databroker::VissProducer::Define</a></div><div class="ttdeci">Result&lt; void &gt; Define(const yoriito::databroker::ProducerDefineRequest &amp;data) override</div><div class="ttdef"><b>Definition</b> <a href="viss__producer_8cc_source.html#l00051">viss_producer.cc:51</a></div></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1VissProducer_html_af3afde03d305c055ec33af130f98a09d"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissProducer.html#af3afde03d305c055ec33af130f98a09d">yoriito::databroker::VissProducer::Get</a></div><div class="ttdeci">Result&lt; yoriito::databroker::ProducerGetResponse &gt; Get(const yoriito::databroker::ProducerGetRequest &amp;request) override</div><div class="ttdef"><b>Definition</b> <a href="viss__producer_8cc_source.html#l00027">viss_producer.cc:27</a></div></div>
-<div class="ttc" id="anamespaceyoriito_1_1databroker_html"><div class="ttname"><a href="namespaceyoriito_1_1databroker.html">yoriito::databroker</a></div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__define__impl_8h_source.html#l00040">viss_grpc_define_impl.h:40</a></div></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>}  <span class="comment">// namespace yoriito::databroker</span></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1VissProducer_html_a4f2ec2e2123973814d0d9c9733994e80"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissProducer.html#a4f2ec2e2123973814d0d9c9733994e80">yoriito::databroker::VissProducer::Inspect</a></div><div class="ttdeci">Result&lt; yoriito::databroker::ProducerInspectResponse &gt; Inspect(const yoriito::databroker::ProducerInspectRequest &amp;request) override</div><div class="ttdef"><b>Definition</b> <a href="viss__producer_8cc_source.html#l00028">viss_producer.cc:28</a></div></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1VissProducer_html_a6772a5ce5036dcfea57c3f7dd4203a9b"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissProducer.html#a6772a5ce5036dcfea57c3f7dd4203a9b">yoriito::databroker::VissProducer::Delete</a></div><div class="ttdeci">Result&lt; void &gt; Delete(const yoriito::databroker::ProducerDeleteRequest &amp;data) override</div><div class="ttdef"><b>Definition</b> <a href="viss__producer_8cc_source.html#l00051">viss_producer.cc:51</a></div></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1VissProducer_html_a84b00491938edde9561fd9fcc3002874"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissProducer.html#a84b00491938edde9561fd9fcc3002874">yoriito::databroker::VissProducer::UnSubscribe</a></div><div class="ttdeci">Result&lt; void &gt; UnSubscribe(std::unique_ptr&lt; ProducerSubscribeContext &gt; subscription_id) override</div><div class="ttdef"><b>Definition</b> <a href="viss__producer_8cc_source.html#l00043">viss_producer.cc:43</a></div></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1VissProducer_html_a8b787fa52873801fea72a184f34db955"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissProducer.html#a8b787fa52873801fea72a184f34db955">yoriito::databroker::VissProducer::Subscribe</a></div><div class="ttdeci">Result&lt; std::unique_ptr&lt; ProducerSubscribeContext &gt; &gt; Subscribe(const yoriito::databroker::ProducerSubscribeRequest &amp;data) override</div><div class="ttdef"><b>Definition</b> <a href="viss__producer_8cc_source.html#l00038">viss_producer.cc:38</a></div></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1VissProducer_html_a9bde612f2d25a95d4206f4975d288c26"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissProducer.html#a9bde612f2d25a95d4206f4975d288c26">yoriito::databroker::VissProducer::Set</a></div><div class="ttdeci">Result&lt; void &gt; Set(const yoriito::databroker::ProducerSetRequest &amp;data) override</div><div class="ttdef"><b>Definition</b> <a href="viss__producer_8cc_source.html#l00033">viss_producer.cc:33</a></div></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1VissProducer_html_ac412658a939f66324249361b6b4855a8"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissProducer.html#ac412658a939f66324249361b6b4855a8">yoriito::databroker::VissProducer::Define</a></div><div class="ttdeci">Result&lt; void &gt; Define(const yoriito::databroker::ProducerDefineRequest &amp;data) override</div><div class="ttdef"><b>Definition</b> <a href="viss__producer_8cc_source.html#l00048">viss_producer.cc:48</a></div></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1VissProducer_html_af3afde03d305c055ec33af130f98a09d"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissProducer.html#af3afde03d305c055ec33af130f98a09d">yoriito::databroker::VissProducer::Get</a></div><div class="ttdeci">Result&lt; yoriito::databroker::ProducerGetResponse &gt; Get(const yoriito::databroker::ProducerGetRequest &amp;request) override</div><div class="ttdef"><b>Definition</b> <a href="viss__producer_8cc_source.html#l00024">viss_producer.cc:24</a></div></div>
+<div class="ttc" id="anamespaceyoriito_1_1databroker_html"><div class="ttname"><a href="namespaceyoriito_1_1databroker.html">yoriito::databroker</a></div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__define__impl_8h_source.html#l00032">viss_grpc_define_impl.h:32</a></div></div>
 <div class="ttc" id="aviss__producer_8h_html"><div class="ttname"><a href="viss__producer_8h.html">viss_producer.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

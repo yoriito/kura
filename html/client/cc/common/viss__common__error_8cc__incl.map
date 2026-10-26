@@ -1,11 +1,13 @@
-<map id="/home/runner/work/kura/kura/client/cc/common/src/viss_common_error.cc" name="/home/runner/work/kura/kura/client/cc/common/src/viss_common_error.cc">
-<area shape="rect" id="Node000001" title=" " alt="" coords="39,5,233,60"/>
-<area shape="rect" id="Node000002" href="$viss__common__error_8h.html" title=" " alt="" coords="55,108,217,133"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,60,139,94,133,94,133,60"/>
+<map id="/work/client/cc/common/src/viss_common_error.cc" name="/work/client/cc/common/src/viss_common_error.cc">
+<area shape="rect" id="Node000001" title=" " alt="" coords="139,5,333,45"/>
+<area shape="rect" id="Node000002" href="$viss__common__error_8h.html" title=" " alt="" coords="38,93,234,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="216,48,170,86,167,82,212,44"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="259,93,413,133"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="260,44,305,82,302,86,256,48"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,181,83,207"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="123,135,71,175,68,171,120,131"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="115,136,70,174,66,170,112,132"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="107,181,165,207"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="139,134,139,168,133,168,133,134"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="189,181,253,207"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="151,131,199,170,195,175,148,135"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="139,134,139,167,133,167,133,134"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="190,181,301,207"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="164,131,220,171,217,175,161,136"/>
 </map>

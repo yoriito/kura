@@ -7,6 +7,7 @@ var hierarchy =
     [ "yoriito::databroker::VissConsumerImpl", "classyoriito_1_1databroker_1_1VissConsumerImpl.html", [
       [ "yoriito::databroker::GrpcConsumerImpl", "classyoriito_1_1databroker_1_1GrpcConsumerImpl.html", null ]
     ] ],
+    [ "yoriito::databroker::consumer::VissGrpcDataPointUtil", "classyoriito_1_1databroker_1_1consumer_1_1VissGrpcDataPointUtil.html", null ],
     [ "yoriito::databroker::consumer::VissGrpcGetImpl", "classyoriito_1_1databroker_1_1consumer_1_1VissGrpcGetImpl.html", null ],
     [ "yoriito::databroker::consumer::VissGrpcInspectImpl", "classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html", null ],
     [ "yoriito::databroker::consumer::VissGrpcSetImpl", "classyoriito_1_1databroker_1_1consumer_1_1VissGrpcSetImpl.html", null ],

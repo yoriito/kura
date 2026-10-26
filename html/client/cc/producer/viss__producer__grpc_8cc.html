@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Yoriito VISS Producer API Reference For Kura: /home/runner/work/kura/kura/client/cc/producer/src/grpc/viss_producer_grpc.cc File Reference</title>
+<title>Yoriito VISS Producer API Reference For Kura: /work/client/cc/producer/src/grpc/viss_producer_grpc.cc File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -96,9 +96,13 @@ $(document).ready(function(){initNavTree('viss__producer__grpc_8cc.html',''); in
   <div class="headertitle"><div class="title">viss_producer_grpc.cc File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;string&gt;</code><br />
-<code>#include &quot;viss_common_error.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="viss__producer_8h_source.html">viss_producer.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="viss__producer__grpc__impl_8h_source.html">grpc/viss_producer_grpc_impl.h</a>&quot;</code><br />
+<code>#include &lt;map&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
+<code>#include &lt;utility&gt;</code><br />
+<code>#include &lt;vector&gt;</code><br />
+<code>#include &quot;common/inc/viss_common_error.h&quot;</code><br />
 <code>#include &quot;grpc/grpc_interceptor_factory.h&quot;</code><br />
 <code>#include &quot;grpc/viss_grpc_context_factory.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="viss__grpc__define__impl_8h_source.html">grpc/viss_grpc_define_impl.h</a>&quot;</code><br />
@@ -109,11 +113,7 @@ $(document).ready(function(){initNavTree('viss__producer__grpc_8cc.html',''); in
 <code>#include &quot;<a class="el" href="viss__grpc__subscribe__impl_8h_source.html">grpc/viss_grpc_subscribe_impl.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="viss__grpc__unsubscribe__impl_8h_source.html">grpc/viss_grpc_unsubscribe_impl.h</a>&quot;</code><br />
 <code>#include &quot;grpc/viss_grpc_value_util.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="viss__producer__grpc__impl_8h_source.html">grpc/viss_producer_grpc_impl.h</a>&quot;</code><br />
-<code>#include &quot;grpcpp/grpcpp.h&quot;</code><br />
-<code>#include &quot;yoriito/viss/v1/producer.grpc.pb.h&quot;</code><br />
-<code>#include &quot;yoriito/viss/v1/producer.pb.h&quot;</code><br />
-<code>#include &quot;yoriito/viss/v1/types/value.grpc.pb.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="viss__producer_8h_source.html">producer/inc/viss_producer.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for viss_producer_grpc.cc:</div>
 <div class="dyncontent">

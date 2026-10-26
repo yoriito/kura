@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Yoriito VISS Producer API Reference For Kura: /home/runner/work/kura/kura/client/cc/producer/src/databroker_producer_factory.cc Source File</title>
+<title>Yoriito VISS Producer API Reference For Kura: /work/client/cc/producer/src/databroker_producer_factory.cc Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -116,23 +116,22 @@ $(document).ready(function(){initNavTree('databroker__producer__factory_8cc_sour
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">// limitations under the License.</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;databroker/databroker_producer_factory.h&quot;</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;databroker/databroker_producer.h&quot;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;<a class="code" href="viss__producer_8h.html">viss_producer.h</a>&quot;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceyoriito_1_1databroker.html">yoriito::databroker</a> {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>DataBrokerProducer* DataBrokerProducerFactory::GetInstance() {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  DataBrokerProducer* ptr = <a class="code hl_function" href="classyoriito_1_1databroker_1_1VissProducer.html#a1961634bdd781ff4a0b8a0650ea05685">VissProducer::GetInstance</a>();</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <span class="keywordflow">return</span> ptr;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>}</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>}  <span class="comment">// namespace yoriito::databroker</span></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1VissProducer_html_a1961634bdd781ff4a0b8a0650ea05685"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissProducer.html#a1961634bdd781ff4a0b8a0650ea05685">yoriito::databroker::VissProducer::GetInstance</a></div><div class="ttdeci">static DataBrokerProducer * GetInstance()</div><div class="ttdef"><b>Definition</b> <a href="viss__producer_8h_source.html#l00033">viss_producer.h:33</a></div></div>
-<div class="ttc" id="anamespaceyoriito_1_1databroker_html"><div class="ttname"><a href="namespaceyoriito_1_1databroker.html">yoriito::databroker</a></div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__define__impl_8h_source.html#l00040">viss_grpc_define_impl.h:40</a></div></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">//</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">//</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;databroker/databroker_producer.h&quot;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;<a class="code" href="viss__producer_8h.html">producer/inc/viss_producer.h</a>&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceyoriito_1_1databroker.html">yoriito::databroker</a> {</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>DataBrokerProducer* DataBrokerProducerFactory::GetInstance() {</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  DataBrokerProducer* ptr = <a class="code hl_function" href="classyoriito_1_1databroker_1_1VissProducer.html#a1961634bdd781ff4a0b8a0650ea05685">VissProducer::GetInstance</a>();</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keywordflow">return</span> ptr;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>}</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>}  <span class="comment">// namespace yoriito::databroker</span></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1VissProducer_html_a1961634bdd781ff4a0b8a0650ea05685"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissProducer.html#a1961634bdd781ff4a0b8a0650ea05685">yoriito::databroker::VissProducer::GetInstance</a></div><div class="ttdeci">static DataBrokerProducer * GetInstance()</div><div class="ttdef"><b>Definition</b> <a href="viss__producer_8h_source.html#l00034">viss_producer.h:34</a></div></div>
+<div class="ttc" id="anamespaceyoriito_1_1databroker_html"><div class="ttname"><a href="namespaceyoriito_1_1databroker.html">yoriito::databroker</a></div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__define__impl_8h_source.html#l00032">viss_grpc_define_impl.h:32</a></div></div>
 <div class="ttc" id="aviss__producer_8h_html"><div class="ttname"><a href="viss__producer_8h.html">viss_producer.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

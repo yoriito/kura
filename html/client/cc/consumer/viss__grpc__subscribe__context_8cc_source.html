@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Yoriito VISS Consumer API Reference For Kura: /home/runner/work/kura/kura/client/cc/consumer/src/grpc/viss_grpc_subscribe_context.cc Source File</title>
+<title>Yoriito VISS Consumer API Reference For Kura: /work/client/cc/consumer/src/grpc/viss_grpc_subscribe_context.cc Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -121,12 +121,12 @@ $(document).ready(function(){initNavTree('viss__grpc__subscribe__context_8cc_sou
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment">//</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;grpc/viss_grpc_inspect_util.h&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;grpc/viss_grpc_value_util.h&quot;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;yoriito/viss/v1/consumer.grpc.pb.h&quot;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;viss_common_error.h&quot;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;viss_common_log.h&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;common/inc/viss_common_error.h&quot;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;<a class="code" href="viss__grpc__datapoint__util_8h.html">grpc/viss_grpc_datapoint_util.h</a>&quot;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;grpc/viss_grpc_inspect_util.h&quot;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;grpc/viss_grpc_value_util.h&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;yoriito/yoriito_log.h&quot;</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceyoriito_1_1databroker_1_1consumer.html">yoriito::databroker::consumer</a> {</div>
 <div class="foldopen" id="foldopen00031" data-start="{" data-end="}">
@@ -134,76 +134,64 @@ $(document).ready(function(){initNavTree('viss__grpc__subscribe__context_8cc_sou
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  yoriito::viss::v1::consumer::SubscribeCurrentResponse response;</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keywordflow">if</span> (subscribe_response_ == <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    VISS_LOG_ERROR(<span class="stringliteral">&quot;CNSR_SUBSCRIBE_CONTEXT&quot;</span>, <span class="stringliteral">&quot;No response reader&quot;</span>);</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    YORIITO_LOG_ERROR(<span class="stringliteral">&quot;CNSR_SUBSCRIBE_CONTEXT&quot;</span>, <span class="stringliteral">&quot;subscribe sequence error&quot;</span>);</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keywordflow">return</span> yoriito::Result&lt;ConsumerGetResponse&gt;::Err(</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        VissCommonError::CreateIllegalError(<span class="stringliteral">&quot;No response reader&quot;</span>));</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        VissCommonError::CreateIllegalError(<span class="stringliteral">&quot;subscribe sequence error&quot;</span>));</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  }</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keywordtype">bool</span> ret = subscribe_response_-&gt;Read(&amp;response);</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  std::vector&lt;yoriito::databroker::ConsumerGetDataPoint&gt; vec;</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keywordflow">if</span> (ret) {</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordflow">if</span> (response.has_error()) {</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>      <span class="comment">// VISS Error</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>      <span class="keyword">auto</span> error = response.error().error().description();</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>      <span class="keyword">auto</span> code = response.error().error().number();</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      <span class="keyword">auto</span> message = error + <span class="stringliteral">&quot; Code:&quot;</span> + std::to_string(code);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>      VISS_LOG_ERROR(<span class="stringliteral">&quot;CNSR_SUBSCRIBE_CONTEXT&quot;</span>, message);</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>      <span class="keyword">const</span> std::string&amp; error = response.error().error().description();</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>      <span class="keyword">const</span> int32_t code =</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>          <span class="keyword">static_cast&lt;</span>int32_t<span class="keyword">&gt;</span>(response.error().error().number());</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>      <span class="keyword">const</span> std::string&amp; message = error + <span class="stringliteral">&quot; Code:&quot;</span> + std::to_string(code);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>      YORIITO_LOG_ERROR(<span class="stringliteral">&quot;CNSR_SUBSCRIBE_CONTEXT&quot;</span>, message);</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>      <span class="keywordflow">return</span> yoriito::Result&lt;ConsumerGetResponse&gt;::Err(</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>          VissCommonError::CreateVissError(code, error));</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    }</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordflow">if</span> (response.has_event()) {</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>      <span class="comment">// Illegal Response Error Check</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>      <span class="keywordflow">if</span> (response.event().data().data_size() == 0) {</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        VISS_LOG_ERROR(<span class="stringliteral">&quot;CNSR_SUBSCRIBE_CONTEXT&quot;</span>, <span class="stringliteral">&quot;No data in event&quot;</span>);</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keywordflow">return</span> yoriito::Result&lt;yoriito::databroker::ConsumerGetResponse&gt;::Err(</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            VissCommonError::CreateIllegalError(<span class="stringliteral">&quot;No data in event&quot;</span>));</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>      }</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>      <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; datapoint : response.event().data().data()) {</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        std::string path = datapoint.path();</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; dp : datapoint.dp()) {</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>          ValueType value = VissGrpcValueUtil::ConvertValueType(dp.value());</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>          int64_t timestamp = dp.storedtimestamp();</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>          std::optional&lt;int64_t&gt; produced_timestamp = std::nullopt;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>          <span class="keywordflow">if</span> (dp.has_producedtimestamp()) {</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            produced_timestamp = dp.producedtimestamp();</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>          }</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>          <span class="comment">//</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>          <span class="keyword">auto</span> actuator_availability = dp.is_available_actuator();</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>          <span class="keyword">auto</span> sensor_availability = dp.is_available_sensor();</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>          vec.push_back(yoriito::databroker::ConsumerGetDataPoint(</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>              path, value, sensor_availability, actuator_availability,</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>              timestamp, produced_timestamp));</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        }</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>      }</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>      <span class="comment">// Illegal Response Error Check</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>      VISS_LOG_ERROR(<span class="stringliteral">&quot;CNSR_SUBSCRIBE_CONTEXT&quot;</span>, <span class="stringliteral">&quot;No event in response&quot;</span>);</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>      <span class="keywordflow">return</span> yoriito::Result&lt;yoriito::databroker::ConsumerGetResponse&gt;::Err(</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>          VissCommonError::CreateIllegalError(<span class="stringliteral">&quot;No event in response&quot;</span>));</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    }</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keyword">auto</span> status = subscribe_response_-&gt;Finish();</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keywordflow">if</span> (status.ok()) {</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>      <span class="comment">// Cancel return ok with no data</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>      <span class="keyword">auto</span> error = status.error_message();</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>      VISS_LOG_ERROR(<span class="stringliteral">&quot;CNSR_SUBSCRIBE_CONTEXT&quot;</span>, error);</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>      <span class="keywordflow">return</span> yoriito::Result&lt;yoriito::databroker::ConsumerGetResponse&gt;::Err(</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>          VissCommonError::CreateIllegalError(error));</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    }</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  }</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  <span class="keywordflow">return</span> yoriito::Result&lt;yoriito::databroker::ConsumerGetResponse&gt;::Ok(</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>      yoriito::databroker::ConsumerGetResponse(std::move(vec)));</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>}</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>      <span class="keywordflow">if</span> (response.event().data().data_size() == 0) {</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        YORIITO_LOG_ERROR(<span class="stringliteral">&quot;CNSR_SUBSCRIBE_CONTEXT&quot;</span>, <span class="stringliteral">&quot;No data in event&quot;</span>);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keywordflow">return</span> yoriito::Result&lt;yoriito::databroker::ConsumerGetResponse&gt;::Err(</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            VissCommonError::CreateIllegalError(<span class="stringliteral">&quot;No data in event&quot;</span>));</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>      }</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>      <span class="keyword">const</span> <span class="keyword">auto</span>&amp; datapoints = response.event().data().data();</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>      <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; datapoint : datapoints) {</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        std::string path = datapoint.path();</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; dp : datapoint.dp()) {</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>          vec.push_back(<a class="code hl_function" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcDataPointUtil.html#a07cb716f6a06b6916462a2d33a38d2a9">VissGrpcDataPointUtil::ConvertDataPoint</a>(dp, path));</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        }</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>      }</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>      <span class="comment">// Illegal Response Error Check</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>      YORIITO_LOG_ERROR(<span class="stringliteral">&quot;CNSR_SUBSCRIBE_CONTEXT&quot;</span>, <span class="stringliteral">&quot;No event in response&quot;</span>);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>      <span class="keywordflow">return</span> yoriito::Result&lt;yoriito::databroker::ConsumerGetResponse&gt;::Err(</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>          VissCommonError::CreateIllegalError(<span class="stringliteral">&quot;No event in response&quot;</span>));</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    }</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keyword">auto</span> status = subscribe_response_-&gt;Finish();</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordflow">if</span> (status.ok()) {</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>      <span class="comment">// Cancel return ok with no data</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>      <span class="keyword">auto</span> error = status.error_message();</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>      YORIITO_LOG_ERROR(<span class="stringliteral">&quot;CNSR_SUBSCRIBE_CONTEXT&quot;</span>, error);</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>      <span class="keywordflow">return</span> yoriito::Result&lt;yoriito::databroker::ConsumerGetResponse&gt;::Err(</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>          VissCommonError::CreateIllegalError(error));</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    }</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  }</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  <span class="keywordflow">return</span> yoriito::Result&lt;yoriito::databroker::ConsumerGetResponse&gt;::Ok(</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>      yoriito::databroker::ConsumerGetResponse(std::move(vec)));</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>}</div>
 </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>}  <span class="comment">// namespace yoriito::databroker::consumer</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>}  <span class="comment">// namespace yoriito::databroker::consumer</span></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcDataPointUtil_html_a07cb716f6a06b6916462a2d33a38d2a9"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcDataPointUtil.html#a07cb716f6a06b6916462a2d33a38d2a9">yoriito::databroker::consumer::VissGrpcDataPointUtil::ConvertDataPoint</a></div><div class="ttdeci">static yoriito::databroker::ConsumerGetDataPoint ConvertDataPoint(const yoriito::viss::v1::DataPointCurrent &amp;datapoint, const std::string &amp;path)</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__datapoint__util_8cc_source.html#l00024">viss_grpc_datapoint_util.cc:24</a></div></div>
 <div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcSubscribeContext_html_a9b6df5337ad59516d47b88e0e9e77992"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcSubscribeContext.html#a9b6df5337ad59516d47b88e0e9e77992">yoriito::databroker::consumer::VissGrpcSubscribeContext::Messages</a></div><div class="ttdeci">Result&lt; ConsumerGetResponse &gt; Messages() override</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__subscribe__context_8cc_source.html#l00031">viss_grpc_subscribe_context.cc:31</a></div></div>
-<div class="ttc" id="anamespaceyoriito_1_1databroker_1_1consumer_html"><div class="ttname"><a href="namespaceyoriito_1_1databroker_1_1consumer.html">yoriito::databroker::consumer</a></div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__get__impl_8h_source.html#l00042">viss_grpc_get_impl.h:42</a></div></div>
+<div class="ttc" id="anamespaceyoriito_1_1databroker_1_1consumer_html"><div class="ttname"><a href="namespaceyoriito_1_1databroker_1_1consumer.html">yoriito::databroker::consumer</a></div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__datapoint__util_8h_source.html#l00015">viss_grpc_datapoint_util.h:15</a></div></div>
+<div class="ttc" id="aviss__grpc__datapoint__util_8h_html"><div class="ttname"><a href="viss__grpc__datapoint__util_8h.html">viss_grpc_datapoint_util.h</a></div></div>
 <div class="ttc" id="aviss__grpc__subscribe__context_8h_html"><div class="ttname"><a href="viss__grpc__subscribe__context_8h.html">viss_grpc_subscribe_context.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

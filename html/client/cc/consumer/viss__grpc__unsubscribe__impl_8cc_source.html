@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Yoriito VISS Consumer API Reference For Kura: /home/runner/work/kura/kura/client/cc/consumer/src/grpc/viss_grpc_unsubscribe_impl.cc Source File</title>
+<title>Yoriito VISS Consumer API Reference For Kura: /work/client/cc/consumer/src/grpc/viss_grpc_unsubscribe_impl.cc Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -117,64 +117,63 @@ $(document).ready(function(){initNavTree('viss__grpc__unsubscribe__impl_8cc_sour
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;<a class="code" href="viss__grpc__unsubscribe__impl_8h.html">grpc/viss_grpc_unsubscribe_impl.h</a>&quot;</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &quot;grpcpp/grpcpp.h&quot;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;yoriito/viss/v1/common.grpc.pb.h&quot;</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;yoriito/viss/v1/common.pb.h&quot;</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;yoriito/viss/v1/types/value.grpc.pb.h&quot;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;viss_common_error.h&quot;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;viss_common_log.h&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment">//</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">using </span>grpc::Channel;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">using </span>grpc::ClientContext;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">using </span>grpc::ClientReader;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">using </span>grpc::Status;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceyoriito_1_1databroker_1_1consumer.html">yoriito::databroker::consumer</a> {</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="foldopen" id="foldopen00033" data-start="{" data-end="}">
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl.html#acf387805b5216759ae96a750dfbc1ec9">   33</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl.html#acf387805b5216759ae96a750dfbc1ec9">VissGrpcUnSubscribeImpl::CreateUnsubscribeRequest</a>(</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <a class="code hl_class" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcSubscribeContext.html">VissGrpcSubscribeContext</a>&amp; viss_context,</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    yoriito::viss::v1::UnsubscribeRequest&amp; request) {</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  request.set_subscription_id(viss_context.<a class="code hl_function" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcSubscribeContext.html#aec7d5c97bf5fc8acaaaadc7722a69c76">GetSubscriptionId</a>());</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>}</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &quot;common/inc/viss_common_error.h&quot;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;yoriito/yoriito_log.h&quot;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceyoriito_1_1databroker_1_1consumer.html">yoriito::databroker::consumer</a> {</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">using </span>grpc::Channel;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">using </span>grpc::ClientContext;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">using </span>grpc::ClientReader;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">using </span>grpc::Status;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="foldopen" id="foldopen00029" data-start="{" data-end="}">
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl.html#ab5d2fafc36bce3b0e6c20120cac38bf4">   29</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl.html#ab5d2fafc36bce3b0e6c20120cac38bf4">VissGrpcUnSubscribeImpl::CreateUnsubscribeRequest</a>(</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="keyword">const</span> <a class="code hl_class" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcSubscribeContext.html">VissGrpcSubscribeContext</a>&amp; viss_context,</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    yoriito::viss::v1::UnsubscribeRequest&amp; request)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  request.set_subscription_id(viss_context.<a class="code hl_function" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcSubscribeContext.html#ae528118afc8ba95d521959ab54079943">GetSubscriptionId</a>());</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>}</div>
 </div>
-<div class="foldopen" id="foldopen00039" data-start="{" data-end="}">
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl.html#aa7d7815e1d4f348677880b0f43daa7aa">   39</a></span>grpc::Status <a class="code hl_function" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl.html#aa7d7815e1d4f348677880b0f43daa7aa">VissGrpcUnSubscribeImpl::Execute</a>(</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    ClientContext&amp; context, yoriito::viss::v1::UnsubscribeRequest&amp; request,</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    yoriito::viss::v1::UnsubscribeResponse&amp; response) {</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keywordflow">return</span> stub_-&gt;Unsubscribe(&amp;context, request, &amp;response);</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>}</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="foldopen" id="foldopen00036" data-start="{" data-end="}">
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl.html#ac33f0c86f1c3388bd275b2a23bbf467e">   36</a></span>grpc::Status <a class="code hl_function" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl.html#ac33f0c86f1c3388bd275b2a23bbf467e">VissGrpcUnSubscribeImpl::Execute</a>(</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    ClientContext&amp; context,</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keyword">const</span> yoriito::viss::v1::UnsubscribeRequest&amp; request,</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    yoriito::viss::v1::UnsubscribeResponse&amp; response)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="keywordflow">return</span> stub_-&gt;Unsubscribe(&amp;context, request, &amp;response);</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>}</div>
 </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="foldopen" id="foldopen00045" data-start="{" data-end="}">
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl.html#aac2d903990a6ac3b2001e570f2fe0b15">   45</a></span>Result&lt;void&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl.html#aac2d903990a6ac3b2001e570f2fe0b15">VissGrpcUnSubscribeImpl::ConvertUnsubscribeResponse</a>(</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    grpc::Status status, yoriito::viss::v1::UnsubscribeResponse&amp; response) {</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keywordflow">if</span> (status.ok()) {</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordflow">if</span> (response.has_error()) {</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>      <span class="comment">// VISS Error</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>      <span class="keyword">auto</span> error = response.error().description();</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>      <span class="keyword">auto</span> code = response.error().number();</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>      <span class="keyword">auto</span> message = error + <span class="stringliteral">&quot; Code:&quot;</span> + std::to_string(code);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>      VISS_LOG_ERROR(<span class="stringliteral">&quot;CNSR_UNSUBSCRIBE&quot;</span>, message);</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>      <span class="keywordflow">return</span> Result&lt;void&gt;::Err(VissCommonError::CreateVissError(code, error));</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    }</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="comment">// GRPC Error</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keyword">auto</span> error = status.error_message();</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    VISS_LOG_ERROR(<span class="stringliteral">&quot;CNSR_UNSUBSCRIBE&quot;</span>, error);</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordflow">return</span> Result&lt;void&gt;::Err(VissCommonError::CreateProtocolError(error));</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  }</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <span class="keywordflow">return</span> Result&lt;void&gt;::Ok();</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>}</div>
+<div class="foldopen" id="foldopen00042" data-start="{" data-end="}">
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl.html#ae888aff2790d7e58e13af0504e1a04d9">   42</a></span>Result&lt;void&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl.html#ae888aff2790d7e58e13af0504e1a04d9">VissGrpcUnSubscribeImpl::ConvertUnsubscribeResponse</a>(</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    grpc::Status status,</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keyword">const</span> yoriito::viss::v1::UnsubscribeResponse&amp; response)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keywordflow">if</span> (status.ok()) {</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordflow">if</span> (response.has_error()) {</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>      <span class="comment">// VISS Error</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>      <span class="keyword">const</span> std::string&amp; error = response.error().description();</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>      <span class="keyword">const</span> int32_t code = <span class="keyword">static_cast&lt;</span>int32_t<span class="keyword">&gt;</span>(response.error().number());</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>      <span class="keyword">const</span> std::string&amp; message = error + <span class="stringliteral">&quot; Code:&quot;</span> + std::to_string(code);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>      YORIITO_LOG_ERROR(<span class="stringliteral">&quot;CNSR_UNSUBSCRIBE&quot;</span>, message);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>      <span class="keywordflow">return</span> Result&lt;void&gt;::Err(VissCommonError::CreateVissError(code, error));</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    }</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="comment">// GRPC Error</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">auto</span> error = status.error_message();</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    YORIITO_LOG_ERROR(<span class="stringliteral">&quot;CNSR_UNSUBSCRIBE&quot;</span>, error);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordflow">return</span> Result&lt;void&gt;::Err(VissCommonError::CreateProtocolError(error));</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  }</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <span class="keywordflow">return</span> Result&lt;void&gt;::Ok();</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>}</div>
 </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>}  <span class="comment">// namespace yoriito::databroker::consumer</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>}  <span class="comment">// namespace yoriito::databroker::consumer</span></div>
 <div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcSubscribeContext_html"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcSubscribeContext.html">yoriito::databroker::consumer::VissGrpcSubscribeContext</a></div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__subscribe__context_8h_source.html#l00043">viss_grpc_subscribe_context.h:43</a></div></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcSubscribeContext_html_aec7d5c97bf5fc8acaaaadc7722a69c76"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcSubscribeContext.html#aec7d5c97bf5fc8acaaaadc7722a69c76">yoriito::databroker::consumer::VissGrpcSubscribeContext::GetSubscriptionId</a></div><div class="ttdeci">std::string GetSubscriptionId()</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__subscribe__context_8h_source.html#l00064">viss_grpc_subscribe_context.h:64</a></div></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl_html_aa7d7815e1d4f348677880b0f43daa7aa"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl.html#aa7d7815e1d4f348677880b0f43daa7aa">yoriito::databroker::consumer::VissGrpcUnSubscribeImpl::Execute</a></div><div class="ttdeci">grpc::Status Execute(ClientContext &amp;context, yoriito::viss::v1::UnsubscribeRequest &amp;request, yoriito::viss::v1::UnsubscribeResponse &amp;response)</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__unsubscribe__impl_8cc_source.html#l00039">viss_grpc_unsubscribe_impl.cc:39</a></div></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl_html_aac2d903990a6ac3b2001e570f2fe0b15"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl.html#aac2d903990a6ac3b2001e570f2fe0b15">yoriito::databroker::consumer::VissGrpcUnSubscribeImpl::ConvertUnsubscribeResponse</a></div><div class="ttdeci">Result&lt; void &gt; ConvertUnsubscribeResponse(grpc::Status status, yoriito::viss::v1::UnsubscribeResponse &amp;response)</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__unsubscribe__impl_8cc_source.html#l00045">viss_grpc_unsubscribe_impl.cc:45</a></div></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl_html_acf387805b5216759ae96a750dfbc1ec9"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl.html#acf387805b5216759ae96a750dfbc1ec9">yoriito::databroker::consumer::VissGrpcUnSubscribeImpl::CreateUnsubscribeRequest</a></div><div class="ttdeci">void CreateUnsubscribeRequest(VissGrpcSubscribeContext &amp;viss_context, yoriito::viss::v1::UnsubscribeRequest &amp;request)</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__unsubscribe__impl_8cc_source.html#l00033">viss_grpc_unsubscribe_impl.cc:33</a></div></div>
-<div class="ttc" id="anamespaceyoriito_1_1databroker_1_1consumer_html"><div class="ttname"><a href="namespaceyoriito_1_1databroker_1_1consumer.html">yoriito::databroker::consumer</a></div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__get__impl_8h_source.html#l00042">viss_grpc_get_impl.h:42</a></div></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcSubscribeContext_html_ae528118afc8ba95d521959ab54079943"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcSubscribeContext.html#ae528118afc8ba95d521959ab54079943">yoriito::databroker::consumer::VissGrpcSubscribeContext::GetSubscriptionId</a></div><div class="ttdeci">std::string GetSubscriptionId() const</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__subscribe__context_8h_source.html#l00072">viss_grpc_subscribe_context.h:72</a></div></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl_html_ab5d2fafc36bce3b0e6c20120cac38bf4"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl.html#ab5d2fafc36bce3b0e6c20120cac38bf4">yoriito::databroker::consumer::VissGrpcUnSubscribeImpl::CreateUnsubscribeRequest</a></div><div class="ttdeci">void CreateUnsubscribeRequest(const VissGrpcSubscribeContext &amp;viss_context, yoriito::viss::v1::UnsubscribeRequest &amp;request) const</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__unsubscribe__impl_8cc_source.html#l00029">viss_grpc_unsubscribe_impl.cc:29</a></div></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl_html_ac33f0c86f1c3388bd275b2a23bbf467e"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl.html#ac33f0c86f1c3388bd275b2a23bbf467e">yoriito::databroker::consumer::VissGrpcUnSubscribeImpl::Execute</a></div><div class="ttdeci">grpc::Status Execute(ClientContext &amp;context, const yoriito::viss::v1::UnsubscribeRequest &amp;request, yoriito::viss::v1::UnsubscribeResponse &amp;response) const</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__unsubscribe__impl_8cc_source.html#l00036">viss_grpc_unsubscribe_impl.cc:36</a></div></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl_html_ae888aff2790d7e58e13af0504e1a04d9"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcUnSubscribeImpl.html#ae888aff2790d7e58e13af0504e1a04d9">yoriito::databroker::consumer::VissGrpcUnSubscribeImpl::ConvertUnsubscribeResponse</a></div><div class="ttdeci">Result&lt; void &gt; ConvertUnsubscribeResponse(grpc::Status status, const yoriito::viss::v1::UnsubscribeResponse &amp;response) const</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__unsubscribe__impl_8cc_source.html#l00042">viss_grpc_unsubscribe_impl.cc:42</a></div></div>
+<div class="ttc" id="anamespaceyoriito_1_1databroker_1_1consumer_html"><div class="ttname"><a href="namespaceyoriito_1_1databroker_1_1consumer.html">yoriito::databroker::consumer</a></div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__datapoint__util_8h_source.html#l00015">viss_grpc_datapoint_util.h:15</a></div></div>
 <div class="ttc" id="aviss__grpc__unsubscribe__impl_8h_html"><div class="ttname"><a href="viss__grpc__unsubscribe__impl_8h.html">viss_grpc_unsubscribe_impl.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

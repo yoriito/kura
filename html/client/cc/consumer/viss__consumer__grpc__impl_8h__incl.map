@@ -1,21 +1,21 @@
-<map id="/home/runner/work/kura/kura/client/cc/consumer/inc/grpc/viss_consumer_grpc_impl.h" name="/home/runner/work/kura/kura/client/cc/consumer/inc/grpc/viss_consumer_grpc_impl.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="323,5,503,75"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,218,83,243"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="323,47,268,54,208,69,149,91,96,125,80,142,67,163,52,206,47,204,62,161,76,139,93,121,147,87,206,63,267,49,323,41"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="299,218,357,243"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="375,77,356,99,341,124,330,165,329,204,323,204,325,164,336,122,352,96,371,73"/>
-<area shape="rect" id="Node000004" href="$viss__consumer__impl_8h.html" title=" " alt="" coords="107,130,274,155"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="340,77,230,127,227,122,337,72"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="350,130,477,155"/>
-<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="416,75,416,116,411,116,411,75"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="501,130,747,155"/>
-<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="485,73,589,122,587,127,483,77"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="771,130,984,155"/>
-<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="504,58,812,124,810,130,503,63"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="1008,123,1163,163"/>
-<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="504,49,723,78,995,120,994,125,722,83,503,55"/>
-<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="172,158,77,213,74,209,170,153"/>
-<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="211,153,299,208,296,213,208,158"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="107,211,274,251"/>
-<area shape="poly" id="edge6_Node000004_Node000005" title=" " alt="" coords="193,156,193,197,188,197,188,156"/>
+<map id="/work/client/cc/consumer/inc/grpc/viss_consumer_grpc_impl.h" name="/work/client/cc/consumer/inc/grpc/viss_consumer_grpc_impl.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="339,5,523,60"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,203,83,229"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="339,44,262,54,183,67,115,86,89,97,71,110,58,127,51,148,45,190,40,189,45,147,54,125,67,106,87,93,113,81,182,62,262,48,338,39"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="299,203,357,229"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="399,62,377,84,358,109,342,150,333,190,328,188,337,149,354,107,373,80,395,58"/>
+<area shape="rect" id="Node000004" href="$viss__consumer__impl_8h.html" title=" " alt="" coords="81,108,292,148"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="363,63,250,106,248,101,361,58"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="367,115,494,141"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="433,60,433,101,428,101,428,60"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="519,115,764,141"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="491,58,604,107,602,112,489,63"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="788,115,1001,141"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="523,50,825,110,824,115,522,55"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="1025,108,1180,148"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="523,41,742,66,1012,105,1011,110,741,72,523,46"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="157,150,76,199,73,194,154,146"/>
+<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="219,146,299,194,296,199,216,150"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="107,196,274,236"/>
+<area shape="poly" id="edge6_Node000004_Node000005" title=" " alt="" coords="190,148,192,182,186,182,185,148"/>
 </map>

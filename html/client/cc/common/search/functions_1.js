@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['grpcinterceptorfactory_0',['GrpcInterceptorFactory',['../classyoriito_1_1databroker_1_1GrpcInterceptorFactory.html#a8478736d541202030bd36654e9d0bc25',1,'yoriito::databroker::GrpcInterceptorFactory']]]
+  ['buildandresolvestructtypemap_0',['BuildAndResolveStructTypeMap',['../classyoriito_1_1databroker_1_1VissGrpcInspectUtil.html#a9b4cad384150199092591f8add41a219',1,'yoriito::databroker::VissGrpcInspectUtil']]]
 ];

@@ -1,7 +1,7 @@
-<map id="/home/runner/work/kura/kura/client/cc/consumer/inc/grpc/viss_grpc_unsubscribe_impl.h" name="/home/runner/work/kura/kura/client/cc/consumer/inc/grpc/viss_grpc_unsubscribe_impl.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="71,5,346,60"/>
-<area shape="rect" id="Node000002" href="$viss__consumer__grpc_8cc.html" title=" " alt="" coords="5,108,185,177"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="173,72,133,110,129,106,169,68"/>
-<area shape="rect" id="Node000003" href="$viss__grpc__unsubscribe__impl_8cc.html" title=" " alt="" coords="210,108,437,177"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="249,68,289,106,286,110,245,72"/>
+<map id="/work/client/cc/consumer/inc/grpc/viss_grpc_unsubscribe_impl.h" name="/work/client/cc/consumer/inc/grpc/viss_grpc_unsubscribe_impl.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="75,5,349,45"/>
+<area shape="rect" id="Node000002" href="$viss__consumer__grpc_8cc.html" title=" " alt="" coords="5,93,189,148"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="180,56,131,95,128,91,177,52"/>
+<area shape="rect" id="Node000003" href="$viss__grpc__unsubscribe__impl_8cc.html" title=" " alt="" coords="213,93,440,148"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="247,52,296,91,293,95,244,56"/>
 </map>

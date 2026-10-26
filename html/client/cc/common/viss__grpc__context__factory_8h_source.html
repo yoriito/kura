@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Yoriito VISS Common API Reference For Kura: /home/runner/work/kura/kura/client/cc/common/inc/grpc/viss_grpc_context_factory.h Source File</title>
+<title>Yoriito VISS Common API Reference For Kura: /work/client/cc/common/inc/grpc/viss_grpc_context_factory.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -117,8 +117,8 @@ $(document).ready(function(){initNavTree('viss__grpc__context__factory_8h_source
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment"> * limitations under the License.</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#ifndef KURA_CLIENT_CC_COMMON_INC_GRPC_VISS_GRPC_CONTEXT_FACTORY_H_</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#define KURA_CLIENT_CC_COMMON_INC_GRPC_VISS_GRPC_CONTEXT_FACTORY_H_</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#ifndef COMMON_INC_GRPC_VISS_GRPC_CONTEXT_FACTORY_H_</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#define COMMON_INC_GRPC_VISS_GRPC_CONTEXT_FACTORY_H_</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
@@ -131,16 +131,16 @@ $(document).ready(function(){initNavTree('viss__grpc__context__factory_8h_source
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> <span class="keyword">public</span>:</div>
 <div class="foldopen" id="foldopen00030" data-start="{" data-end="};">
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="structyoriito_1_1databroker_1_1ClientContextFactory_1_1Config.html">   30</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="structyoriito_1_1databroker_1_1ClientContextFactory_1_1Config.html">Config</a> {</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="structyoriito_1_1databroker_1_1ClientContextFactory_1_1Config.html#afa45683560fd252b419f6faf8e0e9caa">   31</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="structyoriito_1_1databroker_1_1ClientContextFactory_1_1Config.html#afa45683560fd252b419f6faf8e0e9caa">timeout_seconds</a> = 3;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="structyoriito_1_1databroker_1_1ClientContextFactory_1_1Config.html#af1b1b45bbf21d7816eb476e52fd46954">   31</a></span>    uint32_t <a class="code hl_variable" href="structyoriito_1_1databroker_1_1ClientContextFactory_1_1Config.html#af1b1b45bbf21d7816eb476e52fd46954">timeout_seconds</a> = 3;</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  };</div>
 </div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1ClientContextFactory.html#a6ae2203fa7492f8c79e3da5e0e5b2a98">   33</a></span>  <a class="code hl_function" href="classyoriito_1_1databroker_1_1ClientContextFactory.html#a6ae2203fa7492f8c79e3da5e0e5b2a98">ClientContextFactory</a>() = <span class="keyword">delete</span>;</div>
 <div class="foldopen" id="foldopen00034" data-start="{" data-end="}">
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1ClientContextFactory.html#a2bf6ea66696f305654760e8e24480909">   34</a></span>  <span class="keyword">static</span> std::unique_ptr&lt;grpc::ClientContext&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1ClientContextFactory.html#a2bf6ea66696f305654760e8e24480909">Create</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structyoriito_1_1databroker_1_1ClientContextFactory_1_1Config.html">Config</a>&amp; config) {</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keyword">auto</span> context = std::make_unique&lt;grpc::ClientContext&gt;();</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keywordflow">if</span> (config.<a class="code hl_variable" href="structyoriito_1_1databroker_1_1ClientContextFactory_1_1Config.html#afa45683560fd252b419f6faf8e0e9caa">timeout_seconds</a> &gt; 0) {</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keywordflow">if</span> (config.<a class="code hl_variable" href="structyoriito_1_1databroker_1_1ClientContextFactory_1_1Config.html#af1b1b45bbf21d7816eb476e52fd46954">timeout_seconds</a> &gt; 0) {</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>      context-&gt;set_deadline(std::chrono::system_clock::now() +</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                            std::chrono::seconds(config.<a class="code hl_variable" href="structyoriito_1_1databroker_1_1ClientContextFactory_1_1Config.html#afa45683560fd252b419f6faf8e0e9caa">timeout_seconds</a>));</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                            std::chrono::seconds(config.<a class="code hl_variable" href="structyoriito_1_1databroker_1_1ClientContextFactory_1_1Config.html#af1b1b45bbf21d7816eb476e52fd46954">timeout_seconds</a>));</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    }</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordflow">return</span> context;</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  }</div>
@@ -150,13 +150,13 @@ $(document).ready(function(){initNavTree('viss__grpc__context__factory_8h_source
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>}  <span class="comment">// namespace yoriito::databroker</span></div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#endif  </span><span class="comment">// KURA_CLIENT_CC_COMMON_INC_GRPC_VISS_GRPC_CONTEXT_FACTORY_H_</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#endif  </span><span class="comment">// COMMON_INC_GRPC_VISS_GRPC_CONTEXT_FACTORY_H_</span></div>
 <div class="ttc" id="aclassyoriito_1_1databroker_1_1ClientContextFactory_html"><div class="ttname"><a href="classyoriito_1_1databroker_1_1ClientContextFactory.html">yoriito::databroker::ClientContextFactory</a></div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__context__factory_8h_source.html#l00028">viss_grpc_context_factory.h:28</a></div></div>
 <div class="ttc" id="aclassyoriito_1_1databroker_1_1ClientContextFactory_html_a2bf6ea66696f305654760e8e24480909"><div class="ttname"><a href="classyoriito_1_1databroker_1_1ClientContextFactory.html#a2bf6ea66696f305654760e8e24480909">yoriito::databroker::ClientContextFactory::Create</a></div><div class="ttdeci">static std::unique_ptr&lt; grpc::ClientContext &gt; Create(const Config &amp;config)</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__context__factory_8h_source.html#l00034">viss_grpc_context_factory.h:34</a></div></div>
 <div class="ttc" id="aclassyoriito_1_1databroker_1_1ClientContextFactory_html_a6ae2203fa7492f8c79e3da5e0e5b2a98"><div class="ttname"><a href="classyoriito_1_1databroker_1_1ClientContextFactory.html#a6ae2203fa7492f8c79e3da5e0e5b2a98">yoriito::databroker::ClientContextFactory::ClientContextFactory</a></div><div class="ttdeci">ClientContextFactory()=delete</div></div>
 <div class="ttc" id="anamespaceyoriito_1_1databroker_html"><div class="ttname"><a href="namespaceyoriito_1_1databroker.html">yoriito::databroker</a></div><div class="ttdef"><b>Definition</b> <a href="grpc__interceptor__factory_8h_source.html#l00026">grpc_interceptor_factory.h:26</a></div></div>
 <div class="ttc" id="astructyoriito_1_1databroker_1_1ClientContextFactory_1_1Config_html"><div class="ttname"><a href="structyoriito_1_1databroker_1_1ClientContextFactory_1_1Config.html">yoriito::databroker::ClientContextFactory::Config</a></div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__context__factory_8h_source.html#l00030">viss_grpc_context_factory.h:30</a></div></div>
-<div class="ttc" id="astructyoriito_1_1databroker_1_1ClientContextFactory_1_1Config_html_afa45683560fd252b419f6faf8e0e9caa"><div class="ttname"><a href="structyoriito_1_1databroker_1_1ClientContextFactory_1_1Config.html#afa45683560fd252b419f6faf8e0e9caa">yoriito::databroker::ClientContextFactory::Config::timeout_seconds</a></div><div class="ttdeci">int timeout_seconds</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__context__factory_8h_source.html#l00031">viss_grpc_context_factory.h:31</a></div></div>
+<div class="ttc" id="astructyoriito_1_1databroker_1_1ClientContextFactory_1_1Config_html_af1b1b45bbf21d7816eb476e52fd46954"><div class="ttname"><a href="structyoriito_1_1databroker_1_1ClientContextFactory_1_1Config.html#af1b1b45bbf21d7816eb476e52fd46954">yoriito::databroker::ClientContextFactory::Config::timeout_seconds</a></div><div class="ttdeci">uint32_t timeout_seconds</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__context__factory_8h_source.html#l00031">viss_grpc_context_factory.h:31</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

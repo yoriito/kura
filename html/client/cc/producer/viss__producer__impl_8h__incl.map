@@ -1,9 +1,9 @@
-<map id="/home/runner/work/kura/kura/client/cc/producer/inc/viss_producer_impl.h" name="/home/runner/work/kura/kura/client/cc/producer/inc/viss_producer_impl.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="43,5,229,60"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,115,83,141"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,62,67,107,63,103,108,58"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="107,115,165,141"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="139,60,139,101,133,101,133,60"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="190,108,357,148"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="176,58,236,98,233,103,173,62"/>
+<map id="/work/client/cc/producer/inc/viss_producer_impl.h" name="/work/client/cc/producer/inc/viss_producer_impl.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="43,5,229,45"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,101,83,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,48,68,93,65,89,114,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="107,101,165,126"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="139,46,139,87,133,87,133,46"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="190,93,357,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="168,43,233,84,230,88,165,48"/>
 </map>

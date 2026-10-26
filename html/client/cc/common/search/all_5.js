@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['setdatapointvalue_0',['SetDataPointValue',['../classyoriito_1_1databroker_1_1VissGrpcValueUtil.html#afa45bdc10193d4f7058582013c452e07',1,'yoriito::databroker::VissGrpcValueUtil']]],
-  ['setfilter_1',['SetFilter',['../classyoriito_1_1databroker_1_1VissGrpcSubscribeUtil.html#a81df368e760018e408ab3f84bd9812d1',1,'yoriito::databroker::VissGrpcSubscribeUtil']]]
+  ['intercept_0',['Intercept',['../classyoriito_1_1databroker_1_1VissGrpcInterceptor.html#a21db77f6c343bb4a1e7c4ecf664693ea',1,'yoriito::databroker::VissGrpcInterceptor']]],
+  ['isstructdatatype_1',['IsStructDataType',['../classyoriito_1_1databroker_1_1VissGrpcInspectUtil.html#ab948f6f437b5c6fc8980440d947fe62f',1,'yoriito::databroker::VissGrpcInspectUtil']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['databrokertype_0',['DataBrokerType',['../namespaceyoriito_1_1databroker.html#ae7afeac84bf33014c3d10ff566de6e33',1,'yoriito::databroker']]]
+  ['buildandresolvestructtypemap_0',['BuildAndResolveStructTypeMap',['../classyoriito_1_1databroker_1_1VissGrpcInspectUtil.html#a9b4cad384150199092591f8add41a219',1,'yoriito::databroker::VissGrpcInspectUtil']]]
 ];

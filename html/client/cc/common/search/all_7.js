@@ -1,23 +1,6 @@
 var searchData=
 [
-  ['viss_5fcommon_5ferror_2ecc_0',['viss_common_error.cc',['../viss__common__error_8cc.html',1,'']]],
-  ['viss_5fcommon_5ferror_2eh_1',['viss_common_error.h',['../viss__common__error_8h.html',1,'']]],
-  ['viss_5fcommon_5flog_2eh_2',['viss_common_log.h',['../viss__common__log_8h.html',1,'']]],
-  ['viss_5fgrpc_5fcontext_5ffactory_2eh_3',['viss_grpc_context_factory.h',['../viss__grpc__context__factory_8h.html',1,'']]],
-  ['viss_5fgrpc_5finspect_5futil_2ecc_4',['viss_grpc_inspect_util.cc',['../viss__grpc__inspect__util_8cc.html',1,'']]],
-  ['viss_5fgrpc_5finspect_5futil_2eh_5',['viss_grpc_inspect_util.h',['../viss__grpc__inspect__util_8h.html',1,'']]],
-  ['viss_5fgrpc_5finterceptor_2eh_6',['viss_grpc_interceptor.h',['../viss__grpc__interceptor_8h.html',1,'']]],
-  ['viss_5fgrpc_5fsubscribe_5futil_2ecc_7',['viss_grpc_subscribe_util.cc',['../viss__grpc__subscribe__util_8cc.html',1,'']]],
-  ['viss_5fgrpc_5fsubscribe_5futil_2eh_8',['viss_grpc_subscribe_util.h',['../viss__grpc__subscribe__util_8h.html',1,'']]],
-  ['viss_5fgrpc_5fvalue_5futil_2ecc_9',['viss_grpc_value_util.cc',['../viss__grpc__value__util_8cc.html',1,'']]],
-  ['viss_5fgrpc_5fvalue_5futil_2eh_10',['viss_grpc_value_util.h',['../viss__grpc__value__util_8h.html',1,'']]],
-  ['viss_5flog_5fdebug_11',['VISS_LOG_DEBUG',['../viss__common__log_8h.html#af2382294464dbcea42c344a846834ffc',1,'viss_common_log.h']]],
-  ['viss_5flog_5ferror_12',['VISS_LOG_ERROR',['../viss__common__log_8h.html#aa61a8ca6d8d58ae9db36a634f7f4475a',1,'viss_common_log.h']]],
-  ['viss_5flog_5finfo_13',['VISS_LOG_INFO',['../viss__common__log_8h.html#a4cce9ed6730d308b069985d99c211fd3',1,'viss_common_log.h']]],
-  ['viss_5flog_5fwarn_14',['VISS_LOG_WARN',['../viss__common__log_8h.html#ac9e1065172e5ed7de15e9c0c2edb124b',1,'viss_common_log.h']]],
-  ['visscommonerror_15',['VissCommonError',['../classyoriito_1_1databroker_1_1VissCommonError.html',1,'yoriito::databroker']]],
-  ['vissgrpcinspectutil_16',['VissGrpcInspectUtil',['../classyoriito_1_1databroker_1_1VissGrpcInspectUtil.html',1,'yoriito::databroker']]],
-  ['vissgrpcinterceptor_17',['vissgrpcinterceptor',['../classyoriito_1_1databroker_1_1VissGrpcInterceptor.html#a6bfd53612491a5ef2892e3e165cbddfe',1,'yoriito::databroker::VissGrpcInterceptor::VissGrpcInterceptor()'],['../classyoriito_1_1databroker_1_1VissGrpcInterceptor.html',1,'yoriito::databroker::VissGrpcInterceptor']]],
-  ['vissgrpcsubscribeutil_18',['VissGrpcSubscribeUtil',['../classyoriito_1_1databroker_1_1VissGrpcSubscribeUtil.html',1,'yoriito::databroker']]],
-  ['vissgrpcvalueutil_19',['VissGrpcValueUtil',['../classyoriito_1_1databroker_1_1VissGrpcValueUtil.html',1,'yoriito::databroker']]]
+  ['setdatapointvalue_0',['SetDataPointValue',['../classyoriito_1_1databroker_1_1VissGrpcValueUtil.html#a59538f01e5b615317e5fe78060ffe431',1,'yoriito::databroker::VissGrpcValueUtil']]],
+  ['setfilter_1',['SetFilter',['../classyoriito_1_1databroker_1_1VissGrpcSubscribeUtil.html#a81df368e760018e408ab3f84bd9812d1',1,'yoriito::databroker::VissGrpcSubscribeUtil']]],
+  ['structtypemap_2',['StructTypeMap',['../classyoriito_1_1databroker_1_1VissGrpcInspectUtil.html#a279a1cab3b0386c2fa97657e227ede2b',1,'yoriito::databroker::VissGrpcInspectUtil']]]
 ];

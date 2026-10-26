@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Yoriito VISS Consumer API Reference For Kura: /home/runner/work/kura/kura/client/cc/consumer/inc/grpc/viss_grpc_inspect_impl.h Source File</title>
+<title>Yoriito VISS Consumer API Reference For Kura: /work/client/cc/consumer/inc/grpc/viss_grpc_inspect_impl.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -117,62 +117,70 @@ $(document).ready(function(){initNavTree('viss__grpc__inspect__impl_8h_source.ht
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment"> * limitations under the License.</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#ifndef KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_GRPC_INSPECT_IMPL_H_</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#define KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_GRPC_INSPECT_IMPL_H_</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#ifndef CONSUMER_INC_GRPC_VISS_GRPC_INSPECT_IMPL_H_</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#define CONSUMER_INC_GRPC_VISS_GRPC_INSPECT_IMPL_H_</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;databroker/consumer_inspect_request.h&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;databroker/consumer_inspect_response.h&quot;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;result.h&quot;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment">//</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;grpcpp/grpcpp.h&quot;</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;yoriito/viss/v1/common.grpc.pb.h&quot;</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;yoriito/viss/v1/consumer.grpc.pb.h&quot;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;yoriito/viss/v1/consumer.pb.h&quot;</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">//</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">using </span>yoriito::viss::v1::consumer::VISS;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">using </span>grpc::Channel;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">using </span>grpc::ClientContext;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">using </span>grpc::ClientReader;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="keyword">using </span>grpc::Status;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceyoriito_1_1databroker_1_1consumer.html">yoriito::databroker::consumer</a> {</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="foldopen" id="foldopen00043" data-start="{" data-end="};">
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html">   43</a></span><span class="keyword">class </span><a class="code hl_class" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html">VissGrpcInspectImpl</a> {</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> <span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00045" data-start="{" data-end="}">
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#ab569c83b7ae40939472e27a3df831134">   45</a></span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#ab569c83b7ae40939472e27a3df831134">VissGrpcInspectImpl</a>(yoriito::viss::v1::consumer::VISS::Stub* channel)</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      : stub_(channel) {}</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;databroker/consumer_inspect_request.h&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;databroker/consumer_inspect_response.h&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;yoriito/result.h&quot;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment">//</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;grpcpp/grpcpp.h&quot;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &quot;yoriito/viss/v1/common.pb.h&quot;</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &quot;yoriito/viss/v1/consumer.grpc.pb.h&quot;</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceyoriito_1_1databroker_1_1consumer.html">yoriito::databroker::consumer</a> {</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">using </span>grpc::Channel;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">using </span>grpc::ClientContext;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="keyword">using </span>grpc::ClientReader;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keyword">using </span>grpc::Status;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">using </span>yoriito::viss::v1::consumer::VISS;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="foldopen" id="foldopen00044" data-start="{" data-end="};">
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html">   44</a></span><span class="keyword">class </span><a class="code hl_class" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html">VissGrpcInspectImpl</a> {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> <span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00046" data-start="{" data-end="}">
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#ab569c83b7ae40939472e27a3df831134">   46</a></span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#ab569c83b7ae40939472e27a3df831134">VissGrpcInspectImpl</a>(yoriito::viss::v1::consumer::VISS::Stub* channel)</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>      : stub_(channel) {}</div>
 </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#a306d0866a07106cb57deb465c566fa6f">   47</a></span>  <a class="code hl_function" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#a306d0866a07106cb57deb465c566fa6f">~VissGrpcInspectImpl</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#a870de992869f0f7097b90f0260e576aa">CreateInspectRequest</a>(yoriito::viss::v1::InspectRequest&amp; request,</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                            <span class="keyword">const</span> ConsumerInspectRequest&amp; data);</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  <span class="comment">//</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  grpc::Status <a class="code hl_function" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#a9c536a31b3593794c4bf65bef0bbc529">Execute</a>(ClientContext&amp; context,</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                       yoriito::viss::v1::InspectRequest&amp; request,</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                       yoriito::viss::v1::InspectResponse&amp; response);</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  Result&lt;ConsumerInspectResponse&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#a960ceb6dadd46f49c175061a2a0fbf68">ConvertInspectResponse</a>(</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>      grpc::Status status, yoriito::viss::v1::InspectResponse&amp; response,</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      <span class="keyword">const</span> ConsumerInspectRequest&amp; data);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#a306d0866a07106cb57deb465c566fa6f">   48</a></span>  <a class="code hl_function" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#a306d0866a07106cb57deb465c566fa6f">~VissGrpcInspectImpl</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#aa1a85d1908e31a2f50d8f2d48106d2ac">CreateInspectRequest</a>(yoriito::viss::v1::InspectRequest&amp; request,</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                            <span class="keyword">const</span> ConsumerInspectRequest&amp; data) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  grpc::Status <a class="code hl_function" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#a563da0b5a405f0421e51ad1d5209f7b1">Execute</a>(ClientContext&amp; context,</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                       <span class="keyword">const</span> yoriito::viss::v1::InspectRequest&amp; request,</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                       yoriito::viss::v1::InspectResponse&amp; response) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  Result&lt;ConsumerInspectResponse&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#aba46a51a074d96cc02b82b1e7809a96f">ConvertInspectResponse</a>(</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>      grpc::Status status, <span class="keyword">const</span> yoriito::viss::v1::InspectResponse&amp; response,</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      <span class="keyword">const</span> ConsumerInspectRequest&amp; data) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  yoriito::viss::v1::consumer::VISS::Stub* stub_;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>};</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <span class="keywordtype">void</span> BuildInspectDataList(</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>      <span class="keyword">const</span> yoriito::viss::v1::InspectResponse&amp; response,</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>      <span class="keyword">const</span> std::map&lt;std::string,</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>                     std::shared_ptr&lt;yoriito::databroker::StructType&gt;&gt;&amp;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>          struct_type_map,</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>      std::vector&lt;yoriito::databroker::ConsumerInspectData&gt;&amp; inspect_data_list)</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>      <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  yoriito::viss::v1::consumer::VISS::Stub* stub_;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>};</div>
 </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>}  <span class="comment">// namespace yoriito::databroker::consumer</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="preprocessor">#endif  </span><span class="comment">// KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_GRPC_INSPECT_IMPL_H_</span></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl_html"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html">yoriito::databroker::consumer::VissGrpcInspectImpl</a></div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__inspect__impl_8h_source.html#l00043">viss_grpc_inspect_impl.h:43</a></div></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>}  <span class="comment">// namespace yoriito::databroker::consumer</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="preprocessor">#endif  </span><span class="comment">// CONSUMER_INC_GRPC_VISS_GRPC_INSPECT_IMPL_H_</span></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl_html"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html">yoriito::databroker::consumer::VissGrpcInspectImpl</a></div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__inspect__impl_8h_source.html#l00044">viss_grpc_inspect_impl.h:44</a></div></div>
 <div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl_html_a306d0866a07106cb57deb465c566fa6f"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#a306d0866a07106cb57deb465c566fa6f">yoriito::databroker::consumer::VissGrpcInspectImpl::~VissGrpcInspectImpl</a></div><div class="ttdeci">~VissGrpcInspectImpl()=default</div></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl_html_a870de992869f0f7097b90f0260e576aa"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#a870de992869f0f7097b90f0260e576aa">yoriito::databroker::consumer::VissGrpcInspectImpl::CreateInspectRequest</a></div><div class="ttdeci">void CreateInspectRequest(yoriito::viss::v1::InspectRequest &amp;request, const ConsumerInspectRequest &amp;data)</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__inspect__impl_8cc_source.html#l00041">viss_grpc_inspect_impl.cc:41</a></div></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl_html_a960ceb6dadd46f49c175061a2a0fbf68"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#a960ceb6dadd46f49c175061a2a0fbf68">yoriito::databroker::consumer::VissGrpcInspectImpl::ConvertInspectResponse</a></div><div class="ttdeci">Result&lt; ConsumerInspectResponse &gt; ConvertInspectResponse(grpc::Status status, yoriito::viss::v1::InspectResponse &amp;response, const ConsumerInspectRequest &amp;data)</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__inspect__impl_8cc_source.html#l00061">viss_grpc_inspect_impl.cc:61</a></div></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl_html_a9c536a31b3593794c4bf65bef0bbc529"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#a9c536a31b3593794c4bf65bef0bbc529">yoriito::databroker::consumer::VissGrpcInspectImpl::Execute</a></div><div class="ttdeci">grpc::Status Execute(ClientContext &amp;context, yoriito::viss::v1::InspectRequest &amp;request, yoriito::viss::v1::InspectResponse &amp;response)</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__inspect__impl_8cc_source.html#l00056">viss_grpc_inspect_impl.cc:56</a></div></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl_html_ab569c83b7ae40939472e27a3df831134"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#ab569c83b7ae40939472e27a3df831134">yoriito::databroker::consumer::VissGrpcInspectImpl::VissGrpcInspectImpl</a></div><div class="ttdeci">VissGrpcInspectImpl(yoriito::viss::v1::consumer::VISS::Stub *channel)</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__inspect__impl_8h_source.html#l00045">viss_grpc_inspect_impl.h:45</a></div></div>
-<div class="ttc" id="anamespaceyoriito_1_1databroker_1_1consumer_html"><div class="ttname"><a href="namespaceyoriito_1_1databroker_1_1consumer.html">yoriito::databroker::consumer</a></div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__get__impl_8h_source.html#l00042">viss_grpc_get_impl.h:42</a></div></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl_html_a563da0b5a405f0421e51ad1d5209f7b1"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#a563da0b5a405f0421e51ad1d5209f7b1">yoriito::databroker::consumer::VissGrpcInspectImpl::Execute</a></div><div class="ttdeci">grpc::Status Execute(ClientContext &amp;context, const yoriito::viss::v1::InspectRequest &amp;request, yoriito::viss::v1::InspectResponse &amp;response) const</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__inspect__impl_8cc_source.html#l00053">viss_grpc_inspect_impl.cc:53</a></div></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl_html_aa1a85d1908e31a2f50d8f2d48106d2ac"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#aa1a85d1908e31a2f50d8f2d48106d2ac">yoriito::databroker::consumer::VissGrpcInspectImpl::CreateInspectRequest</a></div><div class="ttdeci">void CreateInspectRequest(yoriito::viss::v1::InspectRequest &amp;request, const ConsumerInspectRequest &amp;data) const</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__inspect__impl_8cc_source.html#l00038">viss_grpc_inspect_impl.cc:38</a></div></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl_html_ab569c83b7ae40939472e27a3df831134"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#ab569c83b7ae40939472e27a3df831134">yoriito::databroker::consumer::VissGrpcInspectImpl::VissGrpcInspectImpl</a></div><div class="ttdeci">VissGrpcInspectImpl(yoriito::viss::v1::consumer::VISS::Stub *channel)</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__inspect__impl_8h_source.html#l00046">viss_grpc_inspect_impl.h:46</a></div></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl_html_aba46a51a074d96cc02b82b1e7809a96f"><div class="ttname"><a href="classyoriito_1_1databroker_1_1consumer_1_1VissGrpcInspectImpl.html#aba46a51a074d96cc02b82b1e7809a96f">yoriito::databroker::consumer::VissGrpcInspectImpl::ConvertInspectResponse</a></div><div class="ttdeci">Result&lt; ConsumerInspectResponse &gt; ConvertInspectResponse(grpc::Status status, const yoriito::viss::v1::InspectResponse &amp;response, const ConsumerInspectRequest &amp;data) const</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__inspect__impl_8cc_source.html#l00059">viss_grpc_inspect_impl.cc:59</a></div></div>
+<div class="ttc" id="anamespaceyoriito_1_1databroker_1_1consumer_html"><div class="ttname"><a href="namespaceyoriito_1_1databroker_1_1consumer.html">yoriito::databroker::consumer</a></div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__datapoint__util_8h_source.html#l00015">viss_grpc_datapoint_util.h:15</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

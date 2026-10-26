@@ -106,12 +106,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a224ee8b38460c9f46c02c8edd3e763ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac4a66c94544ec1820422f03e222a9ae" id="r_aac4a66c94544ec1820422f03e222a9ae"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcSubscribeImpl.html#aac4a66c94544ec1820422f03e222a9ae">~VissGrpcSubscribeImpl</a> ()=default</td></tr>
 <tr class="separator:aac4a66c94544ec1820422f03e222a9ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95a151ef9249b61f827eae7c81e461b7" id="r_a95a151ef9249b61f827eae7c81e461b7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcSubscribeImpl.html#a95a151ef9249b61f827eae7c81e461b7">CreateSubscribeRequest</a> (yoriito::viss::v1::producer::SubscribeTargetRequest &amp;request, const ProducerSubscribeRequest &amp;data)</td></tr>
-<tr class="separator:a95a151ef9249b61f827eae7c81e461b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a05ca1e1b9cf659620c4b4eed940b5be2" id="r_a05ca1e1b9cf659620c4b4eed940b5be2"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; grpc::ClientReader&lt; yoriito::viss::v1::producer::SubscribeTargetResponse &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcSubscribeImpl.html#a05ca1e1b9cf659620c4b4eed940b5be2">Execute</a> (ClientContext &amp;context, yoriito::viss::v1::producer::SubscribeTargetRequest &amp;request)</td></tr>
-<tr class="separator:a05ca1e1b9cf659620c4b4eed940b5be2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad93d9f906464aefaf03d2dbbb2f45ea8" id="r_ad93d9f906464aefaf03d2dbbb2f45ea8"><td class="memItemLeft" align="right" valign="top">Result&lt; std::unique_ptr&lt; ProducerSubscribeContext &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcSubscribeImpl.html#ad93d9f906464aefaf03d2dbbb2f45ea8">ConvertSubscribeResponse</a> (std::unique_ptr&lt; grpc::ClientContext &gt; &amp;client_context, std::unique_ptr&lt; grpc::ClientReader&lt; yoriito::viss::v1::producer::SubscribeTargetResponse &gt; &gt; reader)</td></tr>
-<tr class="separator:ad93d9f906464aefaf03d2dbbb2f45ea8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a188072be75ce7cc0f9388fe6807a12b1" id="r_a188072be75ce7cc0f9388fe6807a12b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcSubscribeImpl.html#a188072be75ce7cc0f9388fe6807a12b1">CreateSubscribeRequest</a> (yoriito::viss::v1::producer::SubscribeTargetRequest &amp;request, const ProducerSubscribeRequest &amp;data) const</td></tr>
+<tr class="separator:a188072be75ce7cc0f9388fe6807a12b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd84e506f2905d42a95a35840a973744" id="r_abd84e506f2905d42a95a35840a973744"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; grpc::ClientReader&lt; yoriito::viss::v1::producer::SubscribeTargetResponse &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcSubscribeImpl.html#abd84e506f2905d42a95a35840a973744">Execute</a> (ClientContext &amp;context, const yoriito::viss::v1::producer::SubscribeTargetRequest &amp;request) const</td></tr>
+<tr class="separator:abd84e506f2905d42a95a35840a973744"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0537c212c57458d5ff6d54174f35d652" id="r_a0537c212c57458d5ff6d54174f35d652"><td class="memItemLeft" align="right" valign="top">Result&lt; std::unique_ptr&lt; ProducerSubscribeContext &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcSubscribeImpl.html#a0537c212c57458d5ff6d54174f35d652">ConvertSubscribeResponse</a> (std::unique_ptr&lt; grpc::ClientContext &gt; &amp;context, std::unique_ptr&lt; grpc::ClientReader&lt; yoriito::viss::v1::producer::SubscribeTargetResponse &gt; &gt; reader, const ProducerSubscribeRequest &amp;data) const</td></tr>
+<tr class="separator:a0537c212c57458d5ff6d54174f35d652"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
@@ -171,8 +171,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ad93d9f906464aefaf03d2dbbb2f45ea8" name="ad93d9f906464aefaf03d2dbbb2f45ea8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad93d9f906464aefaf03d2dbbb2f45ea8">&#9670;&#160;</a></span>ConvertSubscribeResponse()</h2>
+<a id="a0537c212c57458d5ff6d54174f35d652" name="a0537c212c57458d5ff6d54174f35d652"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0537c212c57458d5ff6d54174f35d652">&#9670;&#160;</a></span>ConvertSubscribeResponse()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -181,28 +181,34 @@ Public Member Functions</h2></td></tr>
           <td class="memname">Result&lt; std::unique_ptr&lt; ProducerSubscribeContext &gt; &gt; yoriito::databroker::producer::VissGrpcSubscribeImpl::ConvertSubscribeResponse </td>
           <td>(</td>
           <td class="paramtype">std::unique_ptr&lt; grpc::ClientContext &gt; &amp;&#160;</td>
-          <td class="paramname"><em>client_context</em>, </td>
+          <td class="paramname"><em>context</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::unique_ptr&lt; grpc::ClientReader&lt; yoriito::viss::v1::producer::SubscribeTargetResponse &gt; &gt;&#160;</td>
-          <td class="paramname"><em>reader</em>&#160;</td>
+          <td class="paramname"><em>reader</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ProducerSubscribeRequest &amp;&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="viss__grpc__subscribe__impl_8cc_source.html#l00059">59</a> of file <a class="el" href="viss__grpc__subscribe__impl_8cc_source.html">viss_grpc_subscribe_impl.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="viss__grpc__subscribe__impl_8cc_source.html#l00056">56</a> of file <a class="el" href="viss__grpc__subscribe__impl_8cc_source.html">viss_grpc_subscribe_impl.cc</a>.</p>
 
 </div>
 </div>
-<a id="a95a151ef9249b61f827eae7c81e461b7" name="a95a151ef9249b61f827eae7c81e461b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a95a151ef9249b61f827eae7c81e461b7">&#9670;&#160;</a></span>CreateSubscribeRequest()</h2>
+<a id="a188072be75ce7cc0f9388fe6807a12b1" name="a188072be75ce7cc0f9388fe6807a12b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a188072be75ce7cc0f9388fe6807a12b1">&#9670;&#160;</a></span>CreateSubscribeRequest()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -222,17 +228,17 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="viss__grpc__subscribe__impl_8cc_source.html#l00039">39</a> of file <a class="el" href="viss__grpc__subscribe__impl_8cc_source.html">viss_grpc_subscribe_impl.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="viss__grpc__subscribe__impl_8cc_source.html#l00036">36</a> of file <a class="el" href="viss__grpc__subscribe__impl_8cc_source.html">viss_grpc_subscribe_impl.cc</a>.</p>
 
 </div>
 </div>
-<a id="a05ca1e1b9cf659620c4b4eed940b5be2" name="a05ca1e1b9cf659620c4b4eed940b5be2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a05ca1e1b9cf659620c4b4eed940b5be2">&#9670;&#160;</a></span>Execute()</h2>
+<a id="abd84e506f2905d42a95a35840a973744" name="abd84e506f2905d42a95a35840a973744"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd84e506f2905d42a95a35840a973744">&#9670;&#160;</a></span>Execute()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -246,24 +252,24 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">yoriito::viss::v1::producer::SubscribeTargetRequest &amp;&#160;</td>
+          <td class="paramtype">const yoriito::viss::v1::producer::SubscribeTargetRequest &amp;&#160;</td>
           <td class="paramname"><em>request</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="viss__grpc__subscribe__impl_8cc_source.html#l00052">52</a> of file <a class="el" href="viss__grpc__subscribe__impl_8cc_source.html">viss_grpc_subscribe_impl.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="viss__grpc__subscribe__impl_8cc_source.html#l00049">49</a> of file <a class="el" href="viss__grpc__subscribe__impl_8cc_source.html">viss_grpc_subscribe_impl.cc</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/runner/work/kura/kura/client/cc/producer/inc/grpc/<a class="el" href="viss__grpc__subscribe__impl_8h_source.html">viss_grpc_subscribe_impl.h</a></li>
-<li>/home/runner/work/kura/kura/client/cc/producer/src/grpc/<a class="el" href="viss__grpc__subscribe__impl_8cc_source.html">viss_grpc_subscribe_impl.cc</a></li>
+<li>/work/client/cc/producer/inc/grpc/<a class="el" href="viss__grpc__subscribe__impl_8h_source.html">viss_grpc_subscribe_impl.h</a></li>
+<li>/work/client/cc/producer/src/grpc/<a class="el" href="viss__grpc__subscribe__impl_8cc_source.html">viss_grpc_subscribe_impl.cc</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

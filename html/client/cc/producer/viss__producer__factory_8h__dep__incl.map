@@ -1,13 +1,13 @@
-<map id="/home/runner/work/kura/kura/client/cc/producer/inc/viss_producer_factory.h" name="/home/runner/work/kura/kura/client/cc/producer/inc/viss_producer_factory.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="307,5,510,60"/>
-<area shape="rect" id="Node000002" href="$viss__producer_8h.html" title=" " alt="" coords="212,108,389,163"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="372,72,331,110,327,106,368,68"/>
-<area shape="rect" id="Node000006" href="$viss__producer__factory_8cc.html" title=" " alt="" coords="414,108,622,163"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="449,68,491,106,488,110,446,72"/>
-<area shape="rect" id="Node000003" href="$databroker__producer__factory_8cc.html" title=" " alt="" coords="5,211,188,280"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="240,172,162,213,159,208,238,167"/>
-<area shape="rect" id="Node000004" href="$viss__producer__grpc_8cc.html" title=" " alt="" coords="212,211,389,280"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="303,177,303,210,298,210,298,177"/>
-<area shape="rect" id="Node000005" href="$viss__producer_8cc.html" title=" " alt="" coords="413,218,591,273"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="363,167,454,215,452,220,361,172"/>
+<map id="/work/client/cc/producer/inc/viss_producer_factory.h" name="/work/client/cc/producer/inc/viss_producer_factory.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="307,5,510,45"/>
+<area shape="rect" id="Node000002" href="$viss__producer_8h.html" title=" " alt="" coords="212,93,389,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="376,56,326,95,323,91,372,52"/>
+<area shape="rect" id="Node000006" href="$viss__producer__factory_8cc.html" title=" " alt="" coords="414,93,622,133"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="445,52,495,91,492,95,442,56"/>
+<area shape="rect" id="Node000003" href="$databroker__producer__factory_8cc.html" title=" " alt="" coords="5,181,188,236"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="248,141,155,184,153,179,246,137"/>
+<area shape="rect" id="Node000004" href="$viss__producer__grpc_8cc.html" title=" " alt="" coords="212,181,389,236"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="303,147,303,181,298,181,298,147"/>
+<area shape="rect" id="Node000005" href="$viss__producer_8cc.html" title=" " alt="" coords="413,189,591,229"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="355,137,462,186,460,191,353,142"/>
 </map>

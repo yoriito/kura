@@ -1,18 +1,16 @@
-<map id="/home/runner/work/kura/kura/client/cc/common/inc/grpc/grpc_interceptor_factory.h" name="/home/runner/work/kura/kura/client/cc/common/inc/grpc/grpc_interceptor_factory.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="186,5,373,75"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,196,164,236"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="244,77,118,189,114,185,240,73"/>
-<area shape="rect" id="Node000003" href="$viss__grpc__interceptor_8h.html" title=" " alt="" coords="280,123,484,148"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="318,73,361,111,357,115,315,77"/>
-<area shape="poly" id="edge5_Node000003_Node000002" title=" " alt="" coords="339,151,170,195,168,190,338,145"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="189,203,389,229"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="370,150,315,196,311,192,367,146"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="413,203,540,229"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="398,146,454,192,450,196,394,150"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="565,203,623,229"/>
-<area shape="poly" id="edge6_Node000003_Node000006" title=" " alt="" coords="419,146,554,194,558,195,556,200,552,198,417,151"/>
-<area shape="rect" id="Node000007" href="$viss__common__log_8h.html" title=" " alt="" coords="648,203,799,229"/>
-<area shape="poly" id="edge7_Node000003_Node000007" title=" " alt="" coords="432,145,661,198,660,203,431,151"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="672,284,775,309"/>
-<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="726,229,726,270,721,270,721,229"/>
+<map id="/work/client/cc/common/inc/grpc/grpc_interceptor_factory.h" name="/work/client/cc/common/inc/grpc/grpc_interceptor_factory.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="186,5,373,60"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,181,164,221"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="250,62,119,174,116,170,247,58"/>
+<area shape="rect" id="Node000003" href="$viss__grpc__interceptor_8h.html" title=" " alt="" coords="280,108,484,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="312,58,359,97,356,101,309,62"/>
+<area shape="poly" id="edge5_Node000003_Node000002" title=" " alt="" coords="339,136,170,180,168,175,338,131"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="189,189,389,214"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="370,136,315,182,311,178,367,131"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="413,189,540,214"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="398,131,454,178,450,182,394,136"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="565,189,623,214"/>
+<area shape="poly" id="edge6_Node000003_Node000006" title=" " alt="" coords="419,131,554,179,558,181,556,186,552,184,417,136"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="647,189,797,214"/>
+<area shape="poly" id="edge7_Node000003_Node000007" title=" " alt="" coords="432,131,660,183,659,188,431,136"/>
 </map>

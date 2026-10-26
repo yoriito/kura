@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['producertype_0',['ProducerType',['../classyoriito_1_1databroker_1_1VissProducerFactory.html#a8e215420d2a698d8f2e0d415df57cc21',1,'yoriito::databroker::VissProducerFactory']]]
+  ['operator_3d_0',['operator=',['../classyoriito_1_1databroker_1_1producer_1_1VissGrpcSubscribeContext.html#a9e1796e65b144f3d6e765457e4f44bf3',1,'yoriito::databroker::producer::VissGrpcSubscribeContext::operator=(const VissGrpcSubscribeContext &amp;)=delete'],['../classyoriito_1_1databroker_1_1producer_1_1VissGrpcSubscribeContext.html#a86331c53e9aafe0064f60b675a77005c',1,'yoriito::databroker::producer::VissGrpcSubscribeContext::operator=(VissGrpcSubscribeContext &amp;&amp;)=delete'],['../classyoriito_1_1databroker_1_1VissProducerImpl.html#a7fa0b76b2f3d1348ef90297ff00efa7c',1,'yoriito::databroker::VissProducerImpl::operator=(const VissProducerImpl &amp;)=delete'],['../classyoriito_1_1databroker_1_1VissProducerImpl.html#a4d60d16ebf7d866aa6b864eb2083ff36',1,'yoriito::databroker::VissProducerImpl::operator=(VissProducerImpl &amp;&amp;)=delete']]]
 ];

@@ -114,6 +114,8 @@ Collaboration diagram for yoriito::databroker::VissGrpcInterceptor:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a6bfd53612491a5ef2892e3e165cbddfe" id="r_a6bfd53612491a5ef2892e3e165cbddfe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classyoriito_1_1databroker_1_1VissGrpcInterceptor.html#a6bfd53612491a5ef2892e3e165cbddfe">VissGrpcInterceptor</a> (const <a class="el" href="namespaceyoriito_1_1databroker.html#ae7afeac84bf33014c3d10ff566de6e33">DataBrokerType</a> &amp;databrokerType, const grpc::experimental::ClientRpcInfo &amp;info)</td></tr>
 <tr class="separator:a6bfd53612491a5ef2892e3e165cbddfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6016d0c752e07dee5baf835dedbf230" id="r_ae6016d0c752e07dee5baf835dedbf230"><td class="memItemLeft" align="right" valign="top">const google::protobuf::Message *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classyoriito_1_1databroker_1_1VissGrpcInterceptor.html#ae6016d0c752e07dee5baf835dedbf230">AsProtoMessage</a> (const void *p) const noexcept</td></tr>
+<tr class="separator:ae6016d0c752e07dee5baf835dedbf230"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21db77f6c343bb4a1e7c4ecf664693ea" id="r_a21db77f6c343bb4a1e7c4ecf664693ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classyoriito_1_1databroker_1_1VissGrpcInterceptor.html#a21db77f6c343bb4a1e7c4ecf664693ea">Intercept</a> (grpc::experimental::InterceptorBatchMethods *methods) override</td></tr>
 <tr class="separator:a21db77f6c343bb4a1e7c4ecf664693ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -157,11 +159,39 @@ Public Member Functions</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="viss__grpc__interceptor_8h_source.html#l00034">34</a> of file <a class="el" href="viss__grpc__interceptor_8h_source.html">viss_grpc_interceptor.h</a>.</p>
 
-<p class="reference">References <a class="el" href="namespaceyoriito_1_1databroker.html#ae7afeac84bf33014c3d10ff566de6e33a967ffffa9aaf87c52e2c54522118083a">yoriito::databroker::kConsumer</a>.</p>
-
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ae6016d0c752e07dee5baf835dedbf230" name="ae6016d0c752e07dee5baf835dedbf230"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6016d0c752e07dee5baf835dedbf230">&#9670;&#160;</a></span>AsProtoMessage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const google::protobuf::Message * yoriito::databroker::VissGrpcInterceptor::AsProtoMessage </td>
+          <td>(</td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>p</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="viss__grpc__interceptor_8h_source.html#l00054">54</a> of file <a class="el" href="viss__grpc__interceptor_8h_source.html">viss_grpc_interceptor.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="viss__grpc__interceptor_8h_source.html#l00058">Intercept()</a>.</p>
+
+</div>
+</div>
 <a id="a21db77f6c343bb4a1e7c4ecf664693ea" name="a21db77f6c343bb4a1e7c4ecf664693ea"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a21db77f6c343bb4a1e7c4ecf664693ea">&#9670;&#160;</a></span>Intercept()</h2>
 
@@ -186,14 +216,14 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="viss__grpc__interceptor_8h_source.html#l00043">43</a> of file <a class="el" href="viss__grpc__interceptor_8h_source.html">viss_grpc_interceptor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="viss__grpc__interceptor_8h_source.html#l00058">58</a> of file <a class="el" href="viss__grpc__interceptor_8h_source.html">viss_grpc_interceptor.h</a>.</p>
 
-<p class="reference">References <a class="el" href="viss__common__log_8h_source.html#l00024">VISS_LOG_DEBUG</a>, and <a class="el" href="viss__common__log_8h_source.html#l00027">VISS_LOG_ERROR</a>.</p>
+<p class="reference">References <a class="el" href="viss__grpc__interceptor_8h_source.html#l00054">AsProtoMessage()</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/home/runner/work/kura/kura/client/cc/common/inc/grpc/<a class="el" href="viss__grpc__interceptor_8h_source.html">viss_grpc_interceptor.h</a></li>
+<li>/work/client/cc/common/inc/grpc/<a class="el" href="viss__grpc__interceptor_8h_source.html">viss_grpc_interceptor.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

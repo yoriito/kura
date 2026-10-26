@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Yoriito VISS Common API Reference For Kura: /home/runner/work/kura/kura/client/cc/common/inc/grpc/viss_grpc_value_util.h Source File</title>
+<title>Yoriito VISS Common API Reference For Kura: /work/client/cc/common/inc/grpc/viss_grpc_value_util.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -117,30 +117,52 @@ $(document).ready(function(){initNavTree('viss__grpc__value__util_8h_source.html
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment"> * limitations under the License.</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#ifndef KURA_CLIENT_CC_COMMON_INC_GRPC_VISS_GRPC_VALUE_UTIL_H_</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#define KURA_CLIENT_CC_COMMON_INC_GRPC_VISS_GRPC_VALUE_UTIL_H_</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#ifndef COMMON_INC_GRPC_VISS_GRPC_VALUE_UTIL_H_</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#define COMMON_INC_GRPC_VISS_GRPC_VALUE_UTIL_H_</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment">//</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;databroker_type.h&quot;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;yoriito/viss/v1/types/value.pb.h&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;result.h&quot;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;yoriito/viss/v1/types/value.pb.h&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment">//</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;yoriito/databroker_type.h&quot;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;yoriito/result.h&quot;</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceyoriito_1_1databroker.html">yoriito::databroker</a> {</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
 <div class="foldopen" id="foldopen00029" data-start="{" data-end="};">
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1VissGrpcValueUtil.html">   29</a></span><span class="keyword">class </span><a class="code hl_class" href="classyoriito_1_1databroker_1_1VissGrpcValueUtil.html">VissGrpcValueUtil</a> final {</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="keyword">static</span> Result&lt;void&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1VissGrpcValueUtil.html#afa45bdc10193d4f7058582013c452e07">SetDataPointValue</a>(</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>      yoriito::viss::v1::ValueType &amp;datapoint_value_type, ValueType value);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keyword">static</span> ValueType <a class="code hl_function" href="classyoriito_1_1databroker_1_1VissGrpcValueUtil.html#a0479c90e20605940ddf574045110b245">ConvertValueType</a>(yoriito::viss::v1::ValueType val);</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>};</div>
-</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="keyword">static</span> Result&lt;void&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1VissGrpcValueUtil.html#a59538f01e5b615317e5fe78060ffe431">SetDataPointValue</a>(</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>      yoriito::viss::v1::ValueType &amp;datapoint_value_type,</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>      <span class="keyword">const</span> ValueType &amp;value);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keyword">static</span> ValueType <a class="code hl_function" href="classyoriito_1_1databroker_1_1VissGrpcValueUtil.html#a0479c90e20605940ddf574045110b245">ConvertValueType</a>(yoriito::viss::v1::ValueType val);</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>}  <span class="comment">// namespace yoriito::databroker</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#endif  </span><span class="comment">// KURA_CLIENT_CC_COMMON_INC_GRPC_VISS_GRPC_VALUE_UTIL_H_</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keyword">static</span> Result&lt;void&gt; SetStructDataValue(</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>      yoriito::viss::v1::ValueType &amp;datapoint_value_type,</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>      <span class="keyword">const</span> StructDataPtr &amp;value);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="keyword">static</span> Result&lt;void&gt; SetStructDataArrayValue(</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>      yoriito::viss::v1::ValueType &amp;datapoint_value_type,</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>      <span class="keyword">const</span> StructDataArray &amp;value);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> SetValueObject(yoriito::viss::v1::ValueObject &amp;value_object,</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                             <span class="keyword">const</span> StructData &amp;struct_data);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keyword">static</span> StructData ConvertValueObject(</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      <span class="keyword">const</span> yoriito::viss::v1::ValueObject &amp;value_object);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keyword">static</span> ValueType ConvertValueObjectArray(</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>      <span class="keyword">const</span> yoriito::viss::v1::ValueObjectArray &amp;value_object_array);</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> Array&gt;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  <span class="keyword">static</span> ValueType ConvertArray(<span class="keyword">const</span> Array &amp;array);</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> MutableArray&gt;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> SetArrayValue(yoriito::viss::v1::ValueType &amp;datapoint_value_type,</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>                            <span class="keyword">const</span> ValueType &amp;value, MutableArray mutable_array);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>};</div>
+</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>}  <span class="comment">// namespace yoriito::databroker</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="preprocessor">#endif  </span><span class="comment">// COMMON_INC_GRPC_VISS_GRPC_VALUE_UTIL_H_</span></div>
 <div class="ttc" id="aclassyoriito_1_1databroker_1_1VissGrpcValueUtil_html"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissGrpcValueUtil.html">yoriito::databroker::VissGrpcValueUtil</a></div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__value__util_8h_source.html#l00029">viss_grpc_value_util.h:29</a></div></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1VissGrpcValueUtil_html_a0479c90e20605940ddf574045110b245"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissGrpcValueUtil.html#a0479c90e20605940ddf574045110b245">yoriito::databroker::VissGrpcValueUtil::ConvertValueType</a></div><div class="ttdeci">static ValueType ConvertValueType(yoriito::viss::v1::ValueType val)</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__value__util_8cc_source.html#l00181">viss_grpc_value_util.cc:181</a></div></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1VissGrpcValueUtil_html_afa45bdc10193d4f7058582013c452e07"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissGrpcValueUtil.html#afa45bdc10193d4f7058582013c452e07">yoriito::databroker::VissGrpcValueUtil::SetDataPointValue</a></div><div class="ttdeci">static Result&lt; void &gt; SetDataPointValue(yoriito::viss::v1::ValueType &amp;datapoint_value_type, ValueType value)</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__value__util_8cc_source.html#l00039">viss_grpc_value_util.cc:39</a></div></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1VissGrpcValueUtil_html_a0479c90e20605940ddf574045110b245"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissGrpcValueUtil.html#a0479c90e20605940ddf574045110b245">yoriito::databroker::VissGrpcValueUtil::ConvertValueType</a></div><div class="ttdeci">static ValueType ConvertValueType(yoriito::viss::v1::ValueType val)</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__value__util_8cc_source.html#l00195">viss_grpc_value_util.cc:195</a></div></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1VissGrpcValueUtil_html_a59538f01e5b615317e5fe78060ffe431"><div class="ttname"><a href="classyoriito_1_1databroker_1_1VissGrpcValueUtil.html#a59538f01e5b615317e5fe78060ffe431">yoriito::databroker::VissGrpcValueUtil::SetDataPointValue</a></div><div class="ttdeci">static Result&lt; void &gt; SetDataPointValue(yoriito::viss::v1::ValueType &amp;datapoint_value_type, const ValueType &amp;value)</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__value__util_8cc_source.html#l00085">viss_grpc_value_util.cc:85</a></div></div>
 <div class="ttc" id="anamespaceyoriito_1_1databroker_html"><div class="ttname"><a href="namespaceyoriito_1_1databroker.html">yoriito::databroker</a></div><div class="ttdef"><b>Definition</b> <a href="grpc__interceptor__factory_8h_source.html#l00026">grpc_interceptor_factory.h:26</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

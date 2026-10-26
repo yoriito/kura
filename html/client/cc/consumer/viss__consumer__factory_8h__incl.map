@@ -1,12 +1,12 @@
-<map id="/home/runner/work/kura/kura/client/cc/consumer/inc/viss_consumer_factory.h" name="/home/runner/work/kura/kura/client/cc/consumer/inc/viss_consumer_factory.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,215,60"/>
+<map id="/work/client/cc/consumer/inc/viss_consumer_factory.h" name="/work/client/cc/consumer/inc/viss_consumer_factory.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,215,45"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="26,189,103,214"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,61,79,109,72,143,69,175,63,174,67,142,74,107,94,59"/>
-<area shape="rect" id="Node000003" href="$viss__consumer__impl_8h.html" title=" " alt="" coords="88,108,255,133"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="131,59,157,95,153,98,127,62"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="157,136,93,183,90,178,154,131"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="134,189,193,214"/>
-<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="173,134,169,175,163,175,168,133"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="217,181,384,221"/>
-<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="192,131,259,172,257,177,189,136"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,47,79,69,67,94,61,136,63,175,58,175,56,136,62,93,75,66,91,44"/>
+<area shape="rect" id="Node000003" href="$viss__consumer__impl_8h.html" title=" " alt="" coords="77,93,287,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="128,44,159,81,155,85,124,47"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="158,136,93,183,90,178,154,131"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="139,189,198,214"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="182,134,175,175,170,174,176,133"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="223,181,389,221"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="211,131,269,171,266,176,208,136"/>
 </map>

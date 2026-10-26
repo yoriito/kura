@@ -1,26 +1,28 @@
-<map id="/home/runner/work/kura/kura/client/cc/consumer/src/viss_consumer.cc" name="/home/runner/work/kura/kura/client/cc/consumer/src/viss_consumer.cc">
-<area shape="rect" id="Node000001" title=" " alt="" coords="329,5,509,60"/>
-<area shape="rect" id="Node000002" href="$viss__consumer_8h.html" title=" " alt="" coords="258,108,388,133"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="391,62,348,101,344,97,388,58"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="15,335,92,361"/>
-<area shape="poly" id="edge13_Node000001_Node000004" title=" " alt="" coords="329,43,252,56,168,81,127,99,88,122,53,150,24,183,11,206,8,228,20,279,29,302,40,322,35,325,24,304,15,281,3,228,6,205,19,180,50,146,85,118,124,95,166,76,251,51,328,37"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="435,335,494,361"/>
-<area shape="poly" id="edge14_Node000001_Node000005" title=" " alt="" coords="432,59,462,145,476,199,487,254,486,290,477,323,472,321,480,290,482,255,471,200,457,146,427,61"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="553,108,613,133"/>
-<area shape="poly" id="edge15_Node000001_Node000009" title=" " alt="" coords="470,58,550,99,548,104,468,62"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="361,181,426,207"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="336,132,374,170,371,174,333,136"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="258,129,196,136,131,146,75,162,54,172,41,183,31,199,26,216,25,254,33,291,45,322,40,324,28,292,20,254,21,215,27,196,37,180,52,167,73,157,130,141,195,130,257,124"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="368,131,407,149,426,163,441,180,459,215,468,254,471,291,470,322,464,321,465,291,463,254,454,217,437,183,422,167,404,154,365,136"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="137,328,304,368"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="326,134,323,199,315,241,299,281,283,303,263,321,259,317,279,300,294,279,310,240,318,198,321,133"/>
-<area shape="rect" id="Node000007" href="$viss__consumer__factory_8h.html" title=" " alt="" coords="52,181,234,207"/>
-<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="295,136,186,179,184,174,293,131"/>
-<area shape="rect" id="Node000008" href="$viss__consumer__impl_8h.html" title=" " alt="" coords="118,255,285,280"/>
-<area shape="poly" id="edge12_Node000002_Node000008" title=" " alt="" coords="315,136,222,246,218,242,311,132"/>
-<area shape="poly" id="edge7_Node000007_Node000004" title=" " alt="" coords="138,208,108,256,69,325,64,322,103,253,133,206"/>
-<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="155,205,186,243,181,246,151,209"/>
-<area shape="poly" id="edge9_Node000008_Node000004" title=" " alt="" coords="181,283,89,331,86,326,179,278"/>
-<area shape="poly" id="edge10_Node000008_Node000005" title=" " alt="" coords="241,277,422,331,421,336,239,283"/>
-<area shape="poly" id="edge11_Node000008_Node000006" title=" " alt="" coords="207,280,215,314,210,315,202,281"/>
+<map id="/work/client/cc/consumer/src/viss_consumer.cc" name="/work/client/cc/consumer/src/viss_consumer.cc">
+<area shape="rect" id="Node000001" title=" " alt="" coords="520,5,704,45"/>
+<area shape="rect" id="Node000002" href="$viss__consumer_8h.html" title=" " alt="" coords="380,93,601,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="584,48,521,88,518,84,581,43"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="134,350,212,375"/>
+<area shape="poly" id="edge14_Node000001_Node000004" title=" " alt="" coords="520,37,385,53,233,79,161,97,98,118,48,141,15,168,10,180,8,195,13,233,24,270,36,293,55,311,76,326,122,346,120,351,73,330,51,315,32,296,19,272,8,234,3,195,5,178,11,165,45,137,96,113,160,92,232,74,384,48,519,32"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="628,350,686,375"/>
+<area shape="poly" id="edge15_Node000001_Node000005" title=" " alt="" coords="622,45,655,134,672,193,684,254,686,275,684,295,670,338,665,337,678,294,680,275,678,255,667,194,650,135,617,47"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="746,93,806,119"/>
+<area shape="poly" id="edge16_Node000001_Node000010" title=" " alt="" coords="652,43,740,85,738,90,650,48"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="554,174,619,199"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="506,117,563,163,560,167,503,121"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="379,117,166,137,78,151,49,160,33,169,21,191,21,214,31,238,48,262,95,307,143,341,140,345,92,311,44,266,26,241,16,215,16,189,30,165,47,155,77,146,165,131,379,111"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="554,116,597,134,617,148,634,165,646,186,656,208,665,255,667,300,664,337,658,336,661,300,660,256,650,210,642,188,629,168,613,152,594,139,552,121"/>
+<area shape="rect" id="Node000006" href="$viss__consumer__factory_8h.html" title=" " alt="" coords="217,167,428,207"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="467,121,376,163,374,158,465,116"/>
+<area shape="rect" id="Node000007" href="$viss__consumer__impl_8h.html" title=" " alt="" coords="268,255,478,295"/>
+<area shape="poly" id="edge11_Node000002_Node000007" title=" " alt="" coords="488,120,470,160,442,208,407,247,403,243,437,205,465,158,483,118"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="346,343,512,383"/>
+<area shape="poly" id="edge12_Node000002_Node000008" title=" " alt="" coords="496,118,501,150,506,195,505,245,493,296,481,317,465,335,461,332,476,314,488,294,499,245,501,195,496,151,490,119"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="44,174,193,199"/>
+<area shape="poly" id="edge13_Node000002_Node000009" title=" " alt="" coords="436,121,205,169,185,174,184,168,204,164,434,116"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="304,209,258,256,191,341,187,337,254,253,300,205"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="336,206,357,241,352,244,331,208"/>
+<area shape="poly" id="edge8_Node000007_Node000004" title=" " alt="" coords="330,297,213,347,211,342,328,292"/>
+<area shape="poly" id="edge9_Node000007_Node000005" title=" " alt="" coords="436,292,615,346,613,351,434,297"/>
+<area shape="poly" id="edge10_Node000007_Node000008" title=" " alt="" coords="388,293,411,330,407,333,383,296"/>
 </map>

@@ -47,7 +47,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"annotated.html"
+"annotated.html",
+"viss__producer__grpc_8cc_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

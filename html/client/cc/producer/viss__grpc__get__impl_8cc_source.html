@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Yoriito VISS Producer API Reference For Kura: /home/runner/work/kura/kura/client/cc/producer/src/grpc/viss_grpc_get_impl.cc Source File</title>
+<title>Yoriito VISS Producer API Reference For Kura: /work/client/cc/producer/src/grpc/viss_grpc_get_impl.cc Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -115,101 +115,91 @@ $(document).ready(function(){initNavTree('viss__grpc__get__impl_8cc_source.html'
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">// See the License for the specific language governing permissions and</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">// limitations under the License.</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">//</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;<a class="code" href="viss__grpc__get__impl_8h.html">grpc/viss_grpc_get_impl.h</a>&quot;</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;grpc/viss_grpc_inspect_util.h&quot;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;grpc/viss_grpc_value_util.h&quot;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;viss_common_error.h&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;viss_common_log.h&quot;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment">//</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;grpcpp/grpcpp.h&quot;</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;yoriito/viss/v1/common.grpc.pb.h&quot;</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;yoriito/viss/v1/common.pb.h&quot;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;yoriito/viss/v1/types/value.grpc.pb.h&quot;</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">//</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">using </span>grpc::Channel;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">using </span>grpc::ClientContext;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">using </span>grpc::ClientReader;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">using </span>grpc::Status;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceyoriito_1_1databroker_1_1producer.html">yoriito::databroker::producer</a> {</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="foldopen" id="foldopen00040" data-start="{" data-end="}">
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl.html#ae61af38cd1b3e758ae73d1094674a245">   40</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl.html#ae61af38cd1b3e758ae73d1094674a245">VissGrpcGetImpl::CreateGetRequest</a>(</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    yoriito::viss::v1::producer::GetTargetRequest&amp; request,</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">const</span> ProducerGetRequest&amp; data) {</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  request.set_path(data.GetPath());</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keyword">auto</span> get_filter = request.mutable_filter();</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keyword">auto</span> path_filter = get_filter-&gt;mutable_paths_parameter();</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keywordflow">if</span> (data.GetFilter().has_value()) {</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">auto</span> paths = data.GetFilter().value().GetPaths();</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> std::string&amp; path : paths) {</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>      path_filter-&gt;add_paths(path);</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    }</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  }</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>}</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;<a class="code" href="viss__grpc__get__impl_8h.html">grpc/viss_grpc_get_impl.h</a>&quot;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &quot;common/inc/viss_common_error.h&quot;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;grpc/viss_grpc_value_util.h&quot;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;yoriito/yoriito_log.h&quot;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceyoriito_1_1databroker_1_1producer.html">yoriito::databroker::producer</a> {</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">using </span>grpc::Channel;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">using </span>grpc::ClientContext;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">using </span>grpc::ClientReader;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">using </span>grpc::Status;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="foldopen" id="foldopen00030" data-start="{" data-end="}">
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl.html#ac4e43a6b2187a4ec87d9a0849156e2c8">   30</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl.html#ac4e43a6b2187a4ec87d9a0849156e2c8">VissGrpcGetImpl::CreateGetRequest</a>(</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    yoriito::viss::v1::producer::GetTargetRequest&amp; request,</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keyword">const</span> ProducerGetRequest&amp; data)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  request.set_path(data.GetPath());</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keyword">auto</span> get_filter = request.mutable_filter();</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keyword">auto</span> path_filter = get_filter-&gt;mutable_paths_parameter();</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keywordflow">if</span> (data.GetFilter().has_value()) {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; paths = data.GetFilter().value().GetPaths();</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> std::string&amp; path : paths) {</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>      path_filter-&gt;add_paths(path);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    }</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  }</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>}</div>
 </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="foldopen" id="foldopen00055" data-start="{" data-end="}">
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl.html#a4b28905e2ea37f1ea18ed4d627bc2fe0">   55</a></span>grpc::Status <a class="code hl_function" href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl.html#a4b28905e2ea37f1ea18ed4d627bc2fe0">VissGrpcGetImpl::Execute</a>(</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    ClientContext&amp; context,</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    yoriito::viss::v1::producer::GetTargetRequest&amp; request,</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    yoriito::viss::v1::producer::GetTargetResponse&amp; response) {</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <span class="keyword">auto</span> ret = stub_-&gt;GetTarget(&amp;context, request, &amp;response);</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <span class="keywordflow">return</span> ret;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>}</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="foldopen" id="foldopen00045" data-start="{" data-end="}">
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl.html#ac8b12952ac11baa05d375d203c75f5e0">   45</a></span>grpc::Status <a class="code hl_function" href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl.html#ac8b12952ac11baa05d375d203c75f5e0">VissGrpcGetImpl::Execute</a>(</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    ClientContext&amp; context,</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">const</span> yoriito::viss::v1::producer::GetTargetRequest&amp; request,</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    yoriito::viss::v1::producer::GetTargetResponse&amp; response)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keyword">auto</span> ret = stub_-&gt;GetTarget(&amp;context, request, &amp;response);</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keywordflow">return</span> ret;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>}</div>
 </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="foldopen" id="foldopen00063" data-start="{" data-end="}">
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl.html#a359f98d37e4d1d137dab55780ec917b1">   63</a></span>Result&lt;ProducerGetResponse&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl.html#a359f98d37e4d1d137dab55780ec917b1">VissGrpcGetImpl::ConvertGetResponse</a>(</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    grpc::Status status,</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    yoriito::viss::v1::producer::GetTargetResponse&amp; response,</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keyword">const</span> ProducerGetRequest&amp; data) {</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  std::vector&lt;yoriito::databroker::ProducerGetDataPoint&gt; datapoints;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <span class="keywordflow">if</span> (status.ok()) {</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="comment">// VISS Error</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keywordflow">if</span> (response.has_error()) {</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>      <span class="keyword">auto</span> error = response.error().description();</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>      <span class="keyword">auto</span> code = response.error().number();</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>      <span class="keyword">auto</span> message = error + <span class="stringliteral">&quot; Code:&quot;</span> + std::to_string(code);</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>      VISS_LOG_ERROR(<span class="stringliteral">&quot;PRDR_GET&quot;</span>, message);</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>      <span class="keywordflow">return</span> Result&lt;ProducerGetResponse&gt;::Err(</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>          VissCommonError::CreateVissError(code, error));</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    }</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keywordflow">if</span> (!response.has_data()) {</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>      <span class="comment">// Illegal Response: No Data( actually return viss error )</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>      VISS_LOG_ERROR(<span class="stringliteral">&quot;PRDR_GET&quot;</span>, <span class="stringliteral">&quot;Not Found &quot;</span> + data.GetPath());</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>      <span class="keywordflow">return</span> Result&lt;ProducerGetResponse&gt;::Err(</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>          VissCommonError::CreateNotFoundError(data.GetPath()));</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    }</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; package : response.data().data()) {</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>      <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; dp : package.dp()) {</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        ValueType value = VissGrpcValueUtil::ConvertValueType(dp.value());</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        datapoints.push_back(</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>            yoriito::databroker::ProducerGetDataPoint(package.path(), value));</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>      }</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    }</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keyword">auto</span> error = status.error_message();</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    VISS_LOG_ERROR(<span class="stringliteral">&quot;PRDR_GET&quot;</span>, error);</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keywordflow">return</span> Result&lt;ProducerGetResponse&gt;::Err(</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        VissCommonError::CreateProtocolError(error));</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  }</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  <span class="keywordflow">return</span> Result&lt;ProducerGetResponse&gt;::Ok(</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>      ProducerGetResponse(std::move(datapoints)));</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>}</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="foldopen" id="foldopen00053" data-start="{" data-end="}">
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl.html#a2a13f494e8ffb3417ebea3008f185d2f">   53</a></span>Result&lt;ProducerGetResponse&gt; <a class="code hl_function" href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl.html#a2a13f494e8ffb3417ebea3008f185d2f">VissGrpcGetImpl::ConvertGetResponse</a>(</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    grpc::Status status,</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">const</span> yoriito::viss::v1::producer::GetTargetResponse&amp; response,</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keyword">const</span> ProducerGetRequest&amp; data)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  std::vector&lt;yoriito::databroker::ProducerGetDataPoint&gt; datapoints;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  <span class="keywordflow">if</span> (status.ok()) {</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="comment">// VISS Error</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordflow">if</span> (response.has_error()) {</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>      <span class="keyword">const</span> std::string&amp; error = response.error().description();</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>      <span class="keyword">const</span> int32_t code = <span class="keyword">static_cast&lt;</span>int32_t<span class="keyword">&gt;</span>(response.error().number());</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>      <span class="keyword">const</span> std::string&amp; message = error + <span class="stringliteral">&quot; Code:&quot;</span> + std::to_string(code);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>      YORIITO_LOG_ERROR(<span class="stringliteral">&quot;PRDR_GET&quot;</span>, message);</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>      <span class="keywordflow">return</span> Result&lt;ProducerGetResponse&gt;::Err(</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>          VissCommonError::CreateVissError(code, error));</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    }</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordflow">if</span> (!response.has_data()) {</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>      <span class="comment">// Illegal Response: No Data( actually return viss error )</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>      YORIITO_LOG_ERROR(<span class="stringliteral">&quot;PRDR_GET&quot;</span>, <span class="stringliteral">&quot;Not Found &quot;</span> + data.GetPath());</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>      <span class="keywordflow">return</span> Result&lt;ProducerGetResponse&gt;::Err(</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>          VissCommonError::CreateNotFoundError(data.GetPath()));</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    }</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; packages = response.data().data();</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; package : packages) {</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>      <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; dp : package.dp()) {</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        datapoints.push_back(yoriito::databroker::ProducerGetDataPoint(</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>            package.path(), VissGrpcValueUtil::ConvertValueType(dp.value())));</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>      }</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    }</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keyword">auto</span> error = status.error_message();</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    YORIITO_LOG_ERROR(<span class="stringliteral">&quot;PRDR_GET&quot;</span>, error);</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordflow">return</span> Result&lt;ProducerGetResponse&gt;::Err(</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        VissCommonError::CreateProtocolError(error));</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  }</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  <span class="keywordflow">return</span> Result&lt;ProducerGetResponse&gt;::Ok(</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>      ProducerGetResponse(std::move(datapoints)));</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>}</div>
 </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>}  <span class="comment">// namespace yoriito::databroker::producer</span></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl_html_a359f98d37e4d1d137dab55780ec917b1"><div class="ttname"><a href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl.html#a359f98d37e4d1d137dab55780ec917b1">yoriito::databroker::producer::VissGrpcGetImpl::ConvertGetResponse</a></div><div class="ttdeci">Result&lt; ProducerGetResponse &gt; ConvertGetResponse(grpc::Status status, yoriito::viss::v1::producer::GetTargetResponse &amp;response, const ProducerGetRequest &amp;data)</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__get__impl_8cc_source.html#l00063">viss_grpc_get_impl.cc:63</a></div></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl_html_a4b28905e2ea37f1ea18ed4d627bc2fe0"><div class="ttname"><a href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl.html#a4b28905e2ea37f1ea18ed4d627bc2fe0">yoriito::databroker::producer::VissGrpcGetImpl::Execute</a></div><div class="ttdeci">grpc::Status Execute(ClientContext &amp;context, yoriito::viss::v1::producer::GetTargetRequest &amp;request, yoriito::viss::v1::producer::GetTargetResponse &amp;response)</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__get__impl_8cc_source.html#l00055">viss_grpc_get_impl.cc:55</a></div></div>
-<div class="ttc" id="aclassyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl_html_ae61af38cd1b3e758ae73d1094674a245"><div class="ttname"><a href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl.html#ae61af38cd1b3e758ae73d1094674a245">yoriito::databroker::producer::VissGrpcGetImpl::CreateGetRequest</a></div><div class="ttdeci">void CreateGetRequest(yoriito::viss::v1::producer::GetTargetRequest &amp;request, const ProducerGetRequest &amp;data)</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__get__impl_8cc_source.html#l00040">viss_grpc_get_impl.cc:40</a></div></div>
-<div class="ttc" id="anamespaceyoriito_1_1databroker_1_1producer_html"><div class="ttname"><a href="namespaceyoriito_1_1databroker_1_1producer.html">yoriito::databroker::producer</a></div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__define__impl_8h_source.html#l00040">viss_grpc_define_impl.h:40</a></div></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>}  <span class="comment">// namespace yoriito::databroker::producer</span></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl_html_a2a13f494e8ffb3417ebea3008f185d2f"><div class="ttname"><a href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl.html#a2a13f494e8ffb3417ebea3008f185d2f">yoriito::databroker::producer::VissGrpcGetImpl::ConvertGetResponse</a></div><div class="ttdeci">Result&lt; ProducerGetResponse &gt; ConvertGetResponse(grpc::Status status, const yoriito::viss::v1::producer::GetTargetResponse &amp;response, const ProducerGetRequest &amp;data) const</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__get__impl_8cc_source.html#l00053">viss_grpc_get_impl.cc:53</a></div></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl_html_ac4e43a6b2187a4ec87d9a0849156e2c8"><div class="ttname"><a href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl.html#ac4e43a6b2187a4ec87d9a0849156e2c8">yoriito::databroker::producer::VissGrpcGetImpl::CreateGetRequest</a></div><div class="ttdeci">void CreateGetRequest(yoriito::viss::v1::producer::GetTargetRequest &amp;request, const ProducerGetRequest &amp;data) const</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__get__impl_8cc_source.html#l00030">viss_grpc_get_impl.cc:30</a></div></div>
+<div class="ttc" id="aclassyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl_html_ac8b12952ac11baa05d375d203c75f5e0"><div class="ttname"><a href="classyoriito_1_1databroker_1_1producer_1_1VissGrpcGetImpl.html#ac8b12952ac11baa05d375d203c75f5e0">yoriito::databroker::producer::VissGrpcGetImpl::Execute</a></div><div class="ttdeci">grpc::Status Execute(ClientContext &amp;context, const yoriito::viss::v1::producer::GetTargetRequest &amp;request, yoriito::viss::v1::producer::GetTargetResponse &amp;response) const</div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__get__impl_8cc_source.html#l00045">viss_grpc_get_impl.cc:45</a></div></div>
+<div class="ttc" id="anamespaceyoriito_1_1databroker_1_1producer_html"><div class="ttname"><a href="namespaceyoriito_1_1databroker_1_1producer.html">yoriito::databroker::producer</a></div><div class="ttdef"><b>Definition</b> <a href="viss__grpc__define__impl_8h_source.html#l00032">viss_grpc_define_impl.h:32</a></div></div>
 <div class="ttc" id="aviss__grpc__get__impl_8h_html"><div class="ttname"><a href="viss__grpc__get__impl_8h.html">viss_grpc_get_impl.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
