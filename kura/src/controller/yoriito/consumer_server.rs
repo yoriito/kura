@@ -14,15 +14,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::common::get_time;
 use crate::controller::yoriito::converter::FilterUtil;
-use crate::interface::Interactor;
-use crate::interface::Subscriber;
-use crate::interface::signal as internal_signal;
-use crate::interface::signal::MapExternalToKuraResult;
-use crate::interface::signal::MapOptionToKuraError;
-use crate::interface::subscription::{GetCondition, Mode, SubscriptionCondition};
+use crate::interface::{
+    model,
+    result::{self, MapExternalToKuraResult, MapOptionToKuraError},
+    subscription, traits,
+};
 
-use std::time::{SystemTime, UNIX_EPOCH};
 use tokio::sync::mpsc;
 use tokio::sync::mpsc::Sender;
 use tokio_stream::wrappers::ReceiverStream;
@@ -43,7 +42,7 @@ use crate::controller::yoriito::common::viss::consumer::viss_server::Viss;
 #[derive(Clone)]
 pub struct YoriitoConsumerServer {
     addr: String,
-    interactor: Arc<dyn Interactor + Send + Sync>,
+    interactor: Arc<dyn traits::Interactor + Send + Sync>,
 }
 
 impl std::fmt::Debug for YoriitoConsumerServer {
@@ -57,28 +56,28 @@ impl std::fmt::Debug for YoriitoConsumerServer {
 impl YoriitoConsumerServer {
     pub fn new(
         addr: &str,
-        interactor: Arc<dyn Interactor + Send + Sync>,
-    ) -> internal_signal::KuraResult<Self> {
+        interactor: Arc<dyn traits::Interactor + Send + Sync>,
+    ) -> result::KuraResult<Self> {
         Ok(Self {
             addr: addr.to_string(),
             interactor,
         })
     }
 
-    pub async fn start(&self, cancel: CancellationToken) -> internal_signal::KuraResult<()> {
+    pub async fn start(&self, cancel: CancellationToken) -> result::KuraResult<()> {
         let addr = self.addr.clone();
         let viss_server_impl: consumer_viss::viss_server::VissServer<YoriitoConsumerServer> =
             consumer_viss::viss_server::VissServer::new(self.clone());
         let server = tonic::transport::Server::builder().add_service(viss_server_impl);
         let addr = addr.parse().to_kura_result(
-            internal_signal::KuraErrorCode::BadGateway,
-            internal_signal::KuraErrorReason::BadGateway,
+            result::KuraErrorCode::BadGateway,
+            result::KuraErrorReason::BadGateway,
             format!("failed to parse {addr}").to_string(),
         )?;
         tokio::select! {
             res = server.serve_with_shutdown(addr, cancel.cancelled()) => res.to_kura_result(
-                internal_signal::KuraErrorCode::Unspecified,
-                internal_signal::KuraErrorReason::Unspecified,
+                result::KuraErrorCode::Unspecified,
+                result::KuraErrorReason::Unspecified,
                 "failed to shutdown".to_string()
             )?,
             _ = cancel.cancelled() => {}
@@ -90,18 +89,18 @@ impl YoriitoConsumerServer {
         &self,
         _request: &consumer_viss::SetTargetRequest,
         data_package: &common_viss::DataPackageTarget,
-    ) -> internal_signal::KuraResult<()> {
+    ) -> result::KuraResult<()> {
         let path = data_package.path.clone();
         let dp = data_package
             .dp
             .first()
             .to_kura_result(
-                internal_signal::KuraErrorCode::NotFound,
-                internal_signal::KuraErrorReason::InvalidData,
+                result::KuraErrorCode::NotFound,
+                result::KuraErrorReason::InvalidData,
                 "No DataPoint Found".to_string(),
             )?
             .into();
-        self.interactor.set_target_vehicle_data(path, dp).await
+        self.interactor.set_requested_state(path, dp).await
     }
 }
 
@@ -115,12 +114,12 @@ impl Viss for YoriitoConsumerServer {
     ) -> Result<tonic::Response<consumer_viss::GetCurrentResponse>, tonic::Status> {
         let inner = request.into_inner();
         let paths_filter = inner.filter.and_then(|v| v.to_paths_filter());
-        let condition = GetCondition {
+        let condition = subscription::GetCondition {
             path: inner.path.clone(),
             paths_filter,
         };
 
-        let current_signals = self.interactor.get_current_vehicle_data(condition);
+        let current_signals = self.interactor.get_actual_state(condition);
         if let Ok(signals) = &current_signals
             && signals.is_empty()
         {
@@ -172,22 +171,41 @@ impl Viss for YoriitoConsumerServer {
     ) -> std::result::Result<tonic::Response<common_viss::InspectResponse>, tonic::Status> {
         let inner = request.into_inner();
         let paths_filter = inner.filter.as_ref().and_then(|v| v.to_paths_filter());
-        let condition = GetCondition {
+        let condition = subscription::GetCondition {
             path: inner.path.clone(),
             paths_filter,
         };
 
-        let signals = self.interactor.get_current_vehicle_data(condition);
+        let signals = self.interactor.get_metadata(condition);
         let signals = signals.map_err(|e| common_viss::Error::from(&e));
+
         let response = match signals {
             Ok(vec) => {
+                let filtered_defined_types = self
+                    .interactor
+                    .get_vss_user_defined_types_referenced_by(&vec)
+                    .unwrap_or_default();
+
                 match vec
                     .into_iter()
                     .map(|signal| common_viss::MetadataEntry::try_from(&signal))
                     .collect::<Result<Vec<_>, _>>()
                 {
                     Ok(data) => common_viss::inspect_response::Result::Metadata(
-                        common_viss::MetadataEntries { entries: data },
+                        match common_viss::MetadataEntries::try_from(&filtered_defined_types) {
+                            Ok(struct_entries) => common_viss::MetadataEntries {
+                                metadata_entries: data,
+                                struct_metadata_entries: struct_entries.struct_metadata_entries,
+                            },
+                            Err(error) => {
+                                return Ok(tonic::Response::new(common_viss::InspectResponse {
+                                    ts: get_time() as i64,
+                                    result: Some(common_viss::inspect_response::Result::Error(
+                                        common_viss::Error::from(&error),
+                                    )),
+                                }));
+                            }
+                        },
                     ),
                     Err(error) => common_viss::inspect_response::Result::Error(
                         common_viss::Error::from(&error),
@@ -282,11 +300,11 @@ impl Viss for YoriitoConsumerServer {
             .interactor
             .subscribe(
                 Arc::new(()),
-                Arc::new(SubscribrYoriito {
+                Arc::new(SubscriberYoriito {
                     sender: sender.clone(),
                 }),
-                SubscriptionCondition {
-                    mode: Mode::Current,
+                subscription::SubscriptionCondition {
+                    mode: subscription::Mode::Actual,
                     path: inner.path,
                     paths_filter,
                     misc_filter,
@@ -347,15 +365,15 @@ impl Viss for YoriitoConsumerServer {
 }
 
 #[derive(Debug)]
-struct SubscribrYoriito {
+struct SubscriberYoriito {
     sender: Sender<Result<consumer_viss::SubscribeCurrentResponse, Status>>,
 }
 
 #[async_trait]
-impl Subscriber for SubscribrYoriito {
+impl traits::Subscriber for SubscriberYoriito {
     #[tracing::instrument(name = "args", level = "trace")]
     #[tracing::instrument(
-        name = "notify_subscribe_result(SubscribrYoriito)",
+        name = "notify_subscribe_result(SubscriberYoriito)",
         level = "info",
         skip_all
     )]
@@ -364,7 +382,7 @@ impl Subscriber for SubscribrYoriito {
         _object: Arc<dyn Any + Send + Sync>,
         subscription_id: String,
         ret: bool,
-    ) -> internal_signal::KuraResult<()> {
+    ) -> result::KuraResult<()> {
         let message_type = if ret {
             let message = consumer_viss::subscribe_current_response::MessageType::Success(
                 common_viss::SubscribeSuccess { subscription_id },
@@ -388,21 +406,21 @@ impl Subscriber for SubscribrYoriito {
         };
 
         self.sender.send(Ok(response)).await.to_kura_result(
-            internal_signal::KuraErrorCode::BadGateway,
-            internal_signal::KuraErrorReason::Unspecified,
+            result::KuraErrorCode::BadGateway,
+            result::KuraErrorReason::Unspecified,
             "send failed".to_string(),
         )
     }
 
     #[tracing::instrument(name = "args", level = "trace")]
-    #[tracing::instrument(name = "notify_signals(SubscribrYoriito)", level = "info", skip_all)]
+    #[tracing::instrument(name = "notify_signals(SubscriberYoriito)", level = "info", skip_all)]
     async fn notify_signals(
         &self,
         _object: Arc<dyn Any + Send + Sync>,
         subscription_id: String,
-        signals: &[crate::interface::signal::Signal],
-    ) -> internal_signal::KuraResult<()> {
-        let data: internal_signal::KuraResult<Vec<common_viss::DataPackageCurrent>> = signals
+        signals: &[model::SignalStateView],
+    ) -> result::KuraResult<()> {
+        let data: result::KuraResult<Vec<common_viss::DataPackageCurrent>> = signals
             .iter()
             .map(common_viss::DataPackageCurrent::try_from)
             .collect();
@@ -418,15 +436,9 @@ impl Subscriber for SubscribrYoriito {
         };
 
         self.sender.send(Ok(event)).await.to_kura_result(
-            internal_signal::KuraErrorCode::BadGateway,
-            internal_signal::KuraErrorReason::Unspecified,
+            result::KuraErrorCode::BadGateway,
+            result::KuraErrorReason::Unspecified,
             "send failed".to_string(),
         )
     }
-}
-
-fn get_time() -> u64 {
-    let now = SystemTime::now();
-    let duration_since_epoch = now.duration_since(UNIX_EPOCH).unwrap();
-    duration_since_epoch.as_secs()
 }

@@ -15,5 +15,7 @@
 // limitations under the License.
 
 mod config;
+mod time;
 
-pub use config::{Config, FlexibleValue, MetadataNode, resolve_relative_path};
+pub use config::{Config, resolve_relative_path};
+pub use time::get_time;

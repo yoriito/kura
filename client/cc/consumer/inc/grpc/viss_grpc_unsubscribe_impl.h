@@ -16,28 +16,30 @@
  * limitations under the License.
  */
 
-#ifndef KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_GRPC_UNSUBSCRIBE_IMPL_H_
-#define KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_GRPC_UNSUBSCRIBE_IMPL_H_
+#ifndef CONSUMER_INC_GRPC_VISS_GRPC_UNSUBSCRIBE_IMPL_H_
+#define CONSUMER_INC_GRPC_VISS_GRPC_UNSUBSCRIBE_IMPL_H_
 
 #include <memory>
 #include <utility>
 //
 #include "databroker/consumer_subscribe_context.h"
+#include "yoriito/result.h"
+//
 #include "grpc/viss_grpc_subscribe_context.h"
 //
 #include "grpcpp/grpcpp.h"
-#include "yoriito/viss/v1/common.grpc.pb.h"
+#include "yoriito/viss/v1/common.pb.h"
 #include "yoriito/viss/v1/consumer.grpc.pb.h"
-#include "yoriito/viss/v1/consumer.pb.h"
 
-using yoriito::viss::v1::consumer::VISS;
+namespace yoriito::databroker::consumer {
 
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::ClientReader;
 using grpc::Status;
 
-namespace yoriito::databroker::consumer {
+using yoriito::viss::v1::consumer::VISS;
+
 class VissGrpcUnSubscribeImpl {
  public:
   explicit VissGrpcUnSubscribeImpl(
@@ -45,17 +47,19 @@ class VissGrpcUnSubscribeImpl {
       : stub_(channel) {}
   ~VissGrpcUnSubscribeImpl() = default;
 
-  void CreateUnsubscribeRequest(VissGrpcSubscribeContext& viss_context,
-                                yoriito::viss::v1::UnsubscribeRequest& request);
+  void CreateUnsubscribeRequest(
+      const VissGrpcSubscribeContext& viss_context,
+      yoriito::viss::v1::UnsubscribeRequest& request) const;
 
   grpc::Status Execute(ClientContext& context,
-                       yoriito::viss::v1::UnsubscribeRequest& request,
-                       yoriito::viss::v1::UnsubscribeResponse& response);
+                       const yoriito::viss::v1::UnsubscribeRequest& request,
+                       yoriito::viss::v1::UnsubscribeResponse& response) const;
   Result<void> ConvertUnsubscribeResponse(
-      grpc::Status status, yoriito::viss::v1::UnsubscribeResponse& response);
+      grpc::Status status,
+      const yoriito::viss::v1::UnsubscribeResponse& response) const;
 
  private:
   yoriito::viss::v1::consumer::VISS::Stub* stub_;
 };
 }  // namespace yoriito::databroker::consumer
-#endif  // KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_GRPC_UNSUBSCRIBE_IMPL_H_
+#endif  // CONSUMER_INC_GRPC_VISS_GRPC_UNSUBSCRIBE_IMPL_H_

@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-#ifndef KURA_CLIENT_CC_COMMON_INC_GRPC_VISS_GRPC_CONTEXT_FACTORY_H_
-#define KURA_CLIENT_CC_COMMON_INC_GRPC_VISS_GRPC_CONTEXT_FACTORY_H_
+#ifndef COMMON_INC_GRPC_VISS_GRPC_CONTEXT_FACTORY_H_
+#define COMMON_INC_GRPC_VISS_GRPC_CONTEXT_FACTORY_H_
 
 #include <memory>
 
@@ -28,7 +28,7 @@ namespace yoriito::databroker {
 class ClientContextFactory {
  public:
   struct Config {
-    int timeout_seconds = 3;
+    uint32_t timeout_seconds = 3;
   };
   ClientContextFactory() = delete;
   static std::unique_ptr<grpc::ClientContext> Create(const Config& config) {
@@ -43,4 +43,4 @@ class ClientContextFactory {
 
 }  // namespace yoriito::databroker
 
-#endif  // KURA_CLIENT_CC_COMMON_INC_GRPC_VISS_GRPC_CONTEXT_FACTORY_H_
+#endif  // COMMON_INC_GRPC_VISS_GRPC_CONTEXT_FACTORY_H_

@@ -14,8 +14,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "viss_consumer_factory.h"
+#include "consumer/inc/viss_consumer_factory.h"
 
+#include <memory>
+//
 #include "grpc/viss_consumer_grpc_impl.h"
 
 namespace yoriito::databroker {

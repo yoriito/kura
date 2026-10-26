@@ -18,8 +18,6 @@ import time
 import grpc
 import socket
 import threading
-import dataclasses
-from distutils.util import strtobool
 from enum import Enum
 from vshot.yoriito.viss.v1.producer_pb2_grpc import VISSStub
 from google.protobuf.struct_pb2 import Struct
@@ -28,6 +26,7 @@ import vshot.yoriito.viss.v1.producer_pb2 as producer
 import vshot.yoriito.viss.v1.common_pb2 as common
 import vshot.yoriito.viss.v1.types.filter_pb2 as filter
 import vshot.yoriito.viss.v1.types.value_pb2 as value
+from vshot.client.common import MetadataRepository, convert_value
 
 from typing import List, Optional, Iterable, Callable
 
@@ -51,13 +50,10 @@ class PALClient:
         endpoint: str = f"{ip}:{pal_port}"
         self.channel = grpc.insecure_channel(endpoint)
         self.viss_stub = VISSStub(self.channel)
-        self.metadatas: dict[str, _Metadata] = {}
 
         request: common.InspectRequest = common.InspectRequest(path="*")
         response: common.InspectResponse = self.viss_stub.Inspect(request)
-        for single_metadata in response.metadata.entries:
-            self.metadatas[single_metadata.path] = _Metadata(
-                single_metadata.datatype)
+        self.metadata_repo = MetadataRepository.from_inspect_response(response)
 
     def get(self: "PALClient", path: str, paths_filter: List[str]) -> producer.GetTargetResponse:
         paths_filter: filter.PathsFilter = filter.PathsFilter(
@@ -69,8 +65,17 @@ class PALClient:
         return self.viss_stub.GetTarget(request)
 
     def set(self: "PALClient", path: str, _value: str) -> producer.SetCurrentResponse:
-        converted_value: value.ValueType = _convert_value(
-            _value, self.metadatas[path])
+        if path not in self.metadata_repo.signals:
+            # Refresh metadata for the target path lazily to avoid startup cache misses.
+            response = self.inspect(path, [])
+            self.metadata_repo.merge_from_inspect_response(response)
+        if path not in self.metadata_repo.signals:
+            raise KeyError(
+                f"Signal metadata not found for path '{path}'. "
+                "Check whether the running server loaded this VSS path."
+            )
+        converted_value: value.ValueType = convert_value(
+            _value, self.metadata_repo.signals[path], self.metadata_repo)
         data_point = value.DataPointCurrent(value=converted_value)
         data_package = value.DataPackageCurrent(path=path, dp=[data_point])
         data_packages = value.DataPackagesCurrent(data=[data_package])
@@ -130,7 +135,7 @@ class PALClient:
         return self.viss_stub.Unsubscribe(request)
 
     def get_all_paths(self: "PALClient") -> List[str]:
-        return list(self.metadatas.keys())
+        return list(self.metadata_repo.signals.keys())
 
     def _is_server_running(self: "PALClient", ip: str, port: int) -> bool:
         try:
@@ -138,11 +143,6 @@ class PALClient:
                 return True
         except OSError:
             return False
-
-
-@dataclasses.dataclass
-class _Metadata:
-    data_type: value.DataType
 
 
 def _convert_operator(operator: Optional[Operator]) -> Optional["filter.Operator"]:
@@ -164,71 +164,3 @@ def _convert_operator(operator: Optional[Operator]) -> Optional["filter.Operator
         return filter.OPERATOR_LTE
     else:
         return None
-
-
-def _convert_value(_value: str, metadata: _Metadata) -> value.ValueType:
-    data_type: str = metadata.data_type
-    if data_type == value.DataType.DATATYPE_NONE:
-        return value.ValueType()
-    elif data_type == value.DataType.DATATYPE_BOOL:
-        return value.ValueType(bool=bool(strtobool(_value)))
-    elif data_type == value.DataType.DATATYPE_STRING:
-        return value.ValueType(string=_value)
-    elif data_type == value.DataType.DATATYPE_INT8:
-        return value.ValueType(int32=int(_value))
-    elif data_type == value.DataType.DATATYPE_INT16:
-        return value.ValueType(int32=int(_value))
-    elif data_type == value.DataType.DATATYPE_INT32:
-        return value.ValueType(int32=int(_value))
-    elif data_type == value.DataType.DATATYPE_INT64:
-        return value.ValueType(int64=int(_value))
-    elif data_type == value.DataType.DATATYPE_UINT8:
-        return value.ValueType(uint8=int(_value))
-    elif data_type == value.DataType.DATATYPE_UINT16:
-        return value.ValueType(uint16=int(_value))
-    elif data_type == value.DataType.DATATYPE_UINT32:
-        return value.ValueType(uint32=int(_value))
-    elif data_type == value.DataType.DATATYPE_UINT64:
-        return value.ValueType(uint64=int(_value))
-    elif data_type == value.DataType.DATATYPE_FLOAT:
-        return value.ValueType(float=float(_value))
-    elif data_type == value.DataType.DATATYPE_DOUBLE:
-        return value.ValueType(double=float(_value))
-    elif data_type == value.DataType.DATATYPE_ARRAY_BOOL:
-        # TODO
-        return
-    elif data_type == value.DataType.DATATYPE_ARRAY_STRING:
-        # TODO
-        pass
-    elif data_type == value.DataType.DATATYPE_ARRAY_INT8:
-        # TODO
-        pass
-    elif data_type == value.DataType.DATATYPE_ARRAY_INT16:
-        # TODO
-        pass
-    elif data_type == value.DataType.DATATYPE_ARRAY_INT32:
-        # TODO
-        pass
-    elif data_type == value.DataType.DATATYPE_ARRAY_INT64:
-        # TODO
-        pass
-    elif data_type == value.DataType.DATATYPE_ARRAY_UINT8:
-        # TODO
-        pass
-    elif data_type == value.DataType.DATATYPE_ARRAY_UINT16:
-        # TODO
-        pass
-    elif data_type == value.DataType.DATATYPE_ARRAY_UINT32:
-        # TODO
-        pass
-    elif data_type == value.DataType.DATATYPE_ARRAY_UINT64:
-        # TODO
-        pass
-    elif data_type == value.DataType.DATATYPE_ARRAY_FLOAT:
-        # TODO
-        pass
-    elif data_type == value.DataType.DATATYPE_ARRAY_DOUBLE:
-        # TODO
-        pass
-    else:
-        pass

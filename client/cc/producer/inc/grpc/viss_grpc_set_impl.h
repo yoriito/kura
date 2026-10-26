@@ -16,29 +16,28 @@
  * limitations under the License.
  */
 
-#ifndef KURA_CLIENT_CC_PRODUCER_INC_GRPC_VISS_GRPC_SET_IMPL_H_
-#define KURA_CLIENT_CC_PRODUCER_INC_GRPC_VISS_GRPC_SET_IMPL_H_
+#ifndef PRODUCER_INC_GRPC_VISS_GRPC_SET_IMPL_H_
+#define PRODUCER_INC_GRPC_VISS_GRPC_SET_IMPL_H_
 //
 #include <memory>
 #include <utility>
 //
-#include "databroker/producer_set_datapoint.h"
-#include "databroker/producer_set_request.h"
-#include "result.h"
-//
 #include "grpcpp/grpcpp.h"
-#include "yoriito/viss/v1/common.grpc.pb.h"
+#include "yoriito/viss/v1/common.pb.h"
 #include "yoriito/viss/v1/producer.grpc.pb.h"
-#include "yoriito/viss/v1/producer.pb.h"
+//
+#include "databroker/producer_set_request.h"
+#include "yoriito/result.h"
 
-using yoriito::viss::v1::producer::VISS;
+namespace yoriito::databroker::producer {
 
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::ClientReader;
 using grpc::Status;
 
-namespace yoriito::databroker::producer {
+using yoriito::viss::v1::producer::VISS;
+
 class VissGrpcSetImpl {
  public:
   explicit VissGrpcSetImpl(yoriito::viss::v1::producer::VISS::Stub *channel)
@@ -46,18 +45,18 @@ class VissGrpcSetImpl {
   ~VissGrpcSetImpl() = default;
 
   void CreateSetRequest(yoriito::viss::v1::producer::SetCurrentRequest &request,
-                        const ProducerSetRequest &data);
-
+                        const ProducerSetRequest &data) const;
   grpc::Status Execute(
       ClientContext &context,
-      yoriito::viss::v1::producer::SetCurrentRequest &request,
-      yoriito::viss::v1::producer::SetCurrentResponse &response);
+      const yoriito::viss::v1::producer::SetCurrentRequest &request,
+      yoriito::viss::v1::producer::SetCurrentResponse &response) const;
   Result<void> ConvertSetResponse(
       grpc::Status status,
-      yoriito::viss::v1::producer::SetCurrentResponse &response);
+      const yoriito::viss::v1::producer::SetCurrentResponse &response,
+      const ProducerSetRequest &data) const;
 
  private:
   yoriito::viss::v1::producer::VISS::Stub *stub_;
 };
 }  // namespace yoriito::databroker::producer
-#endif  // KURA_CLIENT_CC_PRODUCER_INC_GRPC_VISS_GRPC_SET_IMPL_H_
+#endif  // PRODUCER_INC_GRPC_VISS_GRPC_SET_IMPL_H_

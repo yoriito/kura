@@ -19,9 +19,8 @@
 #include <string>
 
 #include "databroker/databroker_producer_factory.h"
-#include "yoriito_log.h"
-#include "viss_common_log.h"
-#include "viss_producer.h"
+#include "producer/inc/viss_producer.h"
+#include "yoriito/yoriito_log.h"
 
 class TestProducerDelete : public testing::Test {
  protected:
@@ -30,7 +29,7 @@ class TestProducerDelete : public testing::Test {
   }
   void TearDown() override {}
 
-  yoriito::databroker::DataBrokerProducer* producer;
+  yoriito::databroker::DataBrokerProducer *producer;
 };
 
 TEST_F(TestProducerDelete, InvalidPath) {
@@ -39,25 +38,29 @@ TEST_F(TestProducerDelete, InvalidPath) {
   yoriito::Result<void> ret = producer->Delete(data);
   ASSERT_TRUE(ret.IsErr());
   auto error = ret.TakeErr();
-  ASSERT_EQ(static_cast<int32_t>(yoriito::ErrorCode::ERROR_NOT_FOUND), error.get()->ErrorCode());
+  ASSERT_EQ(static_cast<int32_t>(yoriito::ErrorCode::ERROR_NOT_FOUND),
+            error.get()->ErrorCode());
 }
 
 TEST_F(TestProducerDelete, ValidNodePath) {
-  std::string target_path = "Vehicle.CurrentLocation.GNSSReceiver.GNSSLocationType.Timestamp";
+  std::string target_path =
+      "Vehicle.Test.DeleteTest.SensorStringValue";  // Valid node path
   yoriito::databroker::ProducerDeleteRequest data({target_path});
   yoriito::Result<void> ret = producer->Delete(data);
   ASSERT_TRUE(ret.IsOk());
   // Confirm deletion by trying to get the deleted node
-  yoriito::databroker::ProducerGetRequest request_data{std::string(target_path)};
+  yoriito::databroker::ProducerGetRequest request_data{
+      std::string(target_path)};
   yoriito::Result<yoriito::databroker::ProducerGetResponse> get_ret =
       producer->Get(request_data);
   ASSERT_TRUE(get_ret.IsErr());
   auto get_error = get_ret.TakeErr();
-  ASSERT_EQ(static_cast<int32_t>(yoriito::ErrorCode::ERROR_NOT_FOUND), get_error.get()->ErrorCode());
+  ASSERT_EQ(static_cast<int32_t>(yoriito::ErrorCode::ERROR_NOT_FOUND),
+            get_error.get()->ErrorCode());
 }
 
 TEST_F(TestProducerDelete, ValidBranchPath) {
-  std::string target_path = "Vehicle.CurrentLocation";
+  std::string target_path = "Vehicle.Test.DeleteTest.Branch";
   yoriito::databroker::ProducerDeleteRequest data({target_path});
   yoriito::Result<void> ret = producer->Delete(data);
   ASSERT_TRUE(ret.IsOk());
@@ -69,32 +72,37 @@ TEST_F(TestProducerDelete, ValidBranchPath) {
       producer->Get(request_data);
   ASSERT_TRUE(get_ret.IsErr());
   auto get_error = get_ret.TakeErr();
-  ASSERT_EQ(static_cast<int32_t>(yoriito::ErrorCode::ERROR_NOT_FOUND), get_error.get()->ErrorCode());
+  ASSERT_EQ(static_cast<int32_t>(yoriito::ErrorCode::ERROR_NOT_FOUND),
+            get_error.get()->ErrorCode());
 }
 
 TEST_F(TestProducerDelete, ValidMultiplePaths) {
-  std::string target_path1 = "Vehicle.Exterior.AirTemperature";
-  std::string target_path2 = "Vehicle.Exterior.Humidity";
+  std::string target_path1 = "Vehicle.Test.DeleteTest.ActuatorBooleanValue";
+  std::string target_path2 = "Vehicle.Test.DeleteTest.SensorBooleanValue";
 
   yoriito::databroker::ProducerDeleteRequest data({target_path1, target_path2});
   yoriito::Result<void> ret = producer->Delete(data);
   ASSERT_TRUE(ret.IsOk());
 
   {
-    yoriito::databroker::ProducerGetRequest request_data{std::string(target_path1)};
+    yoriito::databroker::ProducerGetRequest request_data{
+        std::string(target_path1)};
     yoriito::Result<yoriito::databroker::ProducerGetResponse> get_ret =
         producer->Get(request_data);
     ASSERT_TRUE(get_ret.IsErr());
     auto get_error = get_ret.TakeErr();
-    ASSERT_EQ(static_cast<int32_t>(yoriito::ErrorCode::ERROR_NOT_FOUND), get_error.get()->ErrorCode());
+    ASSERT_EQ(static_cast<int32_t>(yoriito::ErrorCode::ERROR_NOT_FOUND),
+              get_error.get()->ErrorCode());
   }
 
   {
-    yoriito::databroker::ProducerGetRequest request_data{std::string(target_path2)};
+    yoriito::databroker::ProducerGetRequest request_data{
+        std::string(target_path2)};
     yoriito::Result<yoriito::databroker::ProducerGetResponse> get_ret =
         producer->Get(request_data);
     ASSERT_TRUE(get_ret.IsErr());
     auto get_error = get_ret.TakeErr();
-    ASSERT_EQ(static_cast<int32_t>(yoriito::ErrorCode::ERROR_NOT_FOUND), get_error.get()->ErrorCode());
+    ASSERT_EQ(static_cast<int32_t>(yoriito::ErrorCode::ERROR_NOT_FOUND),
+              get_error.get()->ErrorCode());
   }
 }

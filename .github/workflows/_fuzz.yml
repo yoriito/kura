@@ -1,0 +1,165 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# Copyright 2026 JASPAR
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Fuzz Test
+
+on:
+  workflow_call:
+    inputs:
+      fuzz-duration-sec:
+        description: 'Duration in seconds for each fuzz target'
+        type: number
+        default: 300
+      sync-sha:
+        description: 'Commit SHA to sync the branch to before running (used when chained after other release jobs)'
+        type: string
+        default: ''
+
+jobs:
+  fuzz:
+    name: Fuzz (Rust + C++)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Generate Github App Token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.RELEASE_BOT_ID }}
+          private-key: ${{ secrets.RELEASE_BOT_KEY }}
+          owner: ${{ github.repository_owner }}
+
+      - uses: actions/checkout@v6
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          submodules: 'recursive'
+          fetch-depth: 0
+
+      - name: Sync branch
+        if: inputs.sync-sha != ''
+        run: |
+          git fetch origin ${{ github.ref_name }}
+          git reset --hard ${{ inputs.sync-sha }}
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache
+          docker system prune -af
+
+      - name: docker login
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build C++ fuzz harnesses
+        run: |
+          docker container run --rm \
+            -v ${{ github.workspace }}:/work \
+            -w /work \
+            --entrypoint /init \
+            ${{ vars.DEVCONTAINER_IMAGE }} \
+            bash -lc '
+            set -euo pipefail
+            apt-get update && apt-get install -y afl++
+            cmake -S ./client/cc -B ./client/cc/build_fuzz_gcc \
+              -DCMAKE_CXX_COMPILER=afl-g++ \
+              -DENABLE_FUZZ_TESTS=ON \
+              -DENABLE_ASAN=ON \
+              -DENABLE_UBSAN=ON
+            cmake --build ./client/cc/build_fuzz_gcc --target \
+              fuzz_convert_value_type \
+              fuzz_convert_get_response \
+              fuzz_convert_set_response \
+              fuzz_convert_inspect_response \
+              -- -j4'
+
+      - parallel:
+        - name: Fuzz (Rust)
+          run: |
+            mkdir -p quality/assets
+            : > quality/assets/dast-kura.log
+            docker container run --rm \
+              -v ${{ github.workspace }}:/work \
+              -w /work \
+              --entrypoint /init \
+              ${{ vars.DEVCONTAINER_IMAGE }} \
+              bash -lc '
+              set -euo pipefail
+              rustup toolchain install nightly
+              cargo +nightly install cargo-fuzz
+              kura/fuzz/run_fuzz.sh ${{ inputs.fuzz-duration-sec }}' \
+              2>&1 | tee -a quality/assets/dast-kura.log
+
+        - name: Fuzz (C++)
+          run: |
+            mkdir -p quality/assets
+            : > quality/assets/dast-kura_client.log
+            docker container run --rm \
+              -v ${{ github.workspace }}:/work \
+              -w /work \
+              --entrypoint /init \
+              ${{ vars.DEVCONTAINER_IMAGE }} \
+              bash -lc '
+              set -euo pipefail
+              apt-get update && apt-get install -y afl++
+              client/cc/test_fuzz/run_fuzz.sh ${{ inputs.fuzz-duration-sec }}' \
+              2>&1 | tee -a quality/assets/dast-kura_client.log
+
+      - name: Check for Rust crashes
+        run: |
+          crashes=$(find ${{ github.workspace }}/kura/fuzz/artifacts -type f -name 'crash-*' 2>/dev/null || true)
+          if [ -n "$crashes" ]; then
+            echo "=== Result: Crashes found. ===" | tee -a quality/assets/dast-kura.log
+          else
+            echo "=== Result: No crashes found. ===" | tee -a quality/assets/dast-kura.log
+          fi
+          if [ -n "$crashes" ]; then
+            echo "Crashes found:"
+            echo "$crashes"
+            exit 1
+          fi
+          echo "No crashes found."
+
+      - name: Check for C++ crashes
+        run: |
+          crashes=$(find /tmp/findings_*/default/crashes -type f -not -name 'README.txt' 2>/dev/null || true)
+          if [ -n "$crashes" ]; then
+            echo "=== Result: Crashes found. ===" | tee -a quality/assets/dast-kura_client.log
+          else
+            echo "=== Result: No crashes found. ===" | tee -a quality/assets/dast-kura_client.log
+          fi
+          if [ -n "$crashes" ]; then
+            echo "Crashes found:"
+            echo "$crashes"
+            exit 1
+          fi
+          echo "No crashes found."
+
+      - name: Upload crash artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz-crashes
+          path: |
+            kura/fuzz/artifacts/
+            /tmp/findings_*/default/crashes/
+
+      - name: Upload fuzz evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz-evidence
+          path: |
+            quality/assets/dast-kura.log
+            quality/assets/dast-kura_client.log

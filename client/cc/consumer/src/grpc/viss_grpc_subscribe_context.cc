@@ -20,66 +20,52 @@
 #include <string>
 #include <utility>
 #include <vector>
-//
+
+#include "common/inc/viss_common_error.h"
+#include "grpc/viss_grpc_datapoint_util.h"
 #include "grpc/viss_grpc_inspect_util.h"
 #include "grpc/viss_grpc_value_util.h"
-#include "yoriito/viss/v1/consumer.grpc.pb.h"
-#include "viss_common_error.h"
-#include "viss_common_log.h"
+#include "yoriito/yoriito_log.h"
 
 namespace yoriito::databroker::consumer {
 Result<ConsumerGetResponse> VissGrpcSubscribeContext::Messages() {
   yoriito::viss::v1::consumer::SubscribeCurrentResponse response;
 
   if (subscribe_response_ == nullptr) {
-    VISS_LOG_ERROR("CNSR_SUBSCRIBE_CONTEXT", "No response reader");
+    YORIITO_LOG_ERROR("CNSR_SUBSCRIBE_CONTEXT", "subscribe sequence error");
     return yoriito::Result<ConsumerGetResponse>::Err(
-        VissCommonError::CreateIllegalError("No response reader"));
+        VissCommonError::CreateIllegalError("subscribe sequence error"));
   }
   bool ret = subscribe_response_->Read(&response);
   std::vector<yoriito::databroker::ConsumerGetDataPoint> vec;
   if (ret) {
     if (response.has_error()) {
       // VISS Error
-      auto error = response.error().error().description();
-      auto code = response.error().error().number();
-      auto message = error + " Code:" + std::to_string(code);
-      VISS_LOG_ERROR("CNSR_SUBSCRIBE_CONTEXT", message);
-
+      const std::string& error = response.error().error().description();
+      const int32_t code =
+          static_cast<int32_t>(response.error().error().number());
+      const std::string& message = error + " Code:" + std::to_string(code);
+      YORIITO_LOG_ERROR("CNSR_SUBSCRIBE_CONTEXT", message);
       return yoriito::Result<ConsumerGetResponse>::Err(
           VissCommonError::CreateVissError(code, error));
     }
     if (response.has_event()) {
       // Illegal Response Error Check
-
       if (response.event().data().data_size() == 0) {
-        VISS_LOG_ERROR("CNSR_SUBSCRIBE_CONTEXT", "No data in event");
+        YORIITO_LOG_ERROR("CNSR_SUBSCRIBE_CONTEXT", "No data in event");
         return yoriito::Result<yoriito::databroker::ConsumerGetResponse>::Err(
             VissCommonError::CreateIllegalError("No data in event"));
       }
-
-      for (const auto& datapoint : response.event().data().data()) {
+      const auto& datapoints = response.event().data().data();
+      for (const auto& datapoint : datapoints) {
         std::string path = datapoint.path();
         for (const auto& dp : datapoint.dp()) {
-          ValueType value = VissGrpcValueUtil::ConvertValueType(dp.value());
-
-          int64_t timestamp = dp.storedtimestamp();
-          std::optional<int64_t> produced_timestamp = std::nullopt;
-          if (dp.has_producedtimestamp()) {
-            produced_timestamp = dp.producedtimestamp();
-          }
-          //
-          auto actuator_availability = dp.is_available_actuator();
-          auto sensor_availability = dp.is_available_sensor();
-
-          vec.push_back(yoriito::databroker::ConsumerGetDataPoint(
-              path, value, sensor_availability, actuator_availability,
-              timestamp, produced_timestamp));
+          vec.push_back(VissGrpcDataPointUtil::ConvertDataPoint(dp, path));
         }
       }
     } else {
       // Illegal Response Error Check
-      VISS_LOG_ERROR("CNSR_SUBSCRIBE_CONTEXT", "No event in response");
+      YORIITO_LOG_ERROR("CNSR_SUBSCRIBE_CONTEXT", "No event in response");
       return yoriito::Result<yoriito::databroker::ConsumerGetResponse>::Err(
           VissCommonError::CreateIllegalError("No event in response"));
     }
@@ -89,7 +75,7 @@ Result<ConsumerGetResponse> VissGrpcSubscribeContext::Messages() {
       // Cancel return ok with no data
     } else {
       auto error = status.error_message();
-      VISS_LOG_ERROR("CNSR_SUBSCRIBE_CONTEXT", error);
+      YORIITO_LOG_ERROR("CNSR_SUBSCRIBE_CONTEXT", error);
       return yoriito::Result<yoriito::databroker::ConsumerGetResponse>::Err(
           VissCommonError::CreateIllegalError(error));
     }

@@ -20,33 +20,29 @@
 #include <utility>
 #include <vector>
 
+#include "common/inc/viss_common_error.h"
 #include "grpc/viss_grpc_inspect_util.h"
 #include "grpc/viss_grpc_value_util.h"
-#include "viss_common_error.h"
-#include "viss_common_log.h"
-//
-#include "grpcpp/grpcpp.h"
-#include "yoriito/viss/v1/common.grpc.pb.h"
-#include "yoriito/viss/v1/common.pb.h"
-#include "yoriito/viss/v1/types/value.grpc.pb.h"
-//
+#include "yoriito/yoriito_log.h"
+
+namespace yoriito::databroker::producer {
+
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::ClientReader;
 using grpc::Status;
+
 using yoriito::viss::v1::producer::VISS;
 
-namespace yoriito::databroker::producer {
-
 void VissGrpcInspectImpl::CreateInspectRequest(
-    yoriito::viss::v1::InspectRequest& request,
-    const ProducerInspectRequest& data) {
+    yoriito::viss::v1::InspectRequest &request,
+    const ProducerInspectRequest &data) const {
   request.set_path(data.GetPath());
   auto get_filter = request.mutable_filter();
   auto path_filter = get_filter->mutable_paths_parameter();
   if (data.GetFilter().has_value()) {
     auto paths = data.GetFilter().value().GetPaths();
-    for (const std::string& path : paths) {
+    for (const std::string &path : paths) {
       path_filter->add_paths(path);
     }
   }
@@ -54,51 +50,90 @@ void VissGrpcInspectImpl::CreateInspectRequest(
 }
 
 grpc::Status VissGrpcInspectImpl::Execute(
-    ClientContext& context, yoriito::viss::v1::InspectRequest& request,
-    yoriito::viss::v1::InspectResponse& response) {
+    ClientContext &context, const yoriito::viss::v1::InspectRequest &request,
+    yoriito::viss::v1::InspectResponse &response) const {
   return stub_->Inspect(&context, request, &response);
 }
 
 Result<ProducerInspectResponse> VissGrpcInspectImpl::ConvertInspectResponse(
-    grpc::Status status, yoriito::viss::v1::InspectResponse& response) {
+    grpc::Status status, const yoriito::viss::v1::InspectResponse &response,
+    const ProducerInspectRequest &data) const {
   std::vector<yoriito::databroker::ProducerInspectData> inspect_data_list;
+  std::map<std::string, std::shared_ptr<yoriito::databroker::StructType>>
+      struct_type_map;
+
   if (status.ok()) {
     if (response.has_error()) {
       // VISS Error
-      auto error = response.error().description();
-      auto code = response.error().number();
-      auto message = error + " Code:" + std::to_string(code);
-      VISS_LOG_ERROR("PRDR_INSPECT", message);
+      const std::string &error = response.error().description();
+      const int32_t code = static_cast<int32_t>(response.error().number());
+      const std::string &message = error + " Code:" + std::to_string(code);
+      YORIITO_LOG_ERROR("PRDR_INSPECT", message);
       return Result<ProducerInspectResponse>::Err(
           VissCommonError::CreateVissError(code, error));
     }
 
     // Illegal Response: No Data( actually return viss error )
-    if (!response.has_metadata() || response.metadata().entries().empty()) {
-      VISS_LOG_ERROR("PRDR_INSPECT",
-                     "Request OK but response consistency failed.");
+    if (!response.has_metadata() ||
+        response.metadata().metadata_entries().empty()) {
+      YORIITO_LOG_ERROR(
+          "PRDR_INSPECT",
+          "Response OK but response consistency failed." + data.GetPath());
       return Result<ProducerInspectResponse>::Err(
           VissCommonError::CreateIllegalError(
-              "Request OK but response consistency failed."));
+              "Response OK but response consistency failed." + data.GetPath()));
     }
-    for (const auto& metadata_package : response.metadata().entries()) {
-      auto ret = VissGrpcInspectUtil::ConvertInspectData(metadata_package);
-      if (ret.IsOk()) {
-        inspect_data_list.push_back(
-            yoriito::databroker::ProducerInspectData(ret.TakeOk().value()));
-      }
-    }
+
+    VissGrpcInspectUtil::BuildAndResolveStructTypeMap(response,
+                                                      struct_type_map);
+    BuildInspectDataList(response, struct_type_map, inspect_data_list);
 
   } else {
     // GRPC Error
     auto error = status.error_message();
-    VISS_LOG_ERROR("PRDR_INSPECT", error);
+    YORIITO_LOG_ERROR("PRDR_INSPECT", error);
     return Result<ProducerInspectResponse>::Err(
         VissCommonError::CreateProtocolError(error));
   }
+  std::vector<std::shared_ptr<yoriito::databroker::StructType>>
+      struct_type_list;
+  struct_type_list.reserve(struct_type_map.size());
+
+  (void)std::transform(struct_type_map.begin(), struct_type_map.end(),
+                       std::back_inserter(struct_type_list),
+                       [](const auto &pair) { return pair.second; });
   yoriito::databroker::ProducerInspectResponse inspect_response(
-      std::move(inspect_data_list));
-  return Result<ProducerInspectResponse>::Ok(inspect_response);
+      std::move(inspect_data_list), std::move(struct_type_list));
+  return Result<ProducerInspectResponse>::Ok(std::move(inspect_response));
+}
+
+void VissGrpcInspectImpl::BuildInspectDataList(
+    const yoriito::viss::v1::InspectResponse &response,
+    const std::map<std::string,
+                   std::shared_ptr<yoriito::databroker::StructType>>
+        &struct_type_map,
+    std::vector<yoriito::databroker::ProducerInspectData> &inspect_data_list)
+    const {
+  const auto &metadata_entries = response.metadata().metadata_entries();
+  for (const auto &metadata_package : metadata_entries) {
+    auto ret = VissGrpcInspectUtil::ConvertInspectData(metadata_package);
+    if (!ret.IsOk()) {
+      continue;
+    }
+
+    auto value = ret.TakeOk().value();
+    if (VissGrpcInspectUtil::IsStructDataType(value.GetDataType())) {
+      const std::string data_type_ref = metadata_package.datatype_path();
+      if (!data_type_ref.empty()) {
+        auto it = struct_type_map.find(data_type_ref);
+        if (it != struct_type_map.end()) {
+          value.SetDataTypeRef(yoriito::databroker::StructTypeRef(it->second));
+        }
+      }
+    }
+    inspect_data_list.push_back(
+        yoriito::databroker::ProducerInspectData(value));
+  }
 }
 
 }  // namespace yoriito::databroker::producer

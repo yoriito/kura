@@ -43,16 +43,22 @@ Kura follows Clean Architecture principles:
 ```sh
 cd kura
 cargo build --release
-cargo run --release -- --config_file_path config.yml
+cargo run --release -- --config-file-path config.yml
 ```
 
 ## Usage
 
-- Use client libraries in `client/cc` or `vshot` to connect to the server
+- Use client libraries in `client/cc` or `client/vshot` to connect to the server
 
 ## Documentation
 
 See the `docs/` directory for software design, architecture, and usage guides.
+
+## Versioning
+
+This project follows [Semantic Versioning](https://semver.org/).
+
+The version of vehicle-api is managed independently from the overall Yoriito version.
 
 ## Quality Assessment
  
@@ -60,12 +66,18 @@ This repository contains quality assessment results for this project.
 Please refer to the [quality assessment page](./quality/quality-assessment.md).
 
 The results are provided for transparency and reference purposes and do not constitute any warranty or guarantee of quality.
- 
+
 ### Contents
  
 - Unit Test
 - Coding Style
+- Code Metrics
+- Static Analysis
+- Dynamic Analysis
+- SCA
+- SBOM
 
 ### Notes
  
-Some files in the `quality/` directory may be generated automatically by CI tools.
+Some files in this directory may be generated automatically by CI tools.
+

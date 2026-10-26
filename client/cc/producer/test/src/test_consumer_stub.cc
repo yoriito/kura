@@ -14,18 +14,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "test_consumer_stub.h"
+#include "producer/test/src/test_consumer_stub.h"
 
 #include <string>
 #include <vector>
 
 #include "databroker/databroker_consumer.h"
 #include "databroker/databroker_consumer_factory.h"
+#include "producer/test/src/test_copyable_value_type.h"
 
 namespace yoriito::databroker::test_stub {
-
-Result<void> ConsumerStub::SetData(const std::string& path, ValueType value) {
-  yoriito::databroker::DataBrokerConsumer* Consumer =
+Result<void> ConsumerStub::SetData(const std::string &path,
+                                   const ValueType &value) {
+  yoriito::databroker::DataBrokerConsumer *Consumer =
       yoriito::databroker::DataBrokerConsumerFactory::GetInstance();
 
   yoriito::databroker::ConsumerSetRequest sensor_value(
@@ -35,8 +36,8 @@ Result<void> ConsumerStub::SetData(const std::string& path, ValueType value) {
   return Consumer->Set(sensor_value);
 }
 
-Result<ValueType> ConsumerStub::GetData(const std::string& path) {
-  yoriito::databroker::DataBrokerConsumer* Consumer =
+Result<ValueType> ConsumerStub::GetData(const std::string &path) {
+  yoriito::databroker::DataBrokerConsumer *Consumer =
       yoriito::databroker::DataBrokerConsumerFactory::GetInstance();
   yoriito::databroker::ConsumerGetRequest request_data{std::string(path)};
   yoriito::Result<yoriito::databroker::ConsumerGetResponse> ret =
@@ -45,8 +46,23 @@ Result<ValueType> ConsumerStub::GetData(const std::string& path) {
     return Result<ValueType>::Err(ret.TakeErr());
   }
   auto data = ret.TakeOk().value();
-  auto& data_points = data.GetDataPoints();
-  auto value = data_points.at(0).GetData();
-  return Result<ValueType>::Ok(value);
+  auto &data_points = data.GetDataPoints();
+  const auto &value = data_points.at(0).GetData();
+  return Result<ValueType>::Ok(yoriito::CloneValueType(value));
+}
+Result<ConsumerGetDataPoint> ConsumerStub::GetDataPoint(
+    const std::string &path) {
+  yoriito::databroker::DataBrokerConsumer *Consumer =
+      yoriito::databroker::DataBrokerConsumerFactory::GetInstance();
+  yoriito::databroker::ConsumerGetRequest request_data{std::string(path)};
+  yoriito::Result<yoriito::databroker::ConsumerGetResponse> ret =
+      Consumer->Get(request_data);
+  if (!ret.IsOk()) {
+    return Result<ConsumerGetDataPoint>::Err(ret.TakeErr());
+  }
+  auto data = ret.TakeOk().value();
+  auto &data_points = data.GetDataPoints();
+  const auto &value = data_points.at(0).GetData();
+  return Result<ConsumerGetDataPoint>::Ok(data_points[0]);
 }
 }  // namespace yoriito::databroker::test_stub

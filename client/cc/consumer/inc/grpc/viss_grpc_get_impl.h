@@ -16,49 +16,47 @@
  * limitations under the License.
  */
 
-#ifndef KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_GRPC_GET_IMPL_H_
-#define KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_GRPC_GET_IMPL_H_
+#ifndef CONSUMER_INC_GRPC_VISS_GRPC_GET_IMPL_H_
+#define CONSUMER_INC_GRPC_VISS_GRPC_GET_IMPL_H_
 
-#include "result.h"
-//
 #include "databroker/consumer_get_datapoint.h"
 #include "databroker/consumer_get_request.h"
 #include "databroker/consumer_get_response.h"
+#include "yoriito/result.h"
 
 //
 #include "grpcpp/grpcpp.h"
-#include "yoriito/viss/v1/common.grpc.pb.h"
+#include "yoriito/viss/v1/common.pb.h"
 #include "yoriito/viss/v1/consumer.grpc.pb.h"
-#include "yoriito/viss/v1/consumer.pb.h"
-//
 
-using yoriito::viss::v1::consumer::VISS;
+namespace yoriito::databroker::consumer {
 
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::ClientReader;
 using grpc::Status;
 
-namespace yoriito::databroker::consumer {
+using yoriito::viss::v1::consumer::VISS;
+
 class VissGrpcGetImpl {
  public:
   explicit VissGrpcGetImpl(yoriito::viss::v1::consumer::VISS::Stub* channel)
       : stub_(channel) {}
   ~VissGrpcGetImpl() = default;
   void CreateGetRequest(yoriito::viss::v1::consumer::GetCurrentRequest& request,
-                        const ConsumerGetRequest& data);
+                        const ConsumerGetRequest& data) const;
 
   grpc::Status Execute(
       ClientContext& context,
-      yoriito::viss::v1::consumer::GetCurrentRequest& request,
-      yoriito::viss::v1::consumer::GetCurrentResponse& response);
+      const yoriito::viss::v1::consumer::GetCurrentRequest& request,
+      yoriito::viss::v1::consumer::GetCurrentResponse& response) const;
   Result<ConsumerGetResponse> ConvertGetResponse(
       grpc::Status status,
-      yoriito::viss::v1::consumer::GetCurrentResponse& response,
-      const ConsumerGetRequest& data);
+      const yoriito::viss::v1::consumer::GetCurrentResponse& response,
+      const ConsumerGetRequest& data) const;
 
  private:
   yoriito::viss::v1::consumer::VISS::Stub* stub_;
 };
 }  // namespace yoriito::databroker::consumer
-#endif  // KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_GRPC_GET_IMPL_H_
+#endif  // CONSUMER_INC_GRPC_VISS_GRPC_GET_IMPL_H_

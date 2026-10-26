@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# For viss/
+option(BUILD_VISS "Enable building viss libraries" ON)
+
 # For common/
 option(BUILD_COMMON "Enable building common libraries" ON)
 
@@ -36,7 +39,14 @@ option(ENABLE_DOCS "Enable building documentation" OFF)
 
 # For test
 option(ENABLE_TESTS "Enable building tests" OFF)
+
+# For fuzz tests (AFL++ only; set AFL_COMPILER=clang (default) or gcc)
+option(ENABLE_FUZZ_TESTS "Enable building fuzz harnesses" OFF)
 if(ENABLE_TESTS AND (NOT BUILD_CONSUMER AND NOT BUILD_PRODUCER))
     message(FATAL_ERROR
         "ENABLE_TESTS requires at least one of BUILD_CONSUMER or BUILD_PRODUCER to be ON, but both are disabled.")
+endif()
+if(ENABLE_FUZZ_TESTS AND (NOT BUILD_CONSUMER AND NOT BUILD_COMMON))
+    message(FATAL_ERROR
+        "ENABLE_FUZZ_TESTS requires BUILD_COMMON and BUILD_CONSUMER to be ON.")
 endif()

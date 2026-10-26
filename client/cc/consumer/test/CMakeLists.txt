@@ -18,7 +18,9 @@ cmake_minimum_required(VERSION 3.28)
 set(EXECUTABLE_NAME "test_databroker_consumer")
 
 include("${CMAKE_CURRENT_LIST_DIR}/../../cmake/yoriito_common.cmake")
-
+set_directory_properties(PROPERTIES
+  COMPILE_OPTIONS ""
+)
 include(FetchContent)
 FetchContent_Declare(
   googletest
@@ -51,9 +53,10 @@ target_include_directories(
     ${EXECUTABLE_NAME} AFTER
     PRIVATE ${CMAKE_CURRENT_BINARY_DIR}
     ${INTERFACE_INCLUDE_DIR}
+    ${INTERFACE_INCLUDE_DIR}/..
+    ${CMAKE_CURRENT_SOURCE_DIR}/../..
     ${CMAKE_CURRENT_SOURCE_DIR}/inc
     ${CMAKE_CURRENT_SOURCE_DIR}/../inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../inc
     ${CMAKE_CURRENT_SOURCE_DIR}/../../common/inc
 )
 

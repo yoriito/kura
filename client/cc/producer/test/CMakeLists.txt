@@ -27,6 +27,9 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 enable_testing()
+set_directory_properties(PROPERTIES
+  COMPILE_OPTIONS ""
+)
 
 set(LOCAL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 file(GLOB_RECURSE SRC_FILES LIST_DIRECTORIES false src/*  src/**/*)
@@ -51,6 +54,8 @@ target_include_directories(
     ${EXECUTABLE_NAME} AFTER
     PRIVATE ${CMAKE_CURRENT_BINARY_DIR}
     ${INTERFACE_INCLUDE_DIR}
+    ${INTERFACE_INCLUDE_DIR}/..
+    ${CMAKE_CURRENT_SOURCE_DIR}/../..
     ${CMAKE_CURRENT_SOURCE_DIR}/inc
     ${CMAKE_CURRENT_SOURCE_DIR}/../inc
     ${CMAKE_CURRENT_SOURCE_DIR}/../../common/inc

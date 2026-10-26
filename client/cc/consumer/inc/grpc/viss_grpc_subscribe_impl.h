@@ -16,25 +16,29 @@
  * limitations under the License.
  */
 
-#ifndef KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_GRPC_SUBSCRIBE_IMPL_H_
-#define KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_GRPC_SUBSCRIBE_IMPL_H_
+#ifndef CONSUMER_INC_GRPC_VISS_GRPC_SUBSCRIBE_IMPL_H_
+#define CONSUMER_INC_GRPC_VISS_GRPC_SUBSCRIBE_IMPL_H_
 
 #include <memory>
 
-#include "grpcpp/grpcpp.h"
-#include "yoriito/viss/v1/common.grpc.pb.h"
-#include "yoriito/viss/v1/consumer.grpc.pb.h"
-#include "yoriito/viss/v1/consumer.pb.h"
 //
+#include "grpcpp/grpcpp.h"
+#include "yoriito/viss/v1/common.pb.h"
+#include "yoriito/viss/v1/consumer.grpc.pb.h"
+//
+#include "databroker/consumer_subscribe_request.h"
+#include "grpc/viss_grpc_subscribe_context.h"
+#include "yoriito/result.h"
 
-using yoriito::viss::v1::consumer::VISS;
+namespace yoriito::databroker::consumer {
 
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::ClientReader;
 using grpc::Status;
 
-namespace yoriito::databroker::consumer {
+using yoriito::viss::v1::consumer::VISS;
+
 class VissGrpcSubscribeImpl {
  public:
   explicit VissGrpcSubscribeImpl(
@@ -44,21 +48,22 @@ class VissGrpcSubscribeImpl {
 
   void CreateSubscribeRequest(
       yoriito::viss::v1::consumer::SubscribeCurrentRequest& request,
-      const ConsumerSubscribeRequest& data);
+      const ConsumerSubscribeRequest& data) const;
 
   std::unique_ptr<
       grpc::ClientReader<yoriito::viss::v1::consumer::SubscribeCurrentResponse>>
   Execute(ClientContext& context,
-          yoriito::viss::v1::consumer::SubscribeCurrentRequest& request);
+          const yoriito::viss::v1::consumer::SubscribeCurrentRequest& request)
+      const;
   Result<std::unique_ptr<ConsumerSubscribeContext>> ConvertSubscribeResponse(
-      std::unique_ptr<grpc::ClientContext>& client_context,
+      std::unique_ptr<grpc::ClientContext>& context,
       std::unique_ptr<grpc::ClientReader<
           yoriito::viss::v1::consumer::SubscribeCurrentResponse>>
           reader,
-      const ConsumerSubscribeRequest& data);
+      const ConsumerSubscribeRequest& data) const;
 
  private:
   yoriito::viss::v1::consumer::VISS::Stub* stub_;
 };
 }  // namespace yoriito::databroker::consumer
-#endif  // KURA_CLIENT_CC_CONSUMER_INC_GRPC_VISS_GRPC_SUBSCRIBE_IMPL_H_
+#endif  // CONSUMER_INC_GRPC_VISS_GRPC_SUBSCRIBE_IMPL_H_

@@ -16,9 +16,11 @@
 
 use async_trait::async_trait;
 use std::any::Any;
+use std::collections::HashMap;
 use std::sync::Arc;
 
-use crate::interface::signal::{Config, DataPoint, KuraResult, Signal};
+use crate::interface::model;
+use crate::interface::result::KuraResult;
 use crate::interface::subscription::{GetCondition, SubscriptionCondition};
 
 // Interfactor interfaces declares all functions provided by this software.
@@ -26,17 +28,30 @@ use crate::interface::subscription::{GetCondition, SubscriptionCondition};
 #[async_trait]
 pub trait Interactor: Send + Sync {
     async fn load_vss(&self, vss_json_path: &str) -> KuraResult<()>;
-    async fn update_metadata(&self, path: &str, config: &Config) -> KuraResult<()>;
-    fn get_current_vehicle_data(
+    async fn update_metadata(&self, path: &str, metadata: &model::SignalMetadata)
+    -> KuraResult<()>;
+    fn get_actual_state(
         &self,
-        subscription_condition: GetCondition,
-    ) -> KuraResult<Vec<Signal>>;
-    fn get_target_vehicle_data(
+        get_condition: GetCondition,
+    ) -> KuraResult<Vec<model::SignalStateView>>;
+    fn get_requested_state(
         &self,
-        subscription_condition: GetCondition,
-    ) -> KuraResult<Vec<Signal>>;
-    async fn set_current_vehicle_data(&self, path: String, datapoint: DataPoint) -> KuraResult<()>;
-    async fn set_target_vehicle_data(&self, path: String, datapoint: DataPoint) -> KuraResult<()>;
+        get_condition: GetCondition,
+    ) -> KuraResult<Vec<model::SignalStateView>>;
+    fn get_metadata(
+        &self,
+        get_condition: GetCondition,
+    ) -> KuraResult<Vec<model::SignalMetadataView>>;
+    fn get_vss_user_defined_types_referenced_by(
+        &self,
+        signals: &[model::SignalMetadataView],
+    ) -> KuraResult<HashMap<String, model::VSSUserDefinedType>>;
+    async fn initialize_vss_user_defined_types(
+        &self,
+        vss_user_defined_types: Vec<model::VSSUserDefinedType>,
+    ) -> KuraResult<bool>;
+    async fn set_actual_state(&self, path: String, state: model::SignalState) -> KuraResult<()>;
+    async fn set_requested_state(&self, path: String, state: model::SignalState) -> KuraResult<()>;
     async fn subscribe(
         &self,
         object: Arc<dyn Any + Send + Sync>,
@@ -50,14 +65,39 @@ pub trait Interactor: Send + Sync {
 
 #[async_trait]
 pub trait Database: Send + Sync {
-    async fn initialize_signal(&self, signal: &Signal) -> KuraResult<bool>;
-    async fn update_metadata(&self, path: String, config: &Config) -> KuraResult<bool>;
-    fn get_current(&self, get_condition: GetCondition) -> KuraResult<Vec<Signal>>;
+    async fn initialize_signal(
+        &self,
+        path: String,
+        signal: model::SignalMetadata,
+    ) -> KuraResult<bool>;
+    async fn initialize_vss_user_defined_types(
+        &self,
+        vss_user_defined_types: Vec<model::VSSUserDefinedType>,
+    ) -> KuraResult<bool>;
+    async fn update_metadata(
+        &self,
+        path: String,
+        metadata: &model::SignalMetadata,
+    ) -> KuraResult<bool>;
+    fn get_actual_state(
+        &self,
+        get_condition: GetCondition,
+    ) -> KuraResult<Vec<model::SignalStateView>>;
 
     #[allow(dead_code)]
-    fn get_target(&self, get_condition: GetCondition) -> KuraResult<Vec<Signal>>;
-    async fn set_current(&self, path: String, datapoint: DataPoint) -> KuraResult<()>;
-    async fn set_target(&self, path: String, datapoint: DataPoint) -> KuraResult<()>;
+    fn get_requested_state(
+        &self,
+        get_condition: GetCondition,
+    ) -> KuraResult<Vec<model::SignalStateView>>;
+    fn get_metadata(
+        &self,
+        get_condition: GetCondition,
+    ) -> KuraResult<Vec<model::SignalMetadataView>>;
+    fn get_all_vss_user_defined_types(
+        &self,
+    ) -> KuraResult<HashMap<String, model::VSSUserDefinedType>>;
+    async fn set_actual_state(&self, path: String, state: model::SignalState) -> KuraResult<()>;
+    async fn set_requested_state(&self, path: String, state: model::SignalState) -> KuraResult<()>;
     async fn subscribe(
         &self,
         object: Arc<dyn Any + Send + Sync>,
@@ -81,6 +121,6 @@ pub trait Subscriber: Send + Sync + std::fmt::Debug {
         &self,
         object: Arc<dyn Any + Send + Sync>,
         subscription_id: String,
-        signals: &[Signal],
+        signals: &[model::SignalStateView],
     ) -> KuraResult<()>;
 }

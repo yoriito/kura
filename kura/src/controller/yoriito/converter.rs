@@ -15,8 +15,8 @@
 // limitations under the License.
 
 use crate::controller::yoriito::common::viss as common_viss;
-use crate::interface::signal as internal_signal;
-use crate::interface::subscription as internal_subscription;
+use crate::interface::{model, result, subscription};
+use std::collections::HashMap;
 use std::convert::TryFrom;
 use tracing::error;
 
@@ -25,7 +25,7 @@ pub trait VissErrorExt<T> {
     fn to_viss_error(self) -> Result<T, Box<tonic::Status>>;
 }
 
-impl<T> VissErrorExt<T> for internal_signal::KuraResult<T> {
+impl<T> VissErrorExt<T> for result::KuraResult<T> {
     fn to_viss_error(self) -> Result<T, Box<tonic::Status>> {
         match self {
             Ok(val) => Ok(val),
@@ -47,7 +47,7 @@ impl<T> OptionStatusExt<T> for Option<T> {
 }
 
 // Filter Converters
-impl TryFrom<&common_viss::InspectFilter> for internal_subscription::PathsFilter {
+impl TryFrom<&common_viss::InspectFilter> for subscription::PathsFilter {
     type Error = anyhow::Error;
     fn try_from(v: &common_viss::InspectFilter) -> Result<Self, Self::Error> {
         match &v.parameter_variant {
@@ -57,7 +57,7 @@ impl TryFrom<&common_viss::InspectFilter> for internal_subscription::PathsFilter
             )
             .into()),
             Some(common_viss::inspect_filter::ParameterVariant::PathsParameter(paths_filter)) => {
-                Ok(internal_subscription::PathsFilter {
+                Ok(subscription::PathsFilter {
                     paths: paths_filter.paths.clone(),
                 })
             }
@@ -65,12 +65,12 @@ impl TryFrom<&common_viss::InspectFilter> for internal_subscription::PathsFilter
     }
 }
 
-impl TryFrom<&common_viss::SubscribeFilter> for internal_subscription::PathsFilter {
+impl TryFrom<&common_viss::SubscribeFilter> for subscription::PathsFilter {
     type Error = anyhow::Error;
     fn try_from(v: &common_viss::SubscribeFilter) -> Result<Self, Self::Error> {
         match &v.parameter_variant {
             Some(common_viss::subscribe_filter::ParameterVariant::PathsParameter(paths_filter)) => {
-                Ok(internal_subscription::PathsFilter {
+                Ok(subscription::PathsFilter {
                     paths: paths_filter.paths.clone(),
                 })
             }
@@ -84,20 +84,20 @@ impl TryFrom<&common_viss::SubscribeFilter> for internal_subscription::PathsFilt
 }
 
 pub trait FilterUtil {
-    fn to_paths_filter(&self) -> Option<internal_subscription::PathsFilter>;
-    fn to_misc_filter(&self) -> Option<internal_subscription::MiscFilter>;
+    fn to_paths_filter(&self) -> Option<subscription::PathsFilter>;
+    fn to_misc_filter(&self) -> Option<subscription::MiscFilter>;
 }
 
 impl FilterUtil for common_viss::SubscribeFilter {
-    fn to_paths_filter(&self) -> Option<internal_subscription::PathsFilter> {
+    fn to_paths_filter(&self) -> Option<subscription::PathsFilter> {
         match &self.parameter_variant.clone()? {
             common_viss::subscribe_filter::ParameterVariant::PathsParameter(v) => {
-                Some(internal_subscription::PathsFilter {
+                Some(subscription::PathsFilter {
                     paths: v.paths.clone(),
                 })
             }
             common_viss::subscribe_filter::ParameterVariant::ComboFilter(v) => {
-                Some(internal_subscription::PathsFilter {
+                Some(subscription::PathsFilter {
                     paths: v.paths_parameter.clone()?.paths,
                 })
             }
@@ -105,26 +105,24 @@ impl FilterUtil for common_viss::SubscribeFilter {
         }
     }
 
-    fn to_misc_filter(&self) -> Option<internal_subscription::MiscFilter> {
+    fn to_misc_filter(&self) -> Option<subscription::MiscFilter> {
         match &self.parameter_variant.clone()? {
             common_viss::subscribe_filter::ParameterVariant::MiscParameter(v) => Some(
-                internal_subscription::MiscFilter::from(&v.parameter_variant.clone()?),
+                subscription::MiscFilter::from(&v.parameter_variant.clone()?),
             ),
-            common_viss::subscribe_filter::ParameterVariant::ComboFilter(v) => {
-                Some(internal_subscription::MiscFilter::from(
-                    &v.misc_parameter.clone()?.parameter_variant?,
-                ))
-            }
+            common_viss::subscribe_filter::ParameterVariant::ComboFilter(v) => Some(
+                subscription::MiscFilter::from(&v.misc_parameter.clone()?.parameter_variant?),
+            ),
             _ => None,
         }
     }
 }
 
 impl FilterUtil for common_viss::GetFilter {
-    fn to_paths_filter(&self) -> Option<internal_subscription::PathsFilter> {
+    fn to_paths_filter(&self) -> Option<subscription::PathsFilter> {
         match self.parameter_variant.clone()? {
             common_viss::get_filter::ParameterVariant::PathsParameter(v) => {
-                Some(internal_subscription::PathsFilter {
+                Some(subscription::PathsFilter {
                     paths: v.paths.clone(),
                 })
             }
@@ -132,73 +130,71 @@ impl FilterUtil for common_viss::GetFilter {
         }
     }
 
-    fn to_misc_filter(&self) -> Option<internal_subscription::MiscFilter> {
+    fn to_misc_filter(&self) -> Option<subscription::MiscFilter> {
         match self.parameter_variant.clone()? {
             common_viss::get_filter::ParameterVariant::PathsParameter(_) => None,
             common_viss::get_filter::ParameterVariant::HistoryParameter(v) => {
-                Some(internal_subscription::MiscFilter::from(&v))
+                Some(subscription::MiscFilter::from(&v))
             }
         }
     }
 }
 
 impl FilterUtil for common_viss::InspectFilter {
-    fn to_paths_filter(&self) -> Option<internal_subscription::PathsFilter> {
+    fn to_paths_filter(&self) -> Option<subscription::PathsFilter> {
         match self.parameter_variant.clone()? {
             common_viss::inspect_filter::ParameterVariant::PathsParameter(v) => {
-                Some(internal_subscription::PathsFilter {
+                Some(subscription::PathsFilter {
                     paths: v.paths.clone(),
                 })
             }
         }
     }
 
-    fn to_misc_filter(&self) -> Option<internal_subscription::MiscFilter> {
+    fn to_misc_filter(&self) -> Option<subscription::MiscFilter> {
         None
     }
 }
 
-impl From<&common_viss::PathsFilter> for internal_subscription::PathsFilter {
+impl From<&common_viss::PathsFilter> for subscription::PathsFilter {
     fn from(v: &common_viss::PathsFilter) -> Self {
-        internal_subscription::PathsFilter {
+        subscription::PathsFilter {
             paths: v.paths.clone(),
         }
     }
 }
 
-impl From<&common_viss::TimebasedFilter> for internal_subscription::MiscFilter {
+impl From<&common_viss::TimebasedFilter> for subscription::MiscFilter {
     fn from(v: &common_viss::TimebasedFilter) -> Self {
-        internal_subscription::MiscFilter::Timebased(internal_subscription::TimebasedFilter {
-            interval: v.period,
-        })
+        subscription::MiscFilter::Timebased(subscription::TimebasedFilter { interval: v.period })
     }
 }
 
-impl From<&common_viss::ChangeFilter> for internal_subscription::MiscFilter {
+impl From<&common_viss::ChangeFilter> for subscription::MiscFilter {
     fn from(v: &common_viss::ChangeFilter) -> Self {
         let operator = match common_viss::Operator::try_from(v.logic_op) {
             Ok(v) => v,
-            Err(_) => return internal_subscription::MiscFilter::Invalid,
+            Err(_) => return subscription::MiscFilter::Invalid,
         };
-        internal_subscription::MiscFilter::Change(internal_subscription::ChangeFilter {
-            opecode: (&operator).into(),
+        subscription::MiscFilter::Change(subscription::ChangeFilter {
+            opcode: (&operator).into(),
             offset: v.diff,
         })
     }
 }
 
-impl From<&common_viss::RangeFilter> for internal_subscription::MiscFilter {
+impl From<&common_viss::RangeFilter> for subscription::MiscFilter {
     fn from(v: &common_viss::RangeFilter) -> Self {
-        let mut conditions: Vec<internal_subscription::RangeCondition> = [].to_vec();
+        let mut conditions: Vec<subscription::RangeCondition> = [].to_vec();
         let mut combination = None;
         match &v.range_type {
             Some(common_viss::range_filter::RangeType::Single(v)) => {
                 let operator = match common_viss::Operator::try_from(v.boundary_op) {
                     Ok(v) => v,
-                    Err(_) => return internal_subscription::MiscFilter::Invalid,
+                    Err(_) => return subscription::MiscFilter::Invalid,
                 };
-                conditions.push(internal_subscription::RangeCondition {
-                    opecode: (&operator).into(),
+                conditions.push(subscription::RangeCondition {
+                    opcode: (&operator).into(),
                     boundary: v.boundary,
                 });
             }
@@ -207,48 +203,48 @@ impl From<&common_viss::RangeFilter> for internal_subscription::MiscFilter {
                     if let Some(condition) = cur_condition.combination_op {
                         let condition = match common_viss::Condition::try_from(condition) {
                             Ok(v) => v,
-                            Err(_) => return internal_subscription::MiscFilter::Invalid,
+                            Err(_) => return subscription::MiscFilter::Invalid,
                         };
                         combination = Some((&condition).into());
                     }
                     let operator = match common_viss::Operator::try_from(cur_condition.boundary_op)
                     {
                         Ok(v) => v,
-                        Err(_) => return internal_subscription::MiscFilter::Invalid,
+                        Err(_) => return subscription::MiscFilter::Invalid,
                     };
-                    conditions.push(internal_subscription::RangeCondition {
-                        opecode: (&operator).into(),
+                    conditions.push(subscription::RangeCondition {
+                        opcode: (&operator).into(),
                         boundary: cur_condition.boundary,
                     });
                 }
             }
             None => {}
         }
-        internal_subscription::MiscFilter::Range(internal_subscription::RangeFilter {
+        subscription::MiscFilter::Range(subscription::RangeFilter {
             conditions,
             combination,
         })
     }
 }
 
-impl From<&common_viss::CurvelogFilter> for internal_subscription::MiscFilter {
+impl From<&common_viss::CurvelogFilter> for subscription::MiscFilter {
     fn from(v: &common_viss::CurvelogFilter) -> Self {
-        internal_subscription::MiscFilter::Curvelog(internal_subscription::CurvelogFilter {
+        subscription::MiscFilter::Curvelog(subscription::CurvelogFilter {
             maxerr: v.maxerr,
             bufsize: v.bufsize,
         })
     }
 }
 
-impl From<&common_viss::HistoryFilter> for internal_subscription::MiscFilter {
+impl From<&common_viss::HistoryFilter> for subscription::MiscFilter {
     fn from(v: &common_viss::HistoryFilter) -> Self {
-        internal_subscription::MiscFilter::History(internal_subscription::HistoryFilter {
+        subscription::MiscFilter::History(subscription::HistoryFilter {
             time_period: v.time_period.clone(),
         })
     }
 }
 
-impl From<&common_viss::misc_filter::ParameterVariant> for internal_subscription::MiscFilter {
+impl From<&common_viss::misc_filter::ParameterVariant> for subscription::MiscFilter {
     fn from(v: &common_viss::misc_filter::ParameterVariant) -> Self {
         match &v {
             common_viss::misc_filter::ParameterVariant::TimebasedParameter(v) => v.into(),
@@ -260,189 +256,115 @@ impl From<&common_viss::misc_filter::ParameterVariant> for internal_subscription
 }
 
 // Other Converters
-impl From<&common_viss::ValueType> for internal_signal::Value {
-    fn from(v: &common_viss::ValueType) -> internal_signal::Value {
+impl From<&common_viss::ValueType> for model::Value {
+    fn from(v: &common_viss::ValueType) -> model::Value {
         match &v.value_type {
-            None => internal_signal::Value::Nan,
+            None => model::Value::Nan,
             Some(common_viss::value_type::ValueType::String(value)) => {
-                internal_signal::Value::String(value.clone())
+                model::Value::String(value.clone())
             }
-            Some(common_viss::value_type::ValueType::Bool(b)) => internal_signal::Value::Bool(*b),
-            Some(common_viss::value_type::ValueType::Int8(i)) => {
-                internal_signal::Value::Int8(*i as i8)
-            }
-            Some(common_viss::value_type::ValueType::Int16(i)) => {
-                internal_signal::Value::Int16(*i as i16)
-            }
-            Some(common_viss::value_type::ValueType::Int32(i)) => internal_signal::Value::Int32(*i),
-            Some(common_viss::value_type::ValueType::Int64(i)) => internal_signal::Value::Int64(*i),
-            Some(common_viss::value_type::ValueType::Uint8(i)) => {
-                internal_signal::Value::Uint8(*i as u8)
-            }
-            Some(common_viss::value_type::ValueType::Uint16(i)) => {
-                internal_signal::Value::Uint16(*i as u16)
-            }
-            Some(common_viss::value_type::ValueType::Uint32(u)) => {
-                internal_signal::Value::Uint32(*u)
-            }
-            Some(common_viss::value_type::ValueType::Uint64(u)) => {
-                internal_signal::Value::Uint64(*u)
-            }
-            Some(common_viss::value_type::ValueType::Float(f)) => internal_signal::Value::Float(*f),
-            Some(common_viss::value_type::ValueType::Double(d)) => {
-                internal_signal::Value::Double(*d)
-            }
+            Some(common_viss::value_type::ValueType::Bool(b)) => model::Value::Bool(*b),
+            Some(common_viss::value_type::ValueType::Int8(i)) => model::Value::Int8(*i as i8),
+            Some(common_viss::value_type::ValueType::Int16(i)) => model::Value::Int16(*i as i16),
+            Some(common_viss::value_type::ValueType::Int32(i)) => model::Value::Int32(*i),
+            Some(common_viss::value_type::ValueType::Int64(i)) => model::Value::Int64(*i),
+            Some(common_viss::value_type::ValueType::Uint8(i)) => model::Value::Uint8(*i as u8),
+            Some(common_viss::value_type::ValueType::Uint16(i)) => model::Value::Uint16(*i as u16),
+            Some(common_viss::value_type::ValueType::Uint32(u)) => model::Value::Uint32(*u),
+            Some(common_viss::value_type::ValueType::Uint64(u)) => model::Value::Uint64(*u),
+            Some(common_viss::value_type::ValueType::Float(f)) => model::Value::Float(*f),
+            Some(common_viss::value_type::ValueType::Double(d)) => model::Value::Double(*d),
             Some(common_viss::value_type::ValueType::StringArray(string_array)) => {
-                internal_signal::Value::StringArray(string_array.values.clone())
+                model::Value::StringArray(string_array.values.clone())
             }
             Some(common_viss::value_type::ValueType::BoolArray(bool_array)) => {
-                internal_signal::Value::BoolArray(bool_array.values.clone())
+                model::Value::BoolArray(bool_array.values.clone())
             }
             Some(common_viss::value_type::ValueType::Int8Array(int8_array)) => {
-                internal_signal::Value::Int8Array(
-                    int8_array.values.iter().map(|&x| x as i8).collect(),
-                )
+                model::Value::Int8Array(int8_array.values.iter().map(|&x| x as i8).collect())
             }
             Some(common_viss::value_type::ValueType::Int16Array(int16_array)) => {
-                internal_signal::Value::Int16Array(
-                    int16_array.values.iter().map(|&x| x as i16).collect(),
-                )
+                model::Value::Int16Array(int16_array.values.iter().map(|&x| x as i16).collect())
             }
             Some(common_viss::value_type::ValueType::Int32Array(int32_array)) => {
-                internal_signal::Value::Int32Array(int32_array.values.clone())
+                model::Value::Int32Array(int32_array.values.clone())
             }
             Some(common_viss::value_type::ValueType::Int64Array(int64_array)) => {
-                internal_signal::Value::Int64Array(int64_array.values.clone())
+                model::Value::Int64Array(int64_array.values.clone())
             }
             Some(common_viss::value_type::ValueType::Uint8Array(uint8_array)) => {
-                internal_signal::Value::Uint8Array(
-                    uint8_array.values.iter().map(|&x| x as u8).collect(),
-                )
+                model::Value::Uint8Array(uint8_array.values.iter().map(|&x| x as u8).collect())
             }
             Some(common_viss::value_type::ValueType::Uint16Array(uint16_array)) => {
-                internal_signal::Value::Uint16Array(
-                    uint16_array.values.iter().map(|&x| x as u16).collect(),
-                )
+                model::Value::Uint16Array(uint16_array.values.iter().map(|&x| x as u16).collect())
             }
             Some(common_viss::value_type::ValueType::Uint32Array(uint32_array)) => {
-                internal_signal::Value::Uint32Array(uint32_array.values.clone())
+                model::Value::Uint32Array(uint32_array.values.clone())
             }
             Some(common_viss::value_type::ValueType::Uint64Array(uint64_array)) => {
-                internal_signal::Value::Uint64Array(uint64_array.values.clone())
+                model::Value::Uint64Array(uint64_array.values.clone())
             }
             Some(common_viss::value_type::ValueType::FloatArray(float_array)) => {
-                internal_signal::Value::FloatArray(float_array.values.clone())
+                model::Value::FloatArray(float_array.values.clone())
             }
             Some(common_viss::value_type::ValueType::DoubleArray(double_array)) => {
-                internal_signal::Value::DoubleArray(double_array.values.clone())
+                model::Value::DoubleArray(double_array.values.clone())
             }
-            Some(common_viss::value_type::ValueType::ValueObject(_value_object)) => {
-                internal_signal::Value::Nan
+            Some(common_viss::value_type::ValueType::ValueObject(value_object)) => {
+                let mut map = std::collections::HashMap::new();
+                for property in &value_object.properties {
+                    let value = property
+                        .value
+                        .as_ref()
+                        .map(model::Value::from)
+                        .unwrap_or(model::Value::Nan);
+                    map.insert(property.key.clone(), value);
+                }
+                model::Value::Complex(map)
+            }
+            Some(common_viss::value_type::ValueType::ValueObjectArray(value_object_array)) => {
+                let arr = value_object_array
+                    .values
+                    .iter()
+                    .map(|value_object| {
+                        let mut map = std::collections::HashMap::new();
+                        for property in &value_object.properties {
+                            let value = property
+                                .value
+                                .as_ref()
+                                .map(model::Value::from)
+                                .unwrap_or(model::Value::Nan);
+                            map.insert(property.key.clone(), value);
+                        }
+                        map
+                    })
+                    .collect();
+                model::Value::ComplexArray(arr)
             }
         }
     }
 }
 
-impl TryFrom<&internal_signal::Signal> for common_viss::DataPackageCurrent {
-    type Error = internal_signal::KuraError;
-    fn try_from(v: &internal_signal::Signal) -> Result<Self, Self::Error> {
-        let value = match v.current_datapoint.value.clone() {
-            internal_signal::Value::Nan => {
-                return Ok(common_viss::DataPackageCurrent {
-                    path: v.path.clone(),
-                    dp: [].to_vec(),
-                });
-            }
-            internal_signal::Value::Bool(value) => common_viss::value_type::ValueType::Bool(value),
-            internal_signal::Value::String(value) => {
-                common_viss::value_type::ValueType::String(value)
-            }
-            internal_signal::Value::Int8(value) => {
-                common_viss::value_type::ValueType::Int8(value as i32)
-            }
-            internal_signal::Value::Int16(value) => {
-                common_viss::value_type::ValueType::Int16(value as i32)
-            }
-            internal_signal::Value::Int32(value) => {
-                common_viss::value_type::ValueType::Int32(value)
-            }
-            internal_signal::Value::Int64(value) => {
-                common_viss::value_type::ValueType::Int64(value)
-            }
-            internal_signal::Value::Uint8(value) => {
-                common_viss::value_type::ValueType::Uint8(value as u32)
-            }
-            internal_signal::Value::Uint16(value) => {
-                common_viss::value_type::ValueType::Uint16(value as u32)
-            }
-            internal_signal::Value::Uint32(value) => {
-                common_viss::value_type::ValueType::Uint32(value)
-            }
-            internal_signal::Value::Uint64(value) => {
-                common_viss::value_type::ValueType::Uint64(value)
-            }
-            internal_signal::Value::Float(value) => {
-                common_viss::value_type::ValueType::Float(value)
-            }
-            internal_signal::Value::Double(value) => {
-                common_viss::value_type::ValueType::Double(value)
-            }
-            internal_signal::Value::BoolArray(values) => {
-                common_viss::value_type::ValueType::BoolArray(common_viss::BoolArray { values })
-            }
-            internal_signal::Value::StringArray(values) => {
-                common_viss::value_type::ValueType::StringArray(common_viss::StringArray { values })
-            }
-            internal_signal::Value::Int8Array(values) => {
-                common_viss::value_type::ValueType::Int8Array(common_viss::Int8Array {
-                    values: values.into_iter().map(|x| x as i32).collect(),
-                })
-            }
-            internal_signal::Value::Int16Array(values) => {
-                common_viss::value_type::ValueType::Int16Array(common_viss::Int16Array {
-                    values: values.into_iter().map(|x| x as i32).collect(),
-                })
-            }
-            internal_signal::Value::Int32Array(values) => {
-                common_viss::value_type::ValueType::Int32Array(common_viss::Int32Array { values })
-            }
-            internal_signal::Value::Int64Array(values) => {
-                common_viss::value_type::ValueType::Int64Array(common_viss::Int64Array { values })
-            }
-            internal_signal::Value::Uint8Array(values) => {
-                common_viss::value_type::ValueType::Uint8Array(common_viss::Uint8Array {
-                    values: values.into_iter().map(|x| x as u32).collect(),
-                })
-            }
-            internal_signal::Value::Uint16Array(values) => {
-                common_viss::value_type::ValueType::Uint16Array(common_viss::Uint16Array {
-                    values: values.into_iter().map(|x| x as u32).collect(),
-                })
-            }
-            internal_signal::Value::Uint32Array(values) => {
-                common_viss::value_type::ValueType::Uint32Array(common_viss::Uint32Array { values })
-            }
-            internal_signal::Value::Uint64Array(values) => {
-                common_viss::value_type::ValueType::Uint64Array(common_viss::Uint64Array { values })
-            }
-            internal_signal::Value::FloatArray(values) => {
-                common_viss::value_type::ValueType::FloatArray(common_viss::FloatArray { values })
-            }
-            internal_signal::Value::DoubleArray(values) => {
-                common_viss::value_type::ValueType::DoubleArray(common_viss::DoubleArray { values })
-            }
-        };
-
+impl TryFrom<&model::SignalStateView> for common_viss::DataPackageCurrent {
+    type Error = result::KuraError;
+    fn try_from(v: &model::SignalStateView) -> Result<Self, Self::Error> {
+        if v.state.value == model::Value::Nan {
+            return Ok(common_viss::DataPackageCurrent {
+                path: v.path.clone(),
+                dp: [].to_vec(),
+            });
+        }
+        let value = common_viss::value_type::ValueType::try_from(&v.state.value)?;
         let value = Some(value);
         let value = common_viss::ValueType { value_type: value };
         let value = Some(value);
 
         let datapoint = common_viss::DataPointCurrent {
-            stored_timestamp: v.current_datapoint.stored_timestamp.unwrap_or(0),
+            stored_timestamp: v.state.stored_timestamp.unwrap_or(0),
             value,
-            produced_timestamp: v.current_datapoint.produced_timestamp,
-            is_available_sensor: v.current_datapoint.is_available_sensor,
-            is_available_actuator: v.current_datapoint.is_available_actuator,
+            produced_timestamp: v.state.produced_timestamp,
+            is_available_sensor: v.state.is_available_sensor,
+            is_available_actuator: v.state.is_available_actuator,
         };
         Ok(common_viss::DataPackageCurrent {
             path: v.path.clone(),
@@ -451,132 +373,122 @@ impl TryFrom<&internal_signal::Signal> for common_viss::DataPackageCurrent {
     }
 }
 
-impl TryFrom<&internal_signal::Signal> for common_viss::DataPackageTarget {
-    type Error = internal_signal::KuraError;
-    fn try_from(v: &internal_signal::Signal) -> Result<Self, Self::Error> {
-        let (value, _datatype) = match v.target_datapoint.value.clone() {
-            internal_signal::Value::Nan => {
-                return Ok(common_viss::DataPackageTarget {
-                    path: v.path.clone(),
-                    dp: [].to_vec(),
+impl TryFrom<&model::Value> for common_viss::value_type::ValueType {
+    type Error = result::KuraError;
+
+    fn try_from(value: &model::Value) -> Result<Self, Self::Error> {
+        let value = match value.clone() {
+            model::Value::Nan => {
+                return result::KuraResult::Err(result::KuraError {
+                    number: result::KuraErrorCode::BadRequest,
+                    reason: result::KuraErrorReason::InvalidData,
+                    description: Some(format!("failed to convert {value}")),
                 });
             }
-            internal_signal::Value::Bool(value) => (
-                common_viss::value_type::ValueType::Bool(value),
-                common_viss::DataType::DatatypeBool,
-            ),
-            internal_signal::Value::String(value) => (
-                common_viss::value_type::ValueType::String(value),
-                common_viss::DataType::DatatypeString,
-            ),
-            internal_signal::Value::Int8(value) => (
-                common_viss::value_type::ValueType::Int8(value as i32),
-                common_viss::DataType::DatatypeInt8,
-            ),
-            internal_signal::Value::Int16(value) => (
-                common_viss::value_type::ValueType::Int16(value as i32),
-                common_viss::DataType::DatatypeInt16,
-            ),
-            internal_signal::Value::Int32(value) => (
-                common_viss::value_type::ValueType::Int32(value),
-                common_viss::DataType::DatatypeInt32,
-            ),
-            internal_signal::Value::Int64(value) => (
-                common_viss::value_type::ValueType::Int64(value),
-                common_viss::DataType::DatatypeInt64,
-            ),
-            internal_signal::Value::Uint8(value) => (
-                common_viss::value_type::ValueType::Uint8(value as u32),
-                common_viss::DataType::DatatypeUint8,
-            ),
-            internal_signal::Value::Uint16(value) => (
-                common_viss::value_type::ValueType::Uint16(value as u32),
-                common_viss::DataType::DatatypeUint16,
-            ),
-            internal_signal::Value::Uint32(value) => (
-                common_viss::value_type::ValueType::Uint32(value),
-                common_viss::DataType::DatatypeUint32,
-            ),
-            internal_signal::Value::Uint64(value) => (
-                common_viss::value_type::ValueType::Uint64(value),
-                common_viss::DataType::DatatypeUint64,
-            ),
-            internal_signal::Value::Float(value) => (
-                common_viss::value_type::ValueType::Float(value),
-                common_viss::DataType::DatatypeFloat,
-            ),
-            internal_signal::Value::Double(value) => (
-                common_viss::value_type::ValueType::Double(value),
-                common_viss::DataType::DatatypeDouble,
-            ),
-            internal_signal::Value::BoolArray(values) => (
-                common_viss::value_type::ValueType::BoolArray(common_viss::BoolArray { values }),
-                common_viss::DataType::DatatypeArrayBool,
-            ),
-            internal_signal::Value::StringArray(values) => (
-                common_viss::value_type::ValueType::StringArray(common_viss::StringArray {
-                    values,
-                }),
-                common_viss::DataType::DatatypeArrayString,
-            ),
-            internal_signal::Value::Int8Array(values) => (
+            model::Value::Bool(value) => common_viss::value_type::ValueType::Bool(value),
+            model::Value::String(value) => common_viss::value_type::ValueType::String(value),
+            model::Value::Int8(value) => common_viss::value_type::ValueType::Int8(value as i32),
+            model::Value::Int16(value) => common_viss::value_type::ValueType::Int16(value as i32),
+            model::Value::Int32(value) => common_viss::value_type::ValueType::Int32(value),
+            model::Value::Int64(value) => common_viss::value_type::ValueType::Int64(value),
+            model::Value::Uint8(value) => common_viss::value_type::ValueType::Uint8(value as u32),
+            model::Value::Uint16(value) => common_viss::value_type::ValueType::Uint16(value as u32),
+            model::Value::Uint32(value) => common_viss::value_type::ValueType::Uint32(value),
+            model::Value::Uint64(value) => common_viss::value_type::ValueType::Uint64(value),
+            model::Value::Float(value) => common_viss::value_type::ValueType::Float(value),
+            model::Value::Double(value) => common_viss::value_type::ValueType::Double(value),
+            model::Value::BoolArray(values) => {
+                common_viss::value_type::ValueType::BoolArray(common_viss::BoolArray { values })
+            }
+            model::Value::StringArray(values) => {
+                common_viss::value_type::ValueType::StringArray(common_viss::StringArray { values })
+            }
+            model::Value::Int8Array(values) => {
                 common_viss::value_type::ValueType::Int8Array(common_viss::Int8Array {
                     values: values.into_iter().map(|x| x as i32).collect(),
-                }),
-                common_viss::DataType::DatatypeArrayInt8,
-            ),
-            internal_signal::Value::Int16Array(values) => (
+                })
+            }
+            model::Value::Int16Array(values) => {
                 common_viss::value_type::ValueType::Int16Array(common_viss::Int16Array {
                     values: values.into_iter().map(|x| x as i32).collect(),
-                }),
-                common_viss::DataType::DatatypeArrayInt16,
-            ),
-            internal_signal::Value::Int32Array(values) => (
-                common_viss::value_type::ValueType::Int32Array(common_viss::Int32Array { values }),
-                common_viss::DataType::DatatypeArrayInt32,
-            ),
-            internal_signal::Value::Int64Array(values) => (
-                common_viss::value_type::ValueType::Int64Array(common_viss::Int64Array { values }),
-                common_viss::DataType::DatatypeArrayInt64,
-            ),
-            internal_signal::Value::Uint8Array(values) => (
+                })
+            }
+            model::Value::Int32Array(values) => {
+                common_viss::value_type::ValueType::Int32Array(common_viss::Int32Array { values })
+            }
+            model::Value::Int64Array(values) => {
+                common_viss::value_type::ValueType::Int64Array(common_viss::Int64Array { values })
+            }
+            model::Value::Uint8Array(values) => {
                 common_viss::value_type::ValueType::Uint8Array(common_viss::Uint8Array {
                     values: values.into_iter().map(|x| x as u32).collect(),
-                }),
-                common_viss::DataType::DatatypeArrayUint8,
-            ),
-            internal_signal::Value::Uint16Array(values) => (
+                })
+            }
+            model::Value::Uint16Array(values) => {
                 common_viss::value_type::ValueType::Uint16Array(common_viss::Uint16Array {
                     values: values.into_iter().map(|x| x as u32).collect(),
-                }),
-                common_viss::DataType::DatatypeArrayUint16,
-            ),
-            internal_signal::Value::Uint32Array(values) => (
-                common_viss::value_type::ValueType::Uint32Array(common_viss::Uint32Array {
-                    values,
-                }),
-                common_viss::DataType::DatatypeArrayUint32,
-            ),
-            internal_signal::Value::Uint64Array(values) => (
-                common_viss::value_type::ValueType::Uint64Array(common_viss::Uint64Array {
-                    values,
-                }),
-                common_viss::DataType::DatatypeArrayUint64,
-            ),
-            internal_signal::Value::FloatArray(values) => (
-                common_viss::value_type::ValueType::FloatArray(common_viss::FloatArray { values }),
-                common_viss::DataType::DatatypeArrayFloat,
-            ),
-            internal_signal::Value::DoubleArray(values) => (
-                common_viss::value_type::ValueType::DoubleArray(common_viss::DoubleArray {
-                    values,
-                }),
-                common_viss::DataType::DatatypeArrayDouble,
-            ),
+                })
+            }
+            model::Value::Uint32Array(values) => {
+                common_viss::value_type::ValueType::Uint32Array(common_viss::Uint32Array { values })
+            }
+            model::Value::Uint64Array(values) => {
+                common_viss::value_type::ValueType::Uint64Array(common_viss::Uint64Array { values })
+            }
+            model::Value::FloatArray(values) => {
+                common_viss::value_type::ValueType::FloatArray(common_viss::FloatArray { values })
+            }
+            model::Value::DoubleArray(values) => {
+                common_viss::value_type::ValueType::DoubleArray(common_viss::DoubleArray { values })
+            }
+            model::Value::Complex(values) => {
+                common_viss::value_type::ValueType::ValueObject(common_viss::ValueObject {
+                    properties: values
+                        .iter()
+                        .map(|(key, value)| common_viss::ValueProperty {
+                            key: key.clone(),
+                            value: Some(common_viss::ValueType::from(value)),
+                        })
+                        .collect(),
+                })
+            }
+            model::Value::ComplexArray(values) => {
+                common_viss::value_type::ValueType::ValueObjectArray(
+                    common_viss::ValueObjectArray {
+                        values: values
+                            .iter()
+                            .map(|entry| common_viss::ValueObject {
+                                properties: entry
+                                    .iter()
+                                    .map(|(key, value)| common_viss::ValueProperty {
+                                        key: key.clone(),
+                                        value: Some(common_viss::ValueType::from(value)),
+                                    })
+                                    .collect(),
+                            })
+                            .collect(),
+                    },
+                )
+            }
         };
+        Ok(value)
+    }
+}
+
+impl TryFrom<&model::SignalStateView> for common_viss::DataPackageTarget {
+    type Error = result::KuraError;
+    fn try_from(v: &model::SignalStateView) -> Result<Self, Self::Error> {
+        if v.state.value == model::Value::Nan {
+            return Ok(common_viss::DataPackageTarget {
+                path: v.path.clone(),
+                dp: [].to_vec(),
+            });
+        }
+        let value = common_viss::value_type::ValueType::try_from(&v.state.value)?;
         let value = Some(value);
         let value = common_viss::ValueType { value_type: value };
         let value = Some(value);
+
         let datapoint = common_viss::DataPointTarget { value };
         Ok(common_viss::DataPackageTarget {
             path: v.path.clone(),
@@ -585,280 +497,247 @@ impl TryFrom<&internal_signal::Signal> for common_viss::DataPackageTarget {
     }
 }
 
-impl TryFrom<&internal_signal::Signal> for common_viss::MetadataEntry {
-    type Error = internal_signal::KuraError;
-    fn try_from(v: &internal_signal::Signal) -> Result<Self, Self::Error> {
-        let allowed = v
-            .config
+fn convert_single_metadata_to_metadata_entry(
+    path: &str,
+    v: &model::SignalMetadata,
+) -> result::KuraResult<common_viss::MetadataEntry> {
+    let allowed = v.allowd.as_ref().map(|ret| common_viss::StringArray {
+        values: ret.clone(),
+    });
+
+    let description = match &v.description {
+        Some(v) => v.clone(),
+        None => "".to_string(),
+    };
+
+    let default = v.default.as_ref().map(From::from);
+
+    let max = v.max.as_ref().map(From::from);
+
+    let min = v.min.as_ref().map(From::from);
+
+    let mut fields = ::prost::alloc::collections::BTreeMap::new();
+    if let Some(user_defined_items) = v.user_defined_items.clone() {
+        for (key, value) in user_defined_items {
+            let value = ::prost_types::Value {
+                kind: Some(prost_types::value::Kind::StringValue(value)),
+            };
+            fields.insert(key, value);
+        }
+    }
+    let custom_metadata = Some(::prost_types::Struct { fields });
+
+    let data_type = common_viss::DataType::from(&v.data_type);
+    let datatype_path = match &v.data_type {
+        model::ValueType::TypeComplex(datatype_path)
+        | model::ValueType::TypeComplexArray(datatype_path) => Some(datatype_path.clone()),
+        _ => None,
+    };
+
+    let cur = common_viss::MetadataEntry {
+        path: path.to_owned(),
+        r#type: common_viss::NodeType::from(&v.leaf_type) as i32,
+        datatype: data_type as i32,
+        datatype_path,
+        deprecated: v.deprecation.clone(),
+        unit: v.unit.clone(),
+        pattern: None, // because this func creates metadata from only one signal.
+        max,
+        min,
+        description,
+        comment: v.comment.clone(),
+        allowed,
+        arraysize: v.array_size,
+        default,
+        custom_metadata,
+    };
+    Ok(cur)
+}
+
+impl TryFrom<&model::SignalMetadataView> for common_viss::MetadataEntry {
+    type Error = result::KuraError;
+    fn try_from(v: &model::SignalMetadataView) -> Result<Self, Self::Error> {
+        convert_single_metadata_to_metadata_entry(&v.path, &v.metadata)
+    }
+}
+
+impl TryFrom<(String, &model::PropertyMetadata)> for common_viss::PropertyMetadataEntry {
+    type Error = result::KuraError;
+    fn try_from(tuple: (String, &model::PropertyMetadata)) -> Result<Self, Self::Error> {
+        let (name, metadata) = tuple;
+        let allowed = metadata
             .allowd
             .as_ref()
-            .map(|ret| common_viss::StringArray {
-                values: ret.clone(),
+            .map(|items| common_viss::StringArray {
+                values: items.clone(),
             });
 
-        let description = match &v.config.description {
-            Some(v) => v.clone(),
-            None => "".to_string(),
+        let description = metadata.description.clone().unwrap_or_default();
+        // Treat Nan as "no default" for struct properties, because optional
+        // defaults are frequently omitted in VSS definitions.
+        let default = match &metadata.default {
+            Some(model::Value::Nan) | None => None,
+            Some(default) => Some(common_viss::ValueType {
+                value_type: Some(common_viss::value_type::ValueType::try_from(default)?),
+            }),
         };
 
-        let default = v.config.default.as_ref().map(From::from);
+        let max = metadata.max.as_ref().map(From::from);
 
-        let max = v.config.max.clone().and_then(|x| match x {
-            internal_signal::Value::Int8(v) => Some(v as i32),
-            internal_signal::Value::Int16(v) => Some(v as i32),
-            internal_signal::Value::Int32(v) => Some(v),
-            internal_signal::Value::Int64(v) => Some(v as i32),
-            internal_signal::Value::Uint8(v) => Some(v as i32),
-            internal_signal::Value::Uint16(v) => Some(v as i32),
-            internal_signal::Value::Uint32(v) => Some(v as i32),
-            internal_signal::Value::Uint64(v) => Some(v as i32),
+        let min = metadata.min.as_ref().map(From::from);
+
+        let datatype_path = match &metadata.data_type {
+            model::ValueType::TypeComplex(datatype_path)
+            | model::ValueType::TypeComplexArray(datatype_path) => Some(datatype_path.clone()),
             _ => None,
-        });
+        };
 
-        let min = v.config.min.clone().and_then(|x| match x {
-            internal_signal::Value::Int8(v) => Some(v as i32),
-            internal_signal::Value::Int16(v) => Some(v as i32),
-            internal_signal::Value::Int32(v) => Some(v),
-            internal_signal::Value::Int64(v) => Some(v as i32),
-            internal_signal::Value::Uint8(v) => Some(v as i32),
-            internal_signal::Value::Uint16(v) => Some(v as i32),
-            internal_signal::Value::Uint32(v) => Some(v as i32),
-            internal_signal::Value::Uint64(v) => Some(v as i32),
-            _ => None,
-        });
-
-        let mut fields = ::prost::alloc::collections::BTreeMap::new();
-        if let Some(user_defined_items) = v.config.user_defined_items.clone() {
-            for (key, value) in user_defined_items {
-                let value = ::prost_types::Value {
-                    kind: Some(prost_types::value::Kind::StringValue(value)),
-                };
-                fields.insert(key, value);
-            }
-        }
-        let custom_metadata = Some(::prost_types::Struct { fields });
-
-        let cur = common_viss::MetadataEntry {
-            path: v.path.clone(),
-            r#type: common_viss::NodeType::from(&v.config.leaf_type) as i32,
-            datatype: common_viss::DataType::from(&v.config.data_type) as i32,
-            deprecated: v.config.deprecation.clone(),
-            unit: v.config.unit.clone(),
-            pattern: None, // because this func creates metadata from only one signal.
+        Ok(common_viss::PropertyMetadataEntry {
+            name,
+            datatype: common_viss::DataType::from(&metadata.data_type) as i32,
+            deprecated: metadata.deprecation.clone(),
+            unit: metadata.unit.clone(),
+            pattern: None,
             max,
             min,
             description,
-            comment: v.config.comment.clone(),
+            comment: metadata.comment.clone(),
             allowed,
-            arraysize: v.config.array_size,
+            arraysize: metadata.array_size,
             default,
-            custom_metadata,
-        };
-        Ok(cur)
+            datatype_path,
+            custom_metadata: None,
+        })
     }
 }
 
-impl From<&internal_signal::LeafType> for common_viss::NodeType {
-    fn from(v: &internal_signal::LeafType) -> Self {
+impl TryFrom<&model::VSSUserDefinedType> for common_viss::StructMetadataEntry {
+    type Error = result::KuraError;
+    fn try_from(v: &model::VSSUserDefinedType) -> Result<Self, Self::Error> {
+        let prefix = format!("{}.", v.name);
+        let mut properties = Vec::with_capacity(v.children.len());
+
+        for (path, child) in &v.children {
+            let name = path.strip_prefix(&prefix).unwrap_or(path).to_string();
+            let property = common_viss::PropertyMetadataEntry::try_from((name, child))?;
+            properties.push(property);
+        }
+
+        Ok(common_viss::StructMetadataEntry {
+            path: v.name.clone(),
+            deprecated: None,
+            description: "".to_string(),
+            comment: None,
+            properties,
+            custom_metadata: None,
+        })
+    }
+}
+
+impl TryFrom<&HashMap<String, model::VSSUserDefinedType>> for common_viss::MetadataEntries {
+    type Error = result::KuraError;
+    fn try_from(v: &HashMap<String, model::VSSUserDefinedType>) -> Result<Self, Self::Error> {
+        let struct_metadata_entries = v
+            .values()
+            .map(common_viss::StructMetadataEntry::try_from)
+            .collect::<Result<Vec<_>, _>>()?;
+
+        Ok(common_viss::MetadataEntries {
+            metadata_entries: Vec::new(),
+            struct_metadata_entries,
+        })
+    }
+}
+
+impl From<&model::LeafType> for common_viss::NodeType {
+    fn from(v: &model::LeafType) -> Self {
         match v {
-            internal_signal::LeafType::Branch => common_viss::NodeType::NodeBranch,
-            internal_signal::LeafType::Sensor => common_viss::NodeType::NodeSensor,
-            internal_signal::LeafType::Attribute => common_viss::NodeType::NodeAttribute,
-            internal_signal::LeafType::Actuator => common_viss::NodeType::NodeActuator,
+            model::LeafType::Branch => common_viss::NodeType::NodeBranch,
+            model::LeafType::Sensor => common_viss::NodeType::NodeSensor,
+            model::LeafType::Attribute => common_viss::NodeType::NodeAttribute,
+            model::LeafType::Actuator => common_viss::NodeType::NodeActuator,
+            model::LeafType::Property => {
+                unreachable!("yoriito viss is not aware of property node.")
+            }
         }
     }
 }
 
-impl From<&internal_signal::ValueType> for common_viss::DataType {
-    fn from(v: &internal_signal::ValueType) -> Self {
+impl From<&model::ValueType> for common_viss::DataType {
+    fn from(v: &model::ValueType) -> Self {
         match v {
-            internal_signal::ValueType::TypeNAN => common_viss::DataType::DatatypeNone,
-            internal_signal::ValueType::TypeBool => common_viss::DataType::DatatypeBool,
-            internal_signal::ValueType::TypeString => common_viss::DataType::DatatypeString,
-            internal_signal::ValueType::TypeInt8 => common_viss::DataType::DatatypeInt8,
-            internal_signal::ValueType::TypeInt16 => common_viss::DataType::DatatypeInt16,
-            internal_signal::ValueType::TypeInt32 => common_viss::DataType::DatatypeInt32,
-            internal_signal::ValueType::TypeInt64 => common_viss::DataType::DatatypeInt64,
-            internal_signal::ValueType::TypeUint8 => common_viss::DataType::DatatypeUint8,
-            internal_signal::ValueType::TypeUint16 => common_viss::DataType::DatatypeUint16,
-            internal_signal::ValueType::TypeUint32 => common_viss::DataType::DatatypeUint32,
-            internal_signal::ValueType::TypeUint64 => common_viss::DataType::DatatypeUint64,
-            internal_signal::ValueType::TypeFloat => common_viss::DataType::DatatypeFloat,
-            internal_signal::ValueType::TypeDouble => common_viss::DataType::DatatypeDouble,
-            internal_signal::ValueType::TypeBoolArray => common_viss::DataType::DatatypeArrayBool,
-            internal_signal::ValueType::TypeStringArray => {
-                common_viss::DataType::DatatypeArrayString
-            }
-            internal_signal::ValueType::TypeInt8Array => common_viss::DataType::DatatypeArrayInt8,
-            internal_signal::ValueType::TypeInt16Array => common_viss::DataType::DatatypeArrayInt16,
-            internal_signal::ValueType::TypeInt32Array => common_viss::DataType::DatatypeArrayInt32,
-            internal_signal::ValueType::TypeInt64Array => common_viss::DataType::DatatypeArrayInt64,
-            internal_signal::ValueType::TypeUint8Array => common_viss::DataType::DatatypeArrayUint8,
-            internal_signal::ValueType::TypeUint16Array => {
-                common_viss::DataType::DatatypeArrayUint16
-            }
-            internal_signal::ValueType::TypeUint32Array => {
-                common_viss::DataType::DatatypeArrayUint32
-            }
-            internal_signal::ValueType::TypeUint64Array => {
-                common_viss::DataType::DatatypeArrayUint64
-            }
-            internal_signal::ValueType::TypeFloatArray => common_viss::DataType::DatatypeArrayFloat,
-            internal_signal::ValueType::TypeDoubleArray => {
-                common_viss::DataType::DatatypeArrayDouble
-            }
+            model::ValueType::TypeNAN => common_viss::DataType::DatatypeNone,
+            model::ValueType::TypeBool => common_viss::DataType::DatatypeBool,
+            model::ValueType::TypeString => common_viss::DataType::DatatypeString,
+            model::ValueType::TypeInt8 => common_viss::DataType::DatatypeInt8,
+            model::ValueType::TypeInt16 => common_viss::DataType::DatatypeInt16,
+            model::ValueType::TypeInt32 => common_viss::DataType::DatatypeInt32,
+            model::ValueType::TypeInt64 => common_viss::DataType::DatatypeInt64,
+            model::ValueType::TypeUint8 => common_viss::DataType::DatatypeUint8,
+            model::ValueType::TypeUint16 => common_viss::DataType::DatatypeUint16,
+            model::ValueType::TypeUint32 => common_viss::DataType::DatatypeUint32,
+            model::ValueType::TypeUint64 => common_viss::DataType::DatatypeUint64,
+            model::ValueType::TypeFloat => common_viss::DataType::DatatypeFloat,
+            model::ValueType::TypeDouble => common_viss::DataType::DatatypeDouble,
+            model::ValueType::TypeBoolArray => common_viss::DataType::DatatypeArrayBool,
+            model::ValueType::TypeStringArray => common_viss::DataType::DatatypeArrayString,
+            model::ValueType::TypeInt8Array => common_viss::DataType::DatatypeArrayInt8,
+            model::ValueType::TypeInt16Array => common_viss::DataType::DatatypeArrayInt16,
+            model::ValueType::TypeInt32Array => common_viss::DataType::DatatypeArrayInt32,
+            model::ValueType::TypeInt64Array => common_viss::DataType::DatatypeArrayInt64,
+            model::ValueType::TypeUint8Array => common_viss::DataType::DatatypeArrayUint8,
+            model::ValueType::TypeUint16Array => common_viss::DataType::DatatypeArrayUint16,
+            model::ValueType::TypeUint32Array => common_viss::DataType::DatatypeArrayUint32,
+            model::ValueType::TypeUint64Array => common_viss::DataType::DatatypeArrayUint64,
+            model::ValueType::TypeFloatArray => common_viss::DataType::DatatypeArrayFloat,
+            model::ValueType::TypeDoubleArray => common_viss::DataType::DatatypeArrayDouble,
+            model::ValueType::TypeComplex(_) => common_viss::DataType::DatatypeStruct,
+            model::ValueType::TypeComplexArray(_) => common_viss::DataType::DatatypeStructArray,
         }
     }
 }
 
-impl From<&internal_signal::Value> for common_viss::ValueType {
-    fn from(v: &internal_signal::Value) -> Self {
-        match v.clone() {
-            internal_signal::Value::Nan => common_viss::ValueType { value_type: None },
-            internal_signal::Value::Bool(v) => common_viss::ValueType {
-                value_type: Some(common_viss::value_type::ValueType::Bool(v)),
-            },
-            internal_signal::Value::String(v) => common_viss::ValueType {
-                value_type: Some(common_viss::value_type::ValueType::String(v)),
-            },
-            internal_signal::Value::Int8(v) => common_viss::ValueType {
-                value_type: Some(common_viss::value_type::ValueType::Int32(v.into())),
-            },
-            internal_signal::Value::Int16(v) => common_viss::ValueType {
-                value_type: Some(common_viss::value_type::ValueType::Int32(v.into())),
-            },
-            internal_signal::Value::Int32(v) => common_viss::ValueType {
-                value_type: Some(common_viss::value_type::ValueType::Int32(v)),
-            },
-            internal_signal::Value::Int64(v) => common_viss::ValueType {
-                value_type: Some(common_viss::value_type::ValueType::Int64(v)),
-            },
-            internal_signal::Value::Uint8(v) => common_viss::ValueType {
-                value_type: Some(common_viss::value_type::ValueType::Uint32(v.into())),
-            },
-            internal_signal::Value::Uint16(v) => common_viss::ValueType {
-                value_type: Some(common_viss::value_type::ValueType::Uint32(v.into())),
-            },
-            internal_signal::Value::Uint32(v) => common_viss::ValueType {
-                value_type: Some(common_viss::value_type::ValueType::Uint32(v)),
-            },
-            internal_signal::Value::Uint64(v) => common_viss::ValueType {
-                value_type: Some(common_viss::value_type::ValueType::Uint64(v)),
-            },
-            internal_signal::Value::Float(v) => common_viss::ValueType {
-                value_type: Some(common_viss::value_type::ValueType::Float(v)),
-            },
-            internal_signal::Value::Double(v) => common_viss::ValueType {
-                value_type: Some(common_viss::value_type::ValueType::Double(v)),
-            },
-            internal_signal::Value::BoolArray(items) => common_viss::ValueType {
-                value_type: Some(common_viss::value_type::ValueType::BoolArray(
-                    common_viss::BoolArray { values: items },
-                )),
-            },
-            internal_signal::Value::StringArray(items) => common_viss::ValueType {
-                value_type: Some(common_viss::value_type::ValueType::StringArray(
-                    common_viss::StringArray { values: items },
-                )),
-            },
-            internal_signal::Value::Int8Array(items) => {
-                let items = items.into_iter().map(|x| x as i32).collect();
-                common_viss::ValueType {
-                    value_type: Some(common_viss::value_type::ValueType::Int8Array(
-                        common_viss::Int8Array { values: items },
-                    )),
-                }
-            }
-            internal_signal::Value::Int16Array(items) => {
-                let items = items.into_iter().map(|x| x as i32).collect();
-                common_viss::ValueType {
-                    value_type: Some(common_viss::value_type::ValueType::Int16Array(
-                        common_viss::Int16Array { values: items },
-                    )),
-                }
-            }
-            internal_signal::Value::Int32Array(items) => common_viss::ValueType {
-                value_type: Some(common_viss::value_type::ValueType::Int32Array(
-                    common_viss::Int32Array { values: items },
-                )),
-            },
-            internal_signal::Value::Int64Array(items) => common_viss::ValueType {
-                value_type: Some(common_viss::value_type::ValueType::Int64Array(
-                    common_viss::Int64Array { values: items },
-                )),
-            },
-            internal_signal::Value::Uint8Array(items) => {
-                let items = items.into_iter().map(|x| x as u32).collect();
-                common_viss::ValueType {
-                    value_type: Some(common_viss::value_type::ValueType::Uint8Array(
-                        common_viss::Uint8Array { values: items },
-                    )),
-                }
-            }
-            internal_signal::Value::Uint16Array(items) => {
-                let items = items.into_iter().map(|x| x as u32).collect();
-                common_viss::ValueType {
-                    value_type: Some(common_viss::value_type::ValueType::Uint16Array(
-                        common_viss::Uint16Array { values: items },
-                    )),
-                }
-            }
-            internal_signal::Value::Uint32Array(items) => common_viss::ValueType {
-                value_type: Some(common_viss::value_type::ValueType::Uint32Array(
-                    common_viss::Uint32Array { values: items },
-                )),
-            },
-            internal_signal::Value::Uint64Array(items) => common_viss::ValueType {
-                value_type: Some(common_viss::value_type::ValueType::Uint64Array(
-                    common_viss::Uint64Array { values: items },
-                )),
-            },
-            internal_signal::Value::FloatArray(items) => common_viss::ValueType {
-                value_type: Some(common_viss::value_type::ValueType::FloatArray(
-                    common_viss::FloatArray { values: items },
-                )),
-            },
-            internal_signal::Value::DoubleArray(items) => common_viss::ValueType {
-                value_type: Some(common_viss::value_type::ValueType::DoubleArray(
-                    common_viss::DoubleArray { values: items },
-                )),
-            },
+impl From<&model::Value> for common_viss::ValueType {
+    fn from(v: &model::Value) -> Self {
+        common_viss::ValueType {
+            value_type: common_viss::value_type::ValueType::try_from(v).ok(),
         }
     }
 }
 
-impl From<&common_viss::Operator> for internal_subscription::Opecode {
+impl From<&common_viss::Operator> for subscription::Opcode {
     fn from(v: &common_viss::Operator) -> Self {
         match v {
-            common_viss::Operator::Undefined => internal_subscription::Opecode::Undefined,
-            common_viss::Operator::Eq => internal_subscription::Opecode::Equal,
-            common_viss::Operator::Ne => internal_subscription::Opecode::NotEqual,
-            common_viss::Operator::Gt => internal_subscription::Opecode::GreaterThan,
-            common_viss::Operator::Gte => internal_subscription::Opecode::GreaterEqual,
-            common_viss::Operator::Lt => internal_subscription::Opecode::LesserThan,
-            common_viss::Operator::Lte => internal_subscription::Opecode::LesserEqual,
+            common_viss::Operator::Undefined => subscription::Opcode::Undefined,
+            common_viss::Operator::Eq => subscription::Opcode::Equal,
+            common_viss::Operator::Ne => subscription::Opcode::NotEqual,
+            common_viss::Operator::Gt => subscription::Opcode::GreaterThan,
+            common_viss::Operator::Gte => subscription::Opcode::GreaterEqual,
+            common_viss::Operator::Lt => subscription::Opcode::LesserThan,
+            common_viss::Operator::Lte => subscription::Opcode::LesserEqual,
         }
     }
 }
 
-impl From<&common_viss::Condition> for internal_subscription::Combination {
+impl From<&common_viss::Condition> for subscription::Combination {
     fn from(v: &common_viss::Condition) -> Self {
         match v {
-            common_viss::Condition::Undefined => internal_subscription::Combination::Undefined,
-            common_viss::Condition::And => internal_subscription::Combination::And,
-            common_viss::Condition::Or => internal_subscription::Combination::Or,
+            common_viss::Condition::Undefined => subscription::Combination::Undefined,
+            common_viss::Condition::And => subscription::Combination::And,
+            common_viss::Condition::Or => subscription::Combination::Or,
         }
     }
 }
 
-impl From<&common_viss::DataPointCurrent> for internal_signal::DataPoint {
+impl From<&common_viss::DataPointCurrent> for model::SignalState {
     fn from(v: &common_viss::DataPointCurrent) -> Self {
         let value = v
             .value
             .clone()
-            .map(|x| internal_signal::Value::from(&x))
-            .unwrap_or(internal_signal::Value::Nan);
-        internal_signal::DataPoint {
+            .map(|x| model::Value::from(&x))
+            .unwrap_or(model::Value::Nan);
+
+        model::SignalState {
             stored_timestamp: Some(v.stored_timestamp),
             produced_timestamp: v.produced_timestamp,
             value,
@@ -868,14 +747,16 @@ impl From<&common_viss::DataPointCurrent> for internal_signal::DataPoint {
     }
 }
 
-impl From<&common_viss::DataPointTarget> for internal_signal::DataPoint {
+impl From<&common_viss::DataPointTarget> for model::SignalState {
     fn from(v: &common_viss::DataPointTarget) -> Self {
         let value = v
             .value
             .clone()
-            .map(|x| internal_signal::Value::from(&x))
-            .unwrap_or(internal_signal::Value::Nan);
-        internal_signal::DataPoint {
+            .map(|x| model::Value::from(&x))
+            .unwrap_or(model::Value::Nan);
+
+        // All properties except value are ignored in set requests.
+        model::SignalState {
             stored_timestamp: None,
             produced_timestamp: None,
             value,
@@ -885,12 +766,79 @@ impl From<&common_viss::DataPointTarget> for internal_signal::DataPoint {
     }
 }
 
-impl From<&internal_signal::KuraError> for common_viss::Error {
-    fn from(v: &internal_signal::KuraError) -> Self {
+impl From<&result::KuraError> for common_viss::Error {
+    fn from(v: &result::KuraError) -> Self {
         common_viss::Error {
             number: v.number as i32,
             reason: v.reason as i32,
             description: v.description.clone(),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn inspect_metadata_entry_keeps_typed_min_max() {
+        let metadata = model::SignalMetadata {
+            leaf_type: model::LeafType::Sensor,
+            data_type: model::ValueType::TypeDouble,
+            deprecation: None,
+            unit: None,
+            min: Some(model::Value::Double(-1.5)),
+            max: Some(model::Value::Double(42.25)),
+            description: Some("engine speed".to_string()),
+            comment: None,
+            allowd: None,
+            default: None,
+            array_size: None,
+            pattern: None,
+            user_defined_items: None,
+        };
+
+        let entry = convert_single_metadata_to_metadata_entry("Vehicle.Speed", &metadata)
+            .unwrap_or_else(|error| panic!("metadata conversion should succeed: {error}"));
+
+        assert_eq!(
+            entry.min,
+            Some(common_viss::ValueType::from(&model::Value::Double(-1.5)))
+        );
+        assert_eq!(
+            entry.max,
+            Some(common_viss::ValueType::from(&model::Value::Double(42.25)))
+        );
+    }
+
+    #[test]
+    fn property_metadata_entry_keeps_typed_min_max() {
+        let metadata = model::PropertyMetadata {
+            leaf_type: model::LeafType::Attribute,
+            data_type: model::ValueType::TypeUint64,
+            deprecation: None,
+            unit: None,
+            pattern: None,
+            min: Some(model::Value::Uint64(10)),
+            max: Some(model::Value::Uint64(99)),
+            description: Some("trip count".to_string()),
+            comment: None,
+            allowd: None,
+            default: None,
+            array_size: None,
+            user_defined_items: None,
+        };
+
+        let entry = common_viss::PropertyMetadataEntry::try_from(("Count".to_string(), &metadata))
+            .unwrap_or_else(|error| panic!("property metadata conversion should succeed: {error}"));
+
+        assert_eq!(
+            entry.min,
+            Some(common_viss::ValueType::from(&model::Value::Uint64(10)))
+        );
+        assert_eq!(
+            entry.max,
+            Some(common_viss::ValueType::from(&model::Value::Uint64(99)))
+        );
     }
 }

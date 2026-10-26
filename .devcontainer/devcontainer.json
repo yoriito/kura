@@ -15,7 +15,8 @@
         "llvm-vs-code-extensions.vscode-clangd",
         "rust-lang.rust-analyzer",
         "vadimcn.vscode-lldb",
-        "tamasfe.even-better-toml"
+        "tamasfe.even-better-toml",
+        "ms-vscode.cmake-tools"
       ]
     },
     "settings": {

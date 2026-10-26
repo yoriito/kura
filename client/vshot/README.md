@@ -5,7 +5,7 @@ vshot is a sample gRPC python client implementation for Yoriito VISS.
 ## Dependencies
 
 ```sh
-pip install -r requirements.txt
+pip install .
 ```
 
 ## Generate client impl

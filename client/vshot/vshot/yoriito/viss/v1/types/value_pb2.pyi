@@ -57,7 +57,9 @@ class NodeType(_NodeType, metaclass=_NodeTypeEnumTypeWrapper):
     Basic Data Types
     ***************************************************************************
 
-    NodeType represents the type of a node in the VISS
+    NodeType represents the type of a node in the VISS.
+    Struct and property nodes are not represented here because their roles
+    are expressed by separate message types (StructMetadataEntry, PropertyMetadataEntry).
     """
 
 NODE_UNKNOWN: NodeType.ValueType  # 0
@@ -821,6 +823,7 @@ class MetadataEntry(google.protobuf.message.Message):
     ALLOWED_FIELD_NUMBER: builtins.int
     ARRAYSIZE_FIELD_NUMBER: builtins.int
     DEFAULT_FIELD_NUMBER: builtins.int
+    DATATYPE_PATH_FIELD_NUMBER: builtins.int
     CUSTOM_METADATA_FIELD_NUMBER: builtins.int
     path: builtins.str
     """the VSS path"""
@@ -842,6 +845,8 @@ class MetadataEntry(google.protobuf.message.Message):
     """optional comment for the VSS node"""
     arraysize: builtins.int
     """the size of the array"""
+    datatype_path: builtins.str
+    """the data type path is datatype is STRUCT"""
     @property
     def pattern(self) -> global___StringArray:
         """allowed pattern."""
@@ -874,10 +879,11 @@ class MetadataEntry(google.protobuf.message.Message):
         allowed: global___StringArray | None = ...,
         arraysize: builtins.int | None = ...,
         default: global___ValueType | None = ...,
+        datatype_path: builtins.str | None = ...,
         custom_metadata: google.protobuf.struct_pb2.Struct | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_allowed", b"_allowed", "_arraysize", b"_arraysize", "_comment", b"_comment", "_custom_metadata", b"_custom_metadata", "_default", b"_default", "_deprecated", b"_deprecated", "_max", b"_max", "_min", b"_min", "_pattern", b"_pattern", "_unit", b"_unit", "allowed", b"allowed", "arraysize", b"arraysize", "comment", b"comment", "custom_metadata", b"custom_metadata", "default", b"default", "deprecated", b"deprecated", "max", b"max", "min", b"min", "pattern", b"pattern", "unit", b"unit"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_allowed", b"_allowed", "_arraysize", b"_arraysize", "_comment", b"_comment", "_custom_metadata", b"_custom_metadata", "_default", b"_default", "_deprecated", b"_deprecated", "_max", b"_max", "_min", b"_min", "_pattern", b"_pattern", "_unit", b"_unit", "allowed", b"allowed", "arraysize", b"arraysize", "comment", b"comment", "custom_metadata", b"custom_metadata", "datatype", b"datatype", "default", b"default", "deprecated", b"deprecated", "description", b"description", "max", b"max", "min", b"min", "path", b"path", "pattern", b"pattern", "type", b"type", "unit", b"unit"]) -> None: ...
+    def HasField(self, field_name: typing.Literal["_allowed", b"_allowed", "_arraysize", b"_arraysize", "_comment", b"_comment", "_custom_metadata", b"_custom_metadata", "_datatype_path", b"_datatype_path", "_default", b"_default", "_deprecated", b"_deprecated", "_max", b"_max", "_min", b"_min", "_pattern", b"_pattern", "_unit", b"_unit", "allowed", b"allowed", "arraysize", b"arraysize", "comment", b"comment", "custom_metadata", b"custom_metadata", "datatype_path", b"datatype_path", "default", b"default", "deprecated", b"deprecated", "max", b"max", "min", b"min", "pattern", b"pattern", "unit", b"unit"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["_allowed", b"_allowed", "_arraysize", b"_arraysize", "_comment", b"_comment", "_custom_metadata", b"_custom_metadata", "_datatype_path", b"_datatype_path", "_default", b"_default", "_deprecated", b"_deprecated", "_max", b"_max", "_min", b"_min", "_pattern", b"_pattern", "_unit", b"_unit", "allowed", b"allowed", "arraysize", b"arraysize", "comment", b"comment", "custom_metadata", b"custom_metadata", "datatype", b"datatype", "datatype_path", b"datatype_path", "default", b"default", "deprecated", b"deprecated", "description", b"description", "max", b"max", "min", b"min", "path", b"path", "pattern", b"pattern", "type", b"type", "unit", b"unit"]) -> None: ...
     @typing.overload
     def WhichOneof(self, oneof_group: typing.Literal["_allowed", b"_allowed"]) -> typing.Literal["allowed"] | None: ...
     @typing.overload
@@ -886,6 +892,8 @@ class MetadataEntry(google.protobuf.message.Message):
     def WhichOneof(self, oneof_group: typing.Literal["_comment", b"_comment"]) -> typing.Literal["comment"] | None: ...
     @typing.overload
     def WhichOneof(self, oneof_group: typing.Literal["_custom_metadata", b"_custom_metadata"]) -> typing.Literal["custom_metadata"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing.Literal["_datatype_path", b"_datatype_path"]) -> typing.Literal["datatype_path"] | None: ...
     @typing.overload
     def WhichOneof(self, oneof_group: typing.Literal["_default", b"_default"]) -> typing.Literal["default"] | None: ...
     @typing.overload
@@ -902,21 +910,190 @@ class MetadataEntry(google.protobuf.message.Message):
 global___MetadataEntry = MetadataEntry
 
 @typing.final
-class MetadataEntries(google.protobuf.message.Message):
-    """MetadataEntries represents a array of MetadataEntry"""
+class PropertyMetadataEntry(google.protobuf.message.Message):
+    """PropertyMetadataEntry represents a single metadata entry for a primitive property of a VSS struct.
+    Properties cannot be individually accessed via Get/Set/Subscribe.
+    """
 
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
-    ENTRIES_FIELD_NUMBER: builtins.int
+    NAME_FIELD_NUMBER: builtins.int
+    DATATYPE_FIELD_NUMBER: builtins.int
+    DEPRECATED_FIELD_NUMBER: builtins.int
+    UNIT_FIELD_NUMBER: builtins.int
+    PATTERN_FIELD_NUMBER: builtins.int
+    MAX_FIELD_NUMBER: builtins.int
+    MIN_FIELD_NUMBER: builtins.int
+    DESCRIPTION_FIELD_NUMBER: builtins.int
+    COMMENT_FIELD_NUMBER: builtins.int
+    ALLOWED_FIELD_NUMBER: builtins.int
+    ARRAYSIZE_FIELD_NUMBER: builtins.int
+    DEFAULT_FIELD_NUMBER: builtins.int
+    DATATYPE_PATH_FIELD_NUMBER: builtins.int
+    CUSTOM_METADATA_FIELD_NUMBER: builtins.int
+    name: builtins.str
+    """the property name within the parent struct (not a VSS path).
+    e.g. "temperature", "unit"
+    """
+    datatype: global___DataType.ValueType
+    """the data type of this property's value"""
+    deprecated: builtins.str
+    """the flag to indicate if the property is deprecated"""
+    unit: builtins.str
+    """the unit of the property value, e.g. "km/h", "Celsius", "m/s^2" """
+    max: builtins.int
+    """the maximum value."""
+    min: builtins.int
+    """the minimum value."""
+    description: builtins.str
+    """a human-readable description"""
+    comment: builtins.str
+    """optional comment"""
+    arraysize: builtins.int
+    """the size of the array"""
+    datatype_path: builtins.str
+    """the data type path is datatype is STRUCT"""
     @property
-    def entries(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___MetadataEntry]:
-        """repeated field of MetadataEntry"""
+    def pattern(self) -> global___StringArray:
+        """allowed pattern."""
+
+    @property
+    def allowed(self) -> global___StringArray:
+        """allowed values"""
+
+    @property
+    def default(self) -> global___ValueType:
+        """default value"""
+
+    @property
+    def custom_metadata(self) -> google.protobuf.struct_pb2.Struct:
+        """custom metadata for the VSS node"""
 
     def __init__(
         self,
         *,
-        entries: collections.abc.Iterable[global___MetadataEntry] | None = ...,
+        name: builtins.str = ...,
+        datatype: global___DataType.ValueType = ...,
+        deprecated: builtins.str | None = ...,
+        unit: builtins.str | None = ...,
+        pattern: global___StringArray | None = ...,
+        max: builtins.int | None = ...,
+        min: builtins.int | None = ...,
+        description: builtins.str = ...,
+        comment: builtins.str | None = ...,
+        allowed: global___StringArray | None = ...,
+        arraysize: builtins.int | None = ...,
+        default: global___ValueType | None = ...,
+        datatype_path: builtins.str | None = ...,
+        custom_metadata: google.protobuf.struct_pb2.Struct | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["entries", b"entries"]) -> None: ...
+    def HasField(self, field_name: typing.Literal["_allowed", b"_allowed", "_arraysize", b"_arraysize", "_comment", b"_comment", "_custom_metadata", b"_custom_metadata", "_datatype_path", b"_datatype_path", "_default", b"_default", "_deprecated", b"_deprecated", "_max", b"_max", "_min", b"_min", "_pattern", b"_pattern", "_unit", b"_unit", "allowed", b"allowed", "arraysize", b"arraysize", "comment", b"comment", "custom_metadata", b"custom_metadata", "datatype_path", b"datatype_path", "default", b"default", "deprecated", b"deprecated", "max", b"max", "min", b"min", "pattern", b"pattern", "unit", b"unit"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["_allowed", b"_allowed", "_arraysize", b"_arraysize", "_comment", b"_comment", "_custom_metadata", b"_custom_metadata", "_datatype_path", b"_datatype_path", "_default", b"_default", "_deprecated", b"_deprecated", "_max", b"_max", "_min", b"_min", "_pattern", b"_pattern", "_unit", b"_unit", "allowed", b"allowed", "arraysize", b"arraysize", "comment", b"comment", "custom_metadata", b"custom_metadata", "datatype", b"datatype", "datatype_path", b"datatype_path", "default", b"default", "deprecated", b"deprecated", "description", b"description", "max", b"max", "min", b"min", "name", b"name", "pattern", b"pattern", "unit", b"unit"]) -> None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing.Literal["_allowed", b"_allowed"]) -> typing.Literal["allowed"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing.Literal["_arraysize", b"_arraysize"]) -> typing.Literal["arraysize"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing.Literal["_comment", b"_comment"]) -> typing.Literal["comment"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing.Literal["_custom_metadata", b"_custom_metadata"]) -> typing.Literal["custom_metadata"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing.Literal["_datatype_path", b"_datatype_path"]) -> typing.Literal["datatype_path"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing.Literal["_default", b"_default"]) -> typing.Literal["default"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing.Literal["_deprecated", b"_deprecated"]) -> typing.Literal["deprecated"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing.Literal["_max", b"_max"]) -> typing.Literal["max"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing.Literal["_min", b"_min"]) -> typing.Literal["min"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing.Literal["_pattern", b"_pattern"]) -> typing.Literal["pattern"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing.Literal["_unit", b"_unit"]) -> typing.Literal["unit"] | None: ...
+
+global___PropertyMetadataEntry = PropertyMetadataEntry
+
+@typing.final
+class StructMetadataEntry(google.protobuf.message.Message):
+    """StructMetadataEntry represents a top-level struct node in the VSS tree.
+    This node is independently accessible via Get/Set/Subscribe.
+    Its value is composed from its members as a ValueObject.
+    Struct has no data type of its own - it is a node type, not a data type.
+    """
+
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PATH_FIELD_NUMBER: builtins.int
+    DEPRECATED_FIELD_NUMBER: builtins.int
+    DESCRIPTION_FIELD_NUMBER: builtins.int
+    COMMENT_FIELD_NUMBER: builtins.int
+    PROPERTIES_FIELD_NUMBER: builtins.int
+    CUSTOM_METADATA_FIELD_NUMBER: builtins.int
+    path: builtins.str
+    """the VSS path (dot-separated absolute path in the VSS tree).
+    e.g. "Vehicle.Cabin.HVAC.Station"
+    This identifies the node's position in the tree and serves as the access target.
+    """
+    deprecated: builtins.str
+    """the flag to indicate if the struct is deprecated"""
+    description: builtins.str
+    """a human-readable description of the struct node"""
+    comment: builtins.str
+    """optional comment"""
+    @property
+    def properties(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___PropertyMetadataEntry]:
+        """members of this struct"""
+
+    @property
+    def custom_metadata(self) -> google.protobuf.struct_pb2.Struct:
+        """custom metadata for the VSS node"""
+
+    def __init__(
+        self,
+        *,
+        path: builtins.str = ...,
+        deprecated: builtins.str | None = ...,
+        description: builtins.str = ...,
+        comment: builtins.str | None = ...,
+        properties: collections.abc.Iterable[global___PropertyMetadataEntry] | None = ...,
+        custom_metadata: google.protobuf.struct_pb2.Struct | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["_comment", b"_comment", "_custom_metadata", b"_custom_metadata", "_deprecated", b"_deprecated", "comment", b"comment", "custom_metadata", b"custom_metadata", "deprecated", b"deprecated"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["_comment", b"_comment", "_custom_metadata", b"_custom_metadata", "_deprecated", b"_deprecated", "comment", b"comment", "custom_metadata", b"custom_metadata", "deprecated", b"deprecated", "description", b"description", "path", b"path", "properties", b"properties"]) -> None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing.Literal["_comment", b"_comment"]) -> typing.Literal["comment"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing.Literal["_custom_metadata", b"_custom_metadata"]) -> typing.Literal["custom_metadata"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing.Literal["_deprecated", b"_deprecated"]) -> typing.Literal["deprecated"] | None: ...
+
+global___StructMetadataEntry = StructMetadataEntry
+
+@typing.final
+class MetadataEntries(google.protobuf.message.Message):
+    """MetadataEntries represents a set of metadata for VSS nodes.
+    It can contain both normal node metadata and struct node metadata.
+    """
+
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    METADATA_ENTRIES_FIELD_NUMBER: builtins.int
+    STRUCT_METADATA_ENTRIES_FIELD_NUMBER: builtins.int
+    @property
+    def metadata_entries(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___MetadataEntry]:
+        """metadata for normal VSS nodes"""
+
+    @property
+    def struct_metadata_entries(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___StructMetadataEntry]:
+        """metadata for VSS struct nodes"""
+
+    def __init__(
+        self,
+        *,
+        metadata_entries: collections.abc.Iterable[global___MetadataEntry] | None = ...,
+        struct_metadata_entries: collections.abc.Iterable[global___StructMetadataEntry] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["metadata_entries", b"metadata_entries", "struct_metadata_entries", b"struct_metadata_entries"]) -> None: ...
 
 global___MetadataEntries = MetadataEntries

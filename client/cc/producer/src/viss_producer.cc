@@ -14,12 +14,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "viss_producer.h"
-
-#include <iostream>
+#include "producer/inc/viss_producer.h"
+//
 #include <memory>
-#include <ostream>
-#include <string>
 #include <utility>
 
 namespace yoriito::databroker {

@@ -14,17 +14,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::interface::signal::{KuraError, MapExternalToKuraResult};
-use crate::interface::signal::{KuraErrorCode, KuraErrorReason, KuraResult};
+use crate::interface::result::{self, MapExternalToKuraResult};
 use serde::Deserialize;
-use serde::Serialize;
 
 use std::env;
 use std::fs;
 use std::fs::File;
 use std::io::BufReader;
-
-use std::collections::HashMap;
 
 #[derive(Debug, Deserialize)]
 pub struct Config {
@@ -34,127 +30,27 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn load(config_file_path: &str) -> KuraResult<Self> {
+    pub fn load(config_file_path: &str) -> result::KuraResult<Self> {
         let config_file_path = match fs::exists(config_file_path) {
             Ok(true) => config_file_path.to_string(),
             _ => resolve_relative_path(config_file_path)?,
         };
         let config_file = File::open(config_file_path.clone()).to_kura_result(
-            KuraErrorCode::NotFound,
-            KuraErrorReason::InvalidData,
+            result::KuraErrorCode::NotFound,
+            result::KuraErrorReason::InvalidData,
             format!("failed to open {config_file_path}"),
         )?;
         let config_reader = BufReader::new(config_file);
         let ret: Config = serde_yaml::from_reader(config_reader).to_kura_result(
-            KuraErrorCode::NotFound,
-            KuraErrorReason::InvalidData,
+            result::KuraErrorCode::NotFound,
+            result::KuraErrorReason::InvalidData,
             format!("failed to deserialize {config_file_path}"),
         )?;
         Ok(ret)
     }
 }
 
-#[derive(Clone, serde::Serialize, Debug, Deserialize)]
-#[serde(untagged)]
-pub enum FlexibleValue {
-    Int(i64),
-    Float(f64),
-    Str(String),
-    Bool(bool),
-    Null,
-    Array(Vec<FlexibleValue>),
-    Object(std::collections::HashMap<String, FlexibleValue>),
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(tag = "type")]
-pub enum MetadataNode {
-    #[serde(rename = "branch")]
-    Branch {
-        description: Option<String>,
-        #[serde(default)]
-        children: HashMap<String, MetadataNode>,
-    },
-
-    #[serde(rename = "attribute")]
-    AttributeMetadata {
-        datatype: String,
-        description: Option<String>,
-        #[serde(default)]
-        deprecation: Option<String>,
-        #[serde(default)]
-        comment: Option<String>,
-        #[serde(default)]
-        min: Option<FlexibleValue>,
-        #[serde(default)]
-        max: Option<FlexibleValue>,
-        #[serde(default)]
-        unit: Option<String>,
-        #[serde(default)]
-        pattern: Option<String>,
-        #[serde(default)]
-        default: Option<FlexibleValue>,
-        #[serde(default)]
-        allowed: Vec<FlexibleValue>,
-        //allowed: Vec<String>,
-        #[serde(default)]
-        arraysize: u64,
-        #[serde(default)]
-        user_defined_items: HashMap<String, String>,
-    },
-
-    #[serde(rename = "sensor")]
-    SensorMetadata {
-        datatype: String,
-        description: Option<String>,
-        #[serde(default)]
-        deprecation: Option<String>,
-        #[serde(default)]
-        comment: Option<String>,
-        #[serde(default)]
-        min: Option<FlexibleValue>,
-        #[serde(default)]
-        max: Option<FlexibleValue>,
-        #[serde(default)]
-        unit: Option<String>,
-        #[serde(default)]
-        pattern: Option<String>,
-        #[serde(default)]
-        default: Option<FlexibleValue>,
-        #[serde(default)]
-        allowed: Vec<FlexibleValue>,
-        //allowed: Vec<String>,
-        #[serde(default)]
-        arraysize: u64,
-    },
-
-    #[serde(rename = "actuator")]
-    ActuatorMetadata {
-        datatype: String,
-        description: Option<String>,
-        #[serde(default)]
-        deprecation: Option<String>,
-        #[serde(default)]
-        comment: Option<String>,
-        #[serde(default)]
-        min: Option<FlexibleValue>,
-        #[serde(default)]
-        max: Option<FlexibleValue>,
-        #[serde(default)]
-        unit: Option<String>,
-        #[serde(default)]
-        pattern: Option<String>,
-        #[serde(default)]
-        default: Option<FlexibleValue>,
-        #[serde(default)]
-        allowed: Vec<FlexibleValue>,
-        //allowed: Vec<String>,
-        #[serde(default)]
-        arraysize: u64,
-    },
-}
-
-pub fn resolve_relative_path(relative_path: &str) -> KuraResult<String> {
+pub fn resolve_relative_path(relative_path: &str) -> result::KuraResult<String> {
     let home_dir_path = match env::home_dir() {
         Some(home_dir_path) => home_dir_path.display().to_string(),
         None => "/home/root".to_string(),
@@ -175,10 +71,10 @@ pub fn resolve_relative_path(relative_path: &str) -> KuraResult<String> {
         .iter()
         .map(|candidate_parent| candidate_parent.clone() + "/" + relative_path);
     match candidate_paths.find(|candidate_path| fs::exists(candidate_path).unwrap_or_default()) {
-        Some(path) => KuraResult::Ok(path),
-        None => KuraResult::Err(KuraError {
-            number: KuraErrorCode::NotFound,
-            reason: KuraErrorReason::InvalidData,
+        Some(path) => result::KuraResult::Ok(path),
+        None => result::KuraResult::Err(result::KuraError {
+            number: result::KuraErrorCode::NotFound,
+            reason: result::KuraErrorReason::InvalidData,
             description: Some(format!("{relative_path} not found")),
         }),
     }

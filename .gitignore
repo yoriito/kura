@@ -9,8 +9,11 @@ __pycache__
 
 # directory specific
 /client/cc/build
+/client/cc/build_fuzz
 /client/vshot/build
 /kura/target
+/kura/fuzz/target/
+/kura/fuzz/corpus/
 
 # devcontainer
 /.devcontainer/docker-compose.auto.yml

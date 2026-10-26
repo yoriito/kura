@@ -16,85 +16,97 @@
 
 #include <gtest/gtest.h>
 
+#include <cstdint>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "databroker/databroker_consumer_factory.h"
-#include "databroker_type.h"
-#include "yoriito_log.h"
-#include "viss_consumer.h"
+#include "yoriito/databroker_type.h"
 
 using ::testing::TestWithParam;
 
 TEST(TestConsumerInspect, InspectInvalidPath) {
-  yoriito::databroker::VissConsumer consumer;
+  yoriito::databroker::DataBrokerConsumer *consumer =
+      yoriito::databroker::DataBrokerConsumerFactory::GetInstance();
   std::string target_path = "Vehicle.not_found_path";
   yoriito::Result<yoriito::databroker::ConsumerInspectResponse> ret =
-      consumer.Inspect(
-          yoriito::databroker::ConsumerInspectRequest{std::string(target_path)});
+      consumer->Inspect(yoriito::databroker::ConsumerInspectRequest{
+          std::string(target_path)});
   ASSERT_TRUE(ret.IsErr());
 }
 
+TEST(TestConsumerInspect, InspectBranchPath) {
+  yoriito::databroker::DataBrokerConsumer *consumer =
+      yoriito::databroker::DataBrokerConsumerFactory::GetInstance();
+  yoriito::Result<yoriito::databroker::ConsumerInspectResponse> ret =
+      consumer->Inspect(
+          yoriito::databroker::ConsumerInspectRequest{"Vehicle.Test"});
+
+  ASSERT_TRUE(ret.IsErr());
+  auto error = ret.TakeErr();
+  ASSERT_EQ(static_cast<int32_t>(yoriito::ErrorCode::ERROR_NOT_FOUND),
+            error.get()->ErrorCode());
+}
+
 TEST(TestConsumerInspect, InspectPathFilter) {
-  std::string target_path = "Vehicle.CurrentLocation.GNSSReceiver.GNSSLocationType";
-  yoriito::databroker::VissConsumer consumer;
+  std::string target_path = "Vehicle.Test";
+  yoriito::databroker::DataBrokerConsumer *consumer =
+      yoriito::databroker::DataBrokerConsumerFactory::GetInstance();
+
   yoriito::databroker::ConsumerInspectRequest inspect_request(
-      std::string(target_path), yoriito::databroker::filter::InspectFilter(
-                                    {"Latitude", "Longitude"}));
+      std::string(target_path),
+      yoriito::databroker::filter::InspectFilter(
+          {"ActuatorDoubleValue", "ActuatorFloatValue"}));
 
   yoriito::Result<yoriito::databroker::ConsumerInspectResponse> ret =
-      consumer.Inspect(inspect_request);
+      consumer->Inspect(inspect_request);
   ASSERT_TRUE(ret.IsOk());
   auto data = ret.TakeOk().value();
 
+  auto double_builder = yoriito::databroker::BaseInspectData::CreateBuilder();
+  auto float_builder = yoriito::databroker::BaseInspectData::CreateBuilder();
+
   auto expected_data = std::vector<yoriito::databroker::BaseInspectData>{
-      yoriito::databroker::BaseInspectData(     // 0: Normal Pattern
-          "Vehicle.CurrentLocation.GNSSReceiver.GNSSLocationType.Latitude",  // std::string
-                                               // path
-          yoriito::databroker::BaseInspectData::DataType::
-              DATA_TYPE_DOUBLE,  // DataType entry_type
-          yoriito::databroker::BaseInspectData::EntryType::
-              ENTRY_TYPE_SENSOR,  // EntryType
-                                  // data_type
-          "",                     // std::string deprecation
-          "degrees",              // std::string unit
-          yoriito::ValueType(static_cast<double>(-90)),  // ValueType min
-          yoriito::ValueType(static_cast<double>(90)),   // ValueType max
-          "",                                           // std::string comment
-          {},                // std::vector<std::string> allowed
-          std::monostate{},  // ValueType default_value
-          "Current latitude of vehicle in WGS 84 geodetic coordinates, as "
-          "measured at the position of GNSS receiver antenna.",  // std::string
-                                                                 // description
-          0,   // uint32_t arraysize
-          "",  // std::string pattern
-          {}),
-      yoriito::databroker::BaseInspectData(      // 0: Normal Pattern
-          "Vehicle.CurrentLocation.GNSSReceiver.GNSSLocationType.Longitude",  // std::string
-                                                // path
-          yoriito::databroker::BaseInspectData::DataType::
-              DATA_TYPE_DOUBLE,  // DataType entry_type
-          yoriito::databroker::BaseInspectData::EntryType::
-              ENTRY_TYPE_SENSOR,  // EntryType
-                                  // data_type
-          "",                     // std::string deprecation
-          "degrees",              // std::string unit
-          yoriito::ValueType(static_cast<double>(-180)),  // ValueType min
-          yoriito::ValueType(static_cast<double>(180)),   // ValueType max
-          "",                                            // std::string comment
-          {},                // std::vector<std::string> allowed
-          std::monostate{},  // ValueType default_value
-          "Current longitude of vehicle in WGS 84 geodetic coordinates, as "
-          "measured at the position of GNSS receiver antenna.",  // std::string
-                                                                 // description
-          0,   // uint32_t arraysize
-          "",  // std::string pattern
-          {}),
+      double_builder.SetPath("Vehicle.Test.ActuatorDoubleValue")
+          .SetDataType(
+              yoriito::databroker::BaseInspectData::DataType::DATA_TYPE_DOUBLE)
+          .SetEntryType(yoriito::databroker::BaseInspectData::EntryType::
+                            ENTRY_TYPE_ACTUATOR)
+          .SetDeprecation("")
+          .SetUnit("ratio")
+          .SetMin(static_cast<double>(-1000000.0))
+          .SetMax(static_cast<double>(1000000.0))
+          .SetComment("metadata test")
+          .SetAllowed({})
+          .SetDefaultValue(std::monostate{})
+          .SetDescription("Double property")
+          .SetArraySize(0)
+          .SetPattern("")
+          .SetCustomAttributes({})
+          .Build(),
+      float_builder.SetPath("Vehicle.Test.ActuatorFloatValue")
+          .SetDataType(
+              yoriito::databroker::BaseInspectData::DataType::DATA_TYPE_FLOAT)
+          .SetEntryType(yoriito::databroker::BaseInspectData::EntryType::
+                            ENTRY_TYPE_ACTUATOR)
+          .SetDeprecation("")
+          .SetUnit("ratio")
+          .SetMin(static_cast<float>(-1000.0))
+          .SetMax(static_cast<float>(1000.0))
+          .SetComment("metadata test")
+          .SetAllowed({})
+          .SetDefaultValue(std::monostate{})
+          .SetDescription("Float property")
+          .SetArraySize(0)
+          .SetPattern("")
+          .SetCustomAttributes({})
+          .Build(),
   };
   ASSERT_EQ(expected_data.size(), data.GetDataPoints().size());
 
-  for (const auto& dp : data.GetDataPoints()) {
-    for (const auto& expected_db : expected_data) {
+  for (const auto &dp : data.GetDataPoints()) {
+    for (const auto &expected_db : expected_data) {
       if (dp.GetPath() == expected_db.GetPath()) {
         ASSERT_EQ(expected_db.GetPath(), dp.GetPath());
         ASSERT_EQ(expected_db.GetEntryType(), dp.GetEntryType());
@@ -102,13 +114,13 @@ TEST(TestConsumerInspect, InspectPathFilter) {
         ASSERT_EQ(expected_db.GetDescription(), dp.GetDescription());
         ASSERT_EQ(expected_db.GetComment(), dp.GetComment());
         ASSERT_EQ(expected_db.GetUnit(), dp.GetUnit());
-        auto default_value = expected_db.GetDefaultValue();
+        const auto &default_value = expected_db.GetDefaultValue();
         ASSERT_EQ(default_value, dp.GetDefaultValue());
-        auto allowed_values = expected_db.GetAllowed();
+        const auto &allowed_values = expected_db.GetAllowed();
         ASSERT_EQ(allowed_values, dp.GetAllowed());
-        auto min_value = expected_db.GetMin();
+        const auto &min_value = expected_db.GetMin();
         ASSERT_EQ(min_value, dp.GetMin());
-        auto max_value = expected_db.GetMax();
+        const auto &max_value = expected_db.GetMax();
         ASSERT_EQ(max_value, dp.GetMax());
       }
     }
@@ -123,17 +135,18 @@ class ConsumerInspect_WithParamTest
   }
   void TearDown() override {}
 
-  yoriito::databroker::DataBrokerConsumer* consumer;
+  yoriito::databroker::DataBrokerConsumer *consumer;
 };
 
 TEST_P(ConsumerInspect_WithParamTest, InspectVariousParameter) {
   auto param = GetParam();
   auto target_path = param.GetPath();
 
-  yoriito::databroker::VissConsumer consumer;
+  yoriito::databroker::DataBrokerConsumer *consumer =
+      yoriito::databroker::DataBrokerConsumerFactory::GetInstance();
   yoriito::Result<yoriito::databroker::ConsumerInspectResponse> ret =
-      consumer.Inspect(
-          yoriito::databroker::ConsumerInspectRequest{std::string(target_path)});
+      consumer->Inspect(yoriito::databroker::ConsumerInspectRequest{
+          std::string(target_path)});
 
   ASSERT_TRUE(ret.IsOk());
   auto data = ret.TakeOk().value();
@@ -144,127 +157,686 @@ TEST_P(ConsumerInspect_WithParamTest, InspectVariousParameter) {
   ASSERT_EQ(param.GetDescription(), data.GetDataPoints()[0].GetDescription());
   ASSERT_EQ(param.GetComment(), data.GetDataPoints()[0].GetComment());
   ASSERT_EQ(param.GetUnit(), data.GetDataPoints()[0].GetUnit());
-  auto default_value = data.GetDataPoints()[0].GetDefaultValue();
+  const auto &default_value = data.GetDataPoints()[0].GetDefaultValue();
   ASSERT_EQ(param.GetDefaultValue(), default_value);
 
-  auto allowed_values = data.GetDataPoints()[0].GetAllowed();
+  const auto &allowed_values = data.GetDataPoints()[0].GetAllowed();
   ASSERT_EQ(param.GetAllowed(), allowed_values);
-  auto min_value = data.GetDataPoints()[0].GetMin();
+  const auto &min_value = data.GetDataPoints()[0].GetMin();
   ASSERT_EQ(param.GetMin(), min_value);
-  auto max_value = data.GetDataPoints()[0].GetMax();
+  const auto &max_value = data.GetDataPoints()[0].GetMax();
   ASSERT_EQ(param.GetMax(), max_value);
 }
 
+namespace {
+using BaseInspectData = yoriito::databroker::BaseInspectData;
+using DataType = BaseInspectData::DataType;
+using EntryType = BaseInspectData::EntryType;
+
+BaseInspectData MakeCase(const std::string &path, DataType data_type,
+                         EntryType entry_type, const std::string &description,
+                         const std::string &unit, yoriito::ValueType min,
+                         yoriito::ValueType max,
+                         const std::vector<std::string> &allowed,
+                         const std::string &pattern = "") {
+  return BaseInspectData(path, data_type, entry_type, "", unit, std::move(min),
+                         std::move(max), "metadata test", allowed,
+                         std::monostate{}, description, 0, pattern, {});
+}
+
+std::vector<BaseInspectData> BuildPrimitiveSignalInspectParams() {
+  return {
+      MakeCase("Vehicle.Test.SensorBooleanValue", DataType::DATA_TYPE_BOOLEAN,
+               EntryType::ENTRY_TYPE_SENSOR, "Boolean property", "",
+               std::monostate{}, std::monostate{}, {"true", "false"}),
+      MakeCase("Vehicle.Test.ActuatorBooleanValue", DataType::DATA_TYPE_BOOLEAN,
+               EntryType::ENTRY_TYPE_ACTUATOR, "Boolean property", "",
+               std::monostate{}, std::monostate{}, {"true", "false"}),
+      MakeCase("Vehicle.Test.AttributeBooleanValue",
+               DataType::DATA_TYPE_BOOLEAN, EntryType::ENTRY_TYPE_ATTRIBUTE,
+               "Boolean property", "", std::monostate{}, std::monostate{},
+               {"true", "false"}),
+
+      MakeCase("Vehicle.Test.SensorStringValue", DataType::DATA_TYPE_STRING,
+               EntryType::ENTRY_TYPE_SENSOR, "String property", "",
+               std::monostate{}, std::monostate{}, {"", "sample", "abc"},
+               "^[A-Za-z0-9_]*$"),
+      MakeCase("Vehicle.Test.ActuatorStringValue", DataType::DATA_TYPE_STRING,
+               EntryType::ENTRY_TYPE_ACTUATOR, "String property", "",
+               std::monostate{}, std::monostate{}, {"", "sample", "abc"},
+               "^[A-Za-z0-9_]*$"),
+      MakeCase("Vehicle.Test.AttributeStringValue", DataType::DATA_TYPE_STRING,
+               EntryType::ENTRY_TYPE_ATTRIBUTE, "String property", "",
+               std::monostate{}, std::monostate{}, {"", "sample", "abc"},
+               "^[A-Za-z0-9_]*$"),
+
+      MakeCase("Vehicle.Test.SensorInt8Value", DataType::DATA_TYPE_INT8,
+               EntryType::ENTRY_TYPE_SENSOR, "Int8 property", "ratio",
+               yoriito::ValueType(static_cast<int8_t>(-128)),
+               yoriito::ValueType(static_cast<int8_t>(127)), {}),
+      MakeCase("Vehicle.Test.ActuatorInt8Value", DataType::DATA_TYPE_INT8,
+               EntryType::ENTRY_TYPE_ACTUATOR, "Int8 property", "ratio",
+               yoriito::ValueType(static_cast<int8_t>(-128)),
+               yoriito::ValueType(static_cast<int8_t>(127)), {}),
+      MakeCase("Vehicle.Test.AttributeInt8Value", DataType::DATA_TYPE_INT8,
+               EntryType::ENTRY_TYPE_ATTRIBUTE, "Int8 property", "ratio",
+               yoriito::ValueType(static_cast<int8_t>(-128)),
+               yoriito::ValueType(static_cast<int8_t>(127)), {}),
+
+      MakeCase("Vehicle.Test.SensorInt16Value", DataType::DATA_TYPE_INT16,
+               EntryType::ENTRY_TYPE_SENSOR, "Int16 property", "ratio",
+               yoriito::ValueType(static_cast<int16_t>(-32768)),
+               yoriito::ValueType(static_cast<int16_t>(32767)), {}),
+      MakeCase("Vehicle.Test.ActuatorInt16Value", DataType::DATA_TYPE_INT16,
+               EntryType::ENTRY_TYPE_ACTUATOR, "Int16 property", "ratio",
+               yoriito::ValueType(static_cast<int16_t>(-32768)),
+               yoriito::ValueType(static_cast<int16_t>(32767)), {}),
+      MakeCase("Vehicle.Test.AttributeInt16Value", DataType::DATA_TYPE_INT16,
+               EntryType::ENTRY_TYPE_ATTRIBUTE, "Int16 property", "ratio",
+               yoriito::ValueType(static_cast<int16_t>(-32768)),
+               yoriito::ValueType(static_cast<int16_t>(32767)), {}),
+
+      MakeCase("Vehicle.Test.SensorInt32Value", DataType::DATA_TYPE_INT32,
+               EntryType::ENTRY_TYPE_SENSOR, "Int32 property", "ratio",
+               yoriito::ValueType(static_cast<int32_t>(-2147483647 - 1)),
+               yoriito::ValueType(static_cast<int32_t>(2147483647)), {}),
+      MakeCase("Vehicle.Test.ActuatorInt32Value", DataType::DATA_TYPE_INT32,
+               EntryType::ENTRY_TYPE_ACTUATOR, "Int32 property", "ratio",
+               yoriito::ValueType(static_cast<int32_t>(-2147483647 - 1)),
+               yoriito::ValueType(static_cast<int32_t>(2147483647)), {}),
+      MakeCase("Vehicle.Test.AttributeInt32Value", DataType::DATA_TYPE_INT32,
+               EntryType::ENTRY_TYPE_ATTRIBUTE, "Int32 property", "ratio",
+               yoriito::ValueType(static_cast<int32_t>(-2147483647 - 1)),
+               yoriito::ValueType(static_cast<int32_t>(2147483647)), {}),
+
+      MakeCase(
+          "Vehicle.Test.SensorInt64Value", DataType::DATA_TYPE_INT64,
+          EntryType::ENTRY_TYPE_SENSOR, "Int64 property", "ratio",
+          yoriito::ValueType(static_cast<int64_t>(-9223372036854775807 - 1)),
+          yoriito::ValueType(static_cast<int64_t>(9223372036854775807)), {}),
+      MakeCase(
+          "Vehicle.Test.ActuatorInt64Value", DataType::DATA_TYPE_INT64,
+          EntryType::ENTRY_TYPE_ACTUATOR, "Int64 property", "ratio",
+          yoriito::ValueType(static_cast<int64_t>(-9223372036854775807 - 1)),
+          yoriito::ValueType(static_cast<int64_t>(9223372036854775807)), {}),
+      MakeCase(
+          "Vehicle.Test.AttributeInt64Value", DataType::DATA_TYPE_INT64,
+          EntryType::ENTRY_TYPE_ATTRIBUTE, "Int64 property", "ratio",
+          yoriito::ValueType(static_cast<int64_t>(-9223372036854775807 - 1)),
+          yoriito::ValueType(static_cast<int64_t>(9223372036854775807)), {}),
+
+      MakeCase("Vehicle.Test.SensorUint8Value", DataType::DATA_TYPE_UINT8,
+               EntryType::ENTRY_TYPE_SENSOR, "Uint8 property", "ratio",
+               yoriito::ValueType(static_cast<uint8_t>(0)),
+               yoriito::ValueType(static_cast<uint8_t>(255)), {}),
+      MakeCase("Vehicle.Test.ActuatorUint8Value", DataType::DATA_TYPE_UINT8,
+               EntryType::ENTRY_TYPE_ACTUATOR, "Uint8 property", "ratio",
+               yoriito::ValueType(static_cast<uint8_t>(0)),
+               yoriito::ValueType(static_cast<uint8_t>(255)), {}),
+      MakeCase("Vehicle.Test.AttributeUint8Value", DataType::DATA_TYPE_UINT8,
+               EntryType::ENTRY_TYPE_ATTRIBUTE, "Uint8 property", "ratio",
+               yoriito::ValueType(static_cast<uint8_t>(0)),
+               yoriito::ValueType(static_cast<uint8_t>(255)), {}),
+
+      MakeCase("Vehicle.Test.SensorUint16Value", DataType::DATA_TYPE_UINT16,
+               EntryType::ENTRY_TYPE_SENSOR, "Uint16 property", "ratio",
+               yoriito::ValueType(static_cast<uint16_t>(0)),
+               yoriito::ValueType(static_cast<uint16_t>(65535)), {}),
+      MakeCase("Vehicle.Test.ActuatorUint16Value", DataType::DATA_TYPE_UINT16,
+               EntryType::ENTRY_TYPE_ACTUATOR, "Uint16 property", "ratio",
+               yoriito::ValueType(static_cast<uint16_t>(0)),
+               yoriito::ValueType(static_cast<uint16_t>(65535)), {}),
+      MakeCase("Vehicle.Test.AttributeUint16Value", DataType::DATA_TYPE_UINT16,
+               EntryType::ENTRY_TYPE_ATTRIBUTE, "Uint16 property", "ratio",
+               yoriito::ValueType(static_cast<uint16_t>(0)),
+               yoriito::ValueType(static_cast<uint16_t>(65535)), {}),
+
+      MakeCase("Vehicle.Test.SensorUint32Value", DataType::DATA_TYPE_UINT32,
+               EntryType::ENTRY_TYPE_SENSOR, "Uint32 property", "ratio",
+               yoriito::ValueType(static_cast<uint32_t>(0)),
+               yoriito::ValueType(static_cast<uint32_t>(4294967295u)), {}),
+      MakeCase("Vehicle.Test.ActuatorUint32Value", DataType::DATA_TYPE_UINT32,
+               EntryType::ENTRY_TYPE_ACTUATOR, "Uint32 property", "ratio",
+               yoriito::ValueType(static_cast<uint32_t>(0)),
+               yoriito::ValueType(static_cast<uint32_t>(4294967295u)), {}),
+      MakeCase("Vehicle.Test.AttributeUint32Value", DataType::DATA_TYPE_UINT32,
+               EntryType::ENTRY_TYPE_ATTRIBUTE, "Uint32 property", "ratio",
+               yoriito::ValueType(static_cast<uint32_t>(0)),
+               yoriito::ValueType(static_cast<uint32_t>(4294967295u)), {}),
+
+      MakeCase(
+          "Vehicle.Test.SensorUint64Value", DataType::DATA_TYPE_UINT64,
+          EntryType::ENTRY_TYPE_SENSOR, "Uint64 property", "ratio",
+          yoriito::ValueType(static_cast<uint64_t>(0)),
+          yoriito::ValueType(static_cast<uint64_t>(18446744073709551615ull)),
+          {}),
+      MakeCase(
+          "Vehicle.Test.ActuatorUint64Value", DataType::DATA_TYPE_UINT64,
+          EntryType::ENTRY_TYPE_ACTUATOR, "Uint64 property", "ratio",
+          yoriito::ValueType(static_cast<uint64_t>(0)),
+          yoriito::ValueType(static_cast<uint64_t>(18446744073709551615ull)),
+          {}),
+      MakeCase(
+          "Vehicle.Test.AttributeUint64Value", DataType::DATA_TYPE_UINT64,
+          EntryType::ENTRY_TYPE_ATTRIBUTE, "Uint64 property", "ratio",
+          yoriito::ValueType(static_cast<uint64_t>(0)),
+          yoriito::ValueType(static_cast<uint64_t>(18446744073709551615ull)),
+          {}),
+
+      MakeCase("Vehicle.Test.SensorFloatValue", DataType::DATA_TYPE_FLOAT,
+               EntryType::ENTRY_TYPE_SENSOR, "Float property", "ratio",
+               yoriito::ValueType(static_cast<float>(-1000.0)),
+               yoriito::ValueType(static_cast<float>(1000.0)), {}),
+      MakeCase("Vehicle.Test.ActuatorFloatValue", DataType::DATA_TYPE_FLOAT,
+               EntryType::ENTRY_TYPE_ACTUATOR, "Float property", "ratio",
+               yoriito::ValueType(static_cast<float>(-1000.0)),
+               yoriito::ValueType(static_cast<float>(1000.0)), {}),
+      MakeCase("Vehicle.Test.AttributeFloatValue", DataType::DATA_TYPE_FLOAT,
+               EntryType::ENTRY_TYPE_ATTRIBUTE, "Float property", "ratio",
+               yoriito::ValueType(static_cast<float>(-1000.0)),
+               yoriito::ValueType(static_cast<float>(1000.0)), {}),
+
+      MakeCase("Vehicle.Test.SensorDoubleValue", DataType::DATA_TYPE_DOUBLE,
+               EntryType::ENTRY_TYPE_SENSOR, "Double property", "ratio",
+               yoriito::ValueType(static_cast<double>(-1000000.0)),
+               yoriito::ValueType(static_cast<double>(1000000.0)), {}),
+      MakeCase("Vehicle.Test.ActuatorDoubleValue", DataType::DATA_TYPE_DOUBLE,
+               EntryType::ENTRY_TYPE_ACTUATOR, "Double property", "ratio",
+               yoriito::ValueType(static_cast<double>(-1000000.0)),
+               yoriito::ValueType(static_cast<double>(1000000.0)), {}),
+      MakeCase("Vehicle.Test.AttributeDoubleValue", DataType::DATA_TYPE_DOUBLE,
+               EntryType::ENTRY_TYPE_ATTRIBUTE, "Double property", "ratio",
+               yoriito::ValueType(static_cast<double>(-1000000.0)),
+               yoriito::ValueType(static_cast<double>(1000000.0)), {}),
+
+      MakeCase("Vehicle.Test.SensorBoolArrayValue",
+               DataType::DATA_TYPE_BOOLEAN_ARRAY, EntryType::ENTRY_TYPE_SENSOR,
+               "Boolean array property", "", std::monostate{}, std::monostate{},
+               {}),
+      MakeCase("Vehicle.Test.ActuatorBoolArrayValue",
+               DataType::DATA_TYPE_BOOLEAN_ARRAY,
+               EntryType::ENTRY_TYPE_ACTUATOR, "Boolean array property", "",
+               std::monostate{}, std::monostate{}, {}),
+      MakeCase("Vehicle.Test.AttributeBoolArrayValue",
+               DataType::DATA_TYPE_BOOLEAN_ARRAY,
+               EntryType::ENTRY_TYPE_ATTRIBUTE, "Boolean array property", "",
+               std::monostate{}, std::monostate{}, {}),
+
+      MakeCase("Vehicle.Test.SensorStringArrayValue",
+               DataType::DATA_TYPE_STRING_ARRAY, EntryType::ENTRY_TYPE_SENSOR,
+               "String array property", "", std::monostate{}, std::monostate{},
+               {}, "^[A-Za-z0-9_]*$"),
+      MakeCase("Vehicle.Test.ActuatorStringArrayValue",
+               DataType::DATA_TYPE_STRING_ARRAY, EntryType::ENTRY_TYPE_ACTUATOR,
+               "String array property", "", std::monostate{}, std::monostate{},
+               {}, "^[A-Za-z0-9_]*$"),
+      MakeCase("Vehicle.Test.AttributeStringArrayValue",
+               DataType::DATA_TYPE_STRING_ARRAY,
+               EntryType::ENTRY_TYPE_ATTRIBUTE, "String array property", "",
+               std::monostate{}, std::monostate{}, {}, "^[A-Za-z0-9_]*$"),
+
+      MakeCase("Vehicle.Test.SensorInt8ArrayValue",
+               DataType::DATA_TYPE_INT8_ARRAY, EntryType::ENTRY_TYPE_SENSOR,
+               "Int8 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+      MakeCase("Vehicle.Test.ActuatorInt8ArrayValue",
+               DataType::DATA_TYPE_INT8_ARRAY, EntryType::ENTRY_TYPE_ACTUATOR,
+               "Int8 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+      MakeCase("Vehicle.Test.AttributeInt8ArrayValue",
+               DataType::DATA_TYPE_INT8_ARRAY, EntryType::ENTRY_TYPE_ATTRIBUTE,
+               "Int8 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+
+      MakeCase("Vehicle.Test.SensorInt16ArrayValue",
+               DataType::DATA_TYPE_INT16_ARRAY, EntryType::ENTRY_TYPE_SENSOR,
+               "Int16 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+      MakeCase("Vehicle.Test.ActuatorInt16ArrayValue",
+               DataType::DATA_TYPE_INT16_ARRAY, EntryType::ENTRY_TYPE_ACTUATOR,
+               "Int16 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+      MakeCase("Vehicle.Test.AttributeInt16ArrayValue",
+               DataType::DATA_TYPE_INT16_ARRAY, EntryType::ENTRY_TYPE_ATTRIBUTE,
+               "Int16 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+
+      MakeCase("Vehicle.Test.SensorInt32ArrayValue",
+               DataType::DATA_TYPE_INT32_ARRAY, EntryType::ENTRY_TYPE_SENSOR,
+               "Int32 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+      MakeCase("Vehicle.Test.ActuatorInt32ArrayValue",
+               DataType::DATA_TYPE_INT32_ARRAY, EntryType::ENTRY_TYPE_ACTUATOR,
+               "Int32 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+      MakeCase("Vehicle.Test.AttributeInt32ArrayValue",
+               DataType::DATA_TYPE_INT32_ARRAY, EntryType::ENTRY_TYPE_ATTRIBUTE,
+               "Int32 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+
+      MakeCase("Vehicle.Test.SensorInt64ArrayValue",
+               DataType::DATA_TYPE_INT64_ARRAY, EntryType::ENTRY_TYPE_SENSOR,
+               "Int64 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+      MakeCase("Vehicle.Test.ActuatorInt64ArrayValue",
+               DataType::DATA_TYPE_INT64_ARRAY, EntryType::ENTRY_TYPE_ACTUATOR,
+               "Int64 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+      MakeCase("Vehicle.Test.AttributeInt64ArrayValue",
+               DataType::DATA_TYPE_INT64_ARRAY, EntryType::ENTRY_TYPE_ATTRIBUTE,
+               "Int64 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+
+      MakeCase("Vehicle.Test.SensorUint8ArrayValue",
+               DataType::DATA_TYPE_UINT8_ARRAY, EntryType::ENTRY_TYPE_SENSOR,
+               "Uint8 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+      MakeCase("Vehicle.Test.ActuatorUint8ArrayValue",
+               DataType::DATA_TYPE_UINT8_ARRAY, EntryType::ENTRY_TYPE_ACTUATOR,
+               "Uint8 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+      MakeCase("Vehicle.Test.AttributeUint8ArrayValue",
+               DataType::DATA_TYPE_UINT8_ARRAY, EntryType::ENTRY_TYPE_ATTRIBUTE,
+               "Uint8 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+
+      MakeCase("Vehicle.Test.SensorUint16ArrayValue",
+               DataType::DATA_TYPE_UINT16_ARRAY, EntryType::ENTRY_TYPE_SENSOR,
+               "Uint16 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+      MakeCase("Vehicle.Test.ActuatorUint16ArrayValue",
+               DataType::DATA_TYPE_UINT16_ARRAY, EntryType::ENTRY_TYPE_ACTUATOR,
+               "Uint16 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+      MakeCase("Vehicle.Test.AttributeUint16ArrayValue",
+               DataType::DATA_TYPE_UINT16_ARRAY,
+               EntryType::ENTRY_TYPE_ATTRIBUTE, "Uint16 array property",
+               "ratio", std::monostate{}, std::monostate{}, {}),
+
+      MakeCase("Vehicle.Test.SensorUint32ArrayValue",
+               DataType::DATA_TYPE_UINT32_ARRAY, EntryType::ENTRY_TYPE_SENSOR,
+               "Uint32 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+      MakeCase("Vehicle.Test.ActuatorUint32ArrayValue",
+               DataType::DATA_TYPE_UINT32_ARRAY, EntryType::ENTRY_TYPE_ACTUATOR,
+               "Uint32 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+      MakeCase("Vehicle.Test.AttributeUint32ArrayValue",
+               DataType::DATA_TYPE_UINT32_ARRAY,
+               EntryType::ENTRY_TYPE_ATTRIBUTE, "Uint32 array property",
+               "ratio", std::monostate{}, std::monostate{}, {}),
+
+      MakeCase("Vehicle.Test.SensorUint64ArrayValue",
+               DataType::DATA_TYPE_UINT64_ARRAY, EntryType::ENTRY_TYPE_SENSOR,
+               "Uint64 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+      MakeCase("Vehicle.Test.ActuatorUint64ArrayValue",
+               DataType::DATA_TYPE_UINT64_ARRAY, EntryType::ENTRY_TYPE_ACTUATOR,
+               "Uint64 array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+      MakeCase("Vehicle.Test.AttributeUint64ArrayValue",
+               DataType::DATA_TYPE_UINT64_ARRAY,
+               EntryType::ENTRY_TYPE_ATTRIBUTE, "Uint64 array property",
+               "ratio", std::monostate{}, std::monostate{}, {}),
+
+      MakeCase("Vehicle.Test.SensorFloatArrayValue",
+               DataType::DATA_TYPE_FLOAT_ARRAY, EntryType::ENTRY_TYPE_SENSOR,
+               "Float array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+      MakeCase("Vehicle.Test.ActuatorFloatArrayValue",
+               DataType::DATA_TYPE_FLOAT_ARRAY, EntryType::ENTRY_TYPE_ACTUATOR,
+               "Float array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+      MakeCase("Vehicle.Test.AttributeFloatArrayValue",
+               DataType::DATA_TYPE_FLOAT_ARRAY, EntryType::ENTRY_TYPE_ATTRIBUTE,
+               "Float array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+
+      MakeCase("Vehicle.Test.SensorDoubleArrayValue",
+               DataType::DATA_TYPE_DOUBLE_ARRAY, EntryType::ENTRY_TYPE_SENSOR,
+               "Double array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+      MakeCase("Vehicle.Test.ActuatorDoubleArrayValue",
+               DataType::DATA_TYPE_DOUBLE_ARRAY, EntryType::ENTRY_TYPE_ACTUATOR,
+               "Double array property", "ratio", std::monostate{},
+               std::monostate{}, {}),
+      MakeCase("Vehicle.Test.AttributeDoubleArrayValue",
+               DataType::DATA_TYPE_DOUBLE_ARRAY,
+               EntryType::ENTRY_TYPE_ATTRIBUTE, "Double array property",
+               "ratio", std::monostate{}, std::monostate{}, {}),
+  };
+}
+}  // namespace
+
 INSTANTIATE_TEST_SUITE_P(
     TestConsumerInspect, ConsumerInspect_WithParamTest,
-    ::testing::Values(                        //
-        yoriito::databroker::BaseInspectData(  // 0: Normal Pattern
-            "Vehicle.Powertrain.CombustionEngine."
-            "EngineCode",  // std::string
-                           // path
-            yoriito::databroker::BaseInspectData::DataType::
-                DATA_TYPE_STRING,  // DataType entry_type
-            yoriito::databroker::BaseInspectData::EntryType::
-                ENTRY_TYPE_ATTRIBUTE,  // EntryType
-                                       // data_type
-            "",                        // std::string deprecation
-            "",                        // std::string unit
-            std::monostate{},          // ValueType min
-            std::monostate{},          // ValueType max
-            "For hybrid vehicles the engine code may refer to the "
-            "combination "
-            "of combustion and electric engine.",  // std::string
-                                                   // comment
-            {},                // std::vector<std::string> allowed
-            std::monostate{},  // ValueType default_value
-            "Engine code designation, as specified by "
-            "vehicle manufacturer.",  // std::string
-                                      // description
-            0,                        // uint32_t arraysize
-            "",                       // std::string pattern
-            {}),
+    ::testing::ValuesIn(BuildPrimitiveSignalInspectParams()));
 
-        yoriito::databroker::BaseInspectData(  // 1: Min/Max Pattern ,
-                                              // Unit
-            "Vehicle.Powertrain.Transmission."
-            "TorqueDistribution",  // std::string
-                                   // path
-            yoriito::databroker::BaseInspectData::DataType::
-                DATA_TYPE_FLOAT,  // DataType entry_type
-            yoriito::databroker::BaseInspectData::EntryType::
-                ENTRY_TYPE_ACTUATOR,  // EntryType
-                                      // data_type
-            "",                       // std::string deprecation
-            "percent",                // std::string unit
-            yoriito::ValueType(static_cast<float>(-100)),  // ValueType min
-            yoriito::ValueType(static_cast<float>(100)),   // ValueType max
-            "",                                           // std::string
-                                                          // comment
-            {},                // std::vector<std::string> allowed
-            std::monostate{},  // ValueType default_value
-            "Torque distribution between front and rear axle in "
-            "percent. -100% "
-            "= Full torque to front axle, 0% = 50:50 Front/Rear, "
-            "100% = Full "
-            "torque to rear axle.",  // std::string
-                                     // description
-            0,                       // uint32_t arraysize
-            "",                      // std::string pattern
-            {})                      //
-        ,
-        yoriito::databroker::BaseInspectData(  // 2: Allowed Values Pattern ,
-                                              // Default Value
-            "Vehicle.Powertrain.CombustionEngine."
-            "Configuration",  // std::string
-                              // path
-            yoriito::databroker::BaseInspectData::DataType::
-                DATA_TYPE_STRING,  // DataType entry_type
-            yoriito::databroker::BaseInspectData::EntryType::
-                ENTRY_TYPE_ATTRIBUTE,  // EntryType
-                                       // data_type
-            "",                        // std::string deprecation
-            "",                        // std::string unit
-            std::monostate{},          // ValueType min
-            std::monostate{},          // ValueType max
-            "",                        // std::string
-                                       // comment
-            {"UNKNOWN", "STRAIGHT", "V", "BOXER", "W", "ROTARY", "RADIAL",
-             "SQUARE", "H", "U", "OPPOSED", "X"},
-            // std::vector<std::string> allowed
-            yoriito::ValueType{
-                std::string("UNKNOWN")},  // ValueType default_value
-            "Engine configuration.",      // std::string
-                                          // description
-            0,                            // uint32_t arraysize
-            "",                           // std::string pattern
-            {})                           //
-        //,
-        // NOTE: this node seems to be deleted.
-        //yoriito::databroker::BaseInspectData(     // 4: Deprecated Pattern
-        //    "Vehicle.Driver.Identifier.Issuer",  // std::string
-        //                                         // path
-        //    yoriito::databroker::BaseInspectData::DataType::
-        //        DATA_TYPE_STRING,  // DataType entry_type
-        //    yoriito::databroker::BaseInspectData::EntryType::
-        //        ENTRY_TYPE_SENSOR,  // EntryType
-        //                            // data_type
-        //    "v5.0 - use data from "
-        //    "Vehicle.Occupant.*.*.Identifier.",  // std::string
-        //                                         // deprecation
-        //    "",                                  // std::string unit
-        //    std::monostate{},                    // ValueType min
-        //    std::monostate{},                    // ValueType max
-        //    "",                                  // std::string
-        //                                         // comment
-        //    {},
-        //    // std::vector<std::string> allowed
-        //    std::monostate{},  // ValueType default_value
-        //    "Unique Issuer for the authentication of the "
-        //    "occupant e.g. "
-        //    "https://accounts.funcorp.com.",  // std::string
-        //                                      // description
-        //    0,                                // uint32_t arraysize
-        //    "",                               // std::string pattern
-        //    {})                               //
-        )                                     //
-);
+// struct signal test
+TEST(TestConsumerInspect, StructAllTypeSignal) {
+  yoriito::databroker::DataBrokerConsumer *consumer =
+      yoriito::databroker::DataBrokerConsumerFactory::GetInstance();
+  std::string target_path = "Vehicle.Test.StructAllTypeSignal";
+  yoriito::Result<yoriito::databroker::ConsumerInspectResponse> ret =
+      consumer->Inspect(yoriito::databroker::ConsumerInspectRequest{
+          std::string(target_path)});
+
+  ASSERT_TRUE(ret.IsOk());
+  auto data = ret.TakeOk().value();
+  ASSERT_EQ(1, data.GetDataPoints().size());
+  ASSERT_EQ(target_path, data.GetDataPoints()[0].GetPath());
+  ASSERT_EQ(yoriito::databroker::BaseInspectData::EntryType::ENTRY_TYPE_SENSOR,
+            data.GetDataPoints()[0].GetEntryType());
+  ASSERT_EQ(yoriito::databroker::BaseInspectData::DataType::DATA_TYPE_STRUCT,
+            data.GetDataPoints()[0].GetDataType());
+  ASSERT_EQ("Test Struct Signal", data.GetDataPoints()[0].GetDescription());
+
+  const auto &data_type_ref = data.GetDataPoints()[0].GetDataTypeRef();
+  ASSERT_TRUE(data_type_ref.has_value());
+  ASSERT_TRUE(data_type_ref->IsResolved());
+  auto root_struct = data_type_ref->Resolved().get();
+  ASSERT_NE(root_struct, nullptr);
+
+  const auto &root_properties = root_struct->GetProperties();
+  ASSERT_EQ(root_properties.size(), 25);
+
+  const std::map<std::string, yoriito::databroker::DataType> expected_types = {
+      {"BoolValue", yoriito::databroker::DataType::DATA_TYPE_BOOLEAN},
+      {"StringValue", yoriito::databroker::DataType::DATA_TYPE_STRING},
+      {"Int8Value", yoriito::databroker::DataType::DATA_TYPE_INT8},
+      {"Int16Value", yoriito::databroker::DataType::DATA_TYPE_INT16},
+      {"Int32Value", yoriito::databroker::DataType::DATA_TYPE_INT32},
+      {"Int64Value", yoriito::databroker::DataType::DATA_TYPE_INT64},
+      {"Uint8Value", yoriito::databroker::DataType::DATA_TYPE_UINT8},
+      {"Uint16Value", yoriito::databroker::DataType::DATA_TYPE_UINT16},
+      {"Uint32Value", yoriito::databroker::DataType::DATA_TYPE_UINT32},
+      {"Uint64Value", yoriito::databroker::DataType::DATA_TYPE_UINT64},
+      {"FloatValue", yoriito::databroker::DataType::DATA_TYPE_FLOAT},
+      {"DoubleValue", yoriito::databroker::DataType::DATA_TYPE_DOUBLE},
+      {"BoolArrayValue",
+       yoriito::databroker::DataType::DATA_TYPE_BOOLEAN_ARRAY},
+      {"StringArrayValue",
+       yoriito::databroker::DataType::DATA_TYPE_STRING_ARRAY},
+      {"Int8ArrayValue", yoriito::databroker::DataType::DATA_TYPE_INT8_ARRAY},
+      {"Int16ArrayValue", yoriito::databroker::DataType::DATA_TYPE_INT16_ARRAY},
+      {"Int32ArrayValue", yoriito::databroker::DataType::DATA_TYPE_INT32_ARRAY},
+      {"Int64ArrayValue", yoriito::databroker::DataType::DATA_TYPE_INT64_ARRAY},
+      {"Uint8ArrayValue", yoriito::databroker::DataType::DATA_TYPE_UINT8_ARRAY},
+      {"Uint16ArrayValue",
+       yoriito::databroker::DataType::DATA_TYPE_UINT16_ARRAY},
+      {"Uint32ArrayValue",
+       yoriito::databroker::DataType::DATA_TYPE_UINT32_ARRAY},
+      {"Uint64ArrayValue",
+       yoriito::databroker::DataType::DATA_TYPE_UINT64_ARRAY},
+      {"FloatArrayValue", yoriito::databroker::DataType::DATA_TYPE_FLOAT_ARRAY},
+      {"DoubleArrayValue",
+       yoriito::databroker::DataType::DATA_TYPE_DOUBLE_ARRAY},
+      {"LocationValue", yoriito::databroker::DataType::DATA_TYPE_STRUCT},
+  };
+
+  const std::map<std::string, std::string> expected_descriptions = {
+      {"BoolValue", "Boolean property"},
+      {"StringValue", "String property"},
+      {"Int8Value", "Int8 property"},
+      {"Int16Value", "Int16 property"},
+      {"Int32Value", "Int32 property"},
+      {"Int64Value", "Int64 property"},
+      {"Uint8Value", "Uint8 property"},
+      {"Uint16Value", "Uint16 property"},
+      {"Uint32Value", "Uint32 property"},
+      {"Uint64Value", "Uint64 property"},
+      {"FloatValue", "Float property"},
+      {"DoubleValue", "Double property"},
+      {"BoolArrayValue", "Boolean array property"},
+      {"StringArrayValue", "String array property"},
+      {"Int8ArrayValue", "Int8 array property"},
+      {"Int16ArrayValue", "Int16 array property"},
+      {"Int32ArrayValue", "Int32 array property"},
+      {"Int64ArrayValue", "Int64 array property"},
+      {"Uint8ArrayValue", "Uint8 array property"},
+      {"Uint16ArrayValue", "Uint16 array property"},
+      {"Uint32ArrayValue", "Uint32 array property"},
+      {"Uint64ArrayValue", "Uint64 array property"},
+      {"FloatArrayValue", "Float array property"},
+      {"DoubleArrayValue", "Double array property"},
+      {"LocationValue", "Nested location struct property"},
+  };
+
+  const std::set<std::string> unit_ratio_properties = {
+      "Int8Value",        "Int16Value",       "Int32Value",
+      "Int64Value",       "Uint8Value",       "Uint16Value",
+      "Uint32Value",      "Uint64Value",      "FloatValue",
+      "DoubleValue",      "Int8ArrayValue",   "Int16ArrayValue",
+      "Int32ArrayValue",  "Int64ArrayValue",  "Uint8ArrayValue",
+      "Uint16ArrayValue", "Uint32ArrayValue", "Uint64ArrayValue",
+      "FloatArrayValue",  "DoubleArrayValue"};
+
+  const std::set<std::string> min_max_properties = {
+      "Int8Value",   "Int16Value",  "Int32Value",  "Int64Value", "Uint8Value",
+      "Uint16Value", "Uint32Value", "Uint64Value", "FloatValue", "DoubleValue"};
+
+  const std::map<std::string, std::vector<std::string>> expected_allowed = {
+      {"BoolValue", {"true", "false"}},
+      {"StringValue", {"", "sample", "abc"}},
+  };
+
+  const auto empty_value = yoriito::ValueType(std::monostate{});
+
+  std::set<std::string> observed_properties;
+  bool location_struct_checked = false;
+  for (const auto &prop : root_properties) {
+    auto expected_it = expected_types.find(prop.GetPath());
+    ASSERT_NE(expected_it, expected_types.end());
+    ASSERT_EQ(prop.GetDataType(), expected_it->second);
+
+    auto desc_it = expected_descriptions.find(prop.GetPath());
+    ASSERT_NE(desc_it, expected_descriptions.end());
+    ASSERT_EQ(prop.GetDescription(), desc_it->second);
+    ASSERT_EQ(prop.GetComment(), "metadata test");
+    ASSERT_EQ(prop.GetDeprecation(), "");
+    ASSERT_EQ(prop.GetArraySize(), 0);
+
+    if (unit_ratio_properties.count(prop.GetPath()) > 0) {
+      ASSERT_EQ(prop.GetUnit(), "ratio");
+    } else {
+      ASSERT_EQ(prop.GetUnit(), "");
+    }
+
+    auto allowed_it = expected_allowed.find(prop.GetPath());
+    if (allowed_it != expected_allowed.end()) {
+      ASSERT_EQ(prop.GetAllowed(), allowed_it->second);
+    } else {
+      const std::vector<std::string> empty_allowed{};
+      ASSERT_EQ(prop.GetAllowed(), empty_allowed);
+    }
+
+    observed_properties.insert(prop.GetPath());
+
+    if (prop.GetPath() == "LocationValue") {
+      const auto &nested_ref = prop.GetDataTypeRef();
+      ASSERT_TRUE(nested_ref.IsResolved());
+      auto nested_struct = nested_ref.Resolved().get();
+      ASSERT_NE(nested_struct, nullptr);
+      ASSERT_EQ(nested_struct->GetPath(), "Types.TestDataType_Location");
+
+      const auto &nested_properties = nested_struct->GetProperties();
+      ASSERT_EQ(nested_properties.size(), 3);
+      location_struct_checked = true;
+    }
+  }
+
+  ASSERT_EQ(observed_properties.size(), expected_types.size());
+  ASSERT_TRUE(location_struct_checked);
+}
+
+TEST(TestConsumerInspect, NestedStruct) {
+  yoriito::databroker::DataBrokerConsumer *consumer =
+      yoriito::databroker::DataBrokerConsumerFactory::GetInstance();
+  std::string target_path = "Vehicle.Test.NestedStructSignal";
+  yoriito::Result<yoriito::databroker::ConsumerInspectResponse> ret =
+      consumer->Inspect(yoriito::databroker::ConsumerInspectRequest{
+          std::string(target_path)});
+
+  ASSERT_TRUE(ret.IsOk());
+  auto data = ret.TakeOk().value();
+  ASSERT_EQ(1, data.GetDataPoints().size());
+  ASSERT_EQ(target_path, data.GetDataPoints()[0].GetPath());
+  ASSERT_EQ(yoriito::databroker::BaseInspectData::EntryType::ENTRY_TYPE_SENSOR,
+            data.GetDataPoints()[0].GetEntryType());
+  ASSERT_EQ(yoriito::databroker::BaseInspectData::DataType::DATA_TYPE_STRUCT,
+            data.GetDataPoints()[0].GetDataType());
+  ASSERT_EQ("Test Nested Struct Signal",
+            data.GetDataPoints()[0].GetDescription());
+  ASSERT_EQ("", data.GetDataPoints()[0].GetComment());
+  ASSERT_EQ("", data.GetDataPoints()[0].GetUnit());
+
+  const auto &allowed_values = data.GetDataPoints()[0].GetAllowed();
+  const std::vector<std::string> expected_allowed_values{};
+  ASSERT_EQ(expected_allowed_values, allowed_values);
+
+  const auto &data_type_ref = data.GetDataPoints()[0].GetDataTypeRef();
+  ASSERT_TRUE(data_type_ref.has_value());
+  auto root_struct = data_type_ref->Resolved().get();
+  ASSERT_NE(root_struct, nullptr);
+
+  const auto &root_properties = root_struct->GetProperties();
+  ASSERT_EQ(root_properties.size(), 2);
+
+  bool has_property1 = false;
+  bool has_property2 = false;
+  for (const auto &prop : root_properties) {
+    if (prop.GetPath() == "property1") {
+      has_property1 = true;
+      ASSERT_EQ(prop.GetDataType(),
+                yoriito::databroker::DataType::DATA_TYPE_DOUBLE);
+      ASSERT_EQ(prop.GetDescription(), "A primitive property");
+    } else if (prop.GetPath() == "property2") {
+      has_property2 = true;
+      ASSERT_EQ(prop.GetDataType(),
+                yoriito::databroker::DataType::DATA_TYPE_STRUCT);
+      ASSERT_EQ(prop.GetDescription(), "A primitive property");
+
+      const auto &nested_ref = prop.GetDataTypeRef();
+      ASSERT_TRUE(nested_ref.IsResolved());
+      auto nested_struct = nested_ref.Resolved().get();
+      ASSERT_NE(nested_struct, nullptr);
+      ASSERT_EQ(nested_struct->GetPath(), "Types.TestDataType_Location");
+
+      const auto &nested_properties = nested_struct->GetProperties();
+
+      ASSERT_EQ(nested_properties.size(), 3);
+
+      bool has_latitude = false;
+      bool has_longitude = false;
+      bool has_altitude = false;
+      for (const auto &nested_prop : nested_properties) {
+        if (nested_prop.GetPath() == "Latitude") {
+          has_latitude = true;
+          ASSERT_EQ(nested_prop.GetDataType(),
+                    yoriito::databroker::DataType::DATA_TYPE_DOUBLE);
+          ASSERT_EQ(nested_prop.GetDescription(), "A primitive property");
+        } else if (nested_prop.GetPath() == "Longitude") {
+          has_longitude = true;
+          ASSERT_EQ(nested_prop.GetDataType(),
+                    yoriito::databroker::DataType::DATA_TYPE_DOUBLE);
+          ASSERT_EQ(nested_prop.GetDescription(), "A primitive property");
+        } else if (nested_prop.GetPath() == "Altitude") {
+          has_altitude = true;
+          ASSERT_EQ(nested_prop.GetDataType(),
+                    yoriito::databroker::DataType::DATA_TYPE_DOUBLE);
+          ASSERT_EQ(nested_prop.GetDescription(), "A primitive property");
+        }
+      }
+      ASSERT_TRUE(has_latitude);
+      ASSERT_TRUE(has_longitude);
+      ASSERT_TRUE(has_altitude);
+    }
+  }
+
+  ASSERT_TRUE(has_property1);
+  ASSERT_TRUE(has_property2);
+}
+
+TEST(TestConsumerInspect, StructSignalReturnsOnlyReferencedTypes) {
+  yoriito::databroker::DataBrokerConsumer *consumer =
+      yoriito::databroker::DataBrokerConsumerFactory::GetInstance();
+  std::string target_path = "Vehicle.Test.StructSignal";
+  yoriito::Result<yoriito::databroker::ConsumerInspectResponse> ret =
+      consumer->Inspect(yoriito::databroker::ConsumerInspectRequest{
+          std::string(target_path)});
+
+  ASSERT_TRUE(ret.IsOk());
+  auto data = ret.TakeOk().value();
+
+  std::set<std::string> struct_paths;
+  for (const auto &struct_type : data.GetStructTypes()) {
+    struct_paths.insert(struct_type->GetPath());
+  }
+  const std::set<std::string> expected_struct_paths{
+      "Types.TestDataType_Location"};
+  ASSERT_EQ(expected_struct_paths, struct_paths);
+}
+
+TEST(TestConsumerInspect, NestedStructSignalReturnsOnlyReferencedTypes) {
+  yoriito::databroker::DataBrokerConsumer *consumer =
+      yoriito::databroker::DataBrokerConsumerFactory::GetInstance();
+  std::string target_path = "Vehicle.Test.NestedStructSignal";
+  yoriito::Result<yoriito::databroker::ConsumerInspectResponse> ret =
+      consumer->Inspect(yoriito::databroker::ConsumerInspectRequest{
+          std::string(target_path)});
+
+  ASSERT_TRUE(ret.IsOk());
+  auto data = ret.TakeOk().value();
+
+  std::set<std::string> struct_paths;
+  for (const auto &struct_type : data.GetStructTypes()) {
+    struct_paths.insert(struct_type->GetPath());
+  }
+  const std::set<std::string> expected_struct_paths{
+      "Types.TestNestedStruct", "Types.TestDataType_Location"};
+  ASSERT_EQ(expected_struct_paths, struct_paths);
+}
+
+//
+TEST(TestConsumerInspect, StructArraySignal) {
+  yoriito::databroker::DataBrokerConsumer *consumer =
+      yoriito::databroker::DataBrokerConsumerFactory::GetInstance();
+  std::string target_path = "Vehicle.Test.StructArraySignal";
+  yoriito::Result<yoriito::databroker::ConsumerInspectResponse> ret =
+      consumer->Inspect(yoriito::databroker::ConsumerInspectRequest{
+          std::string(target_path)});
+
+  ASSERT_TRUE(ret.IsOk());
+  auto data = ret.TakeOk().value();
+  ASSERT_EQ(1, data.GetDataPoints().size());
+  ASSERT_EQ(target_path, data.GetDataPoints()[0].GetPath());
+  ASSERT_EQ(yoriito::databroker::BaseInspectData::EntryType::ENTRY_TYPE_SENSOR,
+            data.GetDataPoints()[0].GetEntryType());
+  ASSERT_EQ(
+      yoriito::databroker::BaseInspectData::DataType::DATA_TYPE_STRUCT_ARRAY,
+      data.GetDataPoints()[0].GetDataType());
+  ASSERT_EQ("Test Struct Array Signal",
+            data.GetDataPoints()[0].GetDescription());
+
+  const auto &data_type_ref = data.GetDataPoints()[0].GetDataTypeRef();
+  ASSERT_TRUE(data_type_ref.has_value());
+  ASSERT_TRUE(data_type_ref->IsResolved());
+
+  auto root_struct = data_type_ref->Resolved().get();
+  ASSERT_NE(root_struct, nullptr);
+  ASSERT_EQ(root_struct->GetPath(), "Types.TestDataType_Location");
+  ASSERT_EQ(root_struct->GetProperties().size(), 3);
+}
+
+TEST(TestConsumerInspect, NonStructSignalReturnsNoStructTypes) {
+  yoriito::databroker::DataBrokerConsumer *consumer =
+      yoriito::databroker::DataBrokerConsumerFactory::GetInstance();
+  std::string target_path = "Vehicle.Chassis.SteeringWheel.Angle";
+  yoriito::Result<yoriito::databroker::ConsumerInspectResponse> ret =
+      consumer->Inspect(yoriito::databroker::ConsumerInspectRequest{
+          std::string(target_path)});
+
+  ASSERT_TRUE(ret.IsOk());
+  auto data = ret.TakeOk().value();
+  ASSERT_TRUE(data.GetStructTypes().empty());
+}

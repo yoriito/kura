@@ -16,11 +16,10 @@
 
 #include "databroker/databroker_consumer_factory.h"
 
-#include <iostream>
 #include <memory>
-
+//
+#include "consumer/inc/viss_consumer.h"
 #include "databroker/databroker_consumer.h"
-#include "viss_consumer.h"
 
 namespace yoriito::databroker {
 DataBrokerConsumer* DataBrokerConsumerFactory::GetInstance() {

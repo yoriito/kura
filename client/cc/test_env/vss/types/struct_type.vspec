@@ -1,0 +1,266 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# Copyright 2026 JASPAR
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+Types.TestDataType_Location:
+  type: struct
+  description: "A struct that is going to contain properties that are structs themselves"
+Types.TestDataType_Location.Latitude:
+  type: property
+  description: "A primitive property"
+  datatype: double
+Types.TestDataType_Location.Longitude:
+  type: property
+  description: "A primitive property"
+  datatype: double
+Types.TestDataType_Location.Altitude:
+  type: property
+  description: "A primitive property"
+  datatype: double
+
+
+Types.TestNestedStruct:
+  type: struct
+  description: "A struct that is going to contain properties that are structs themselves"
+Types.TestNestedStruct.property1:
+  type: property
+  description: "A primitive property"
+  datatype: double
+Types.TestNestedStruct.property2:
+  type: property
+  description: "A primitive property"
+  datatype: Types.TestDataType_Location
+
+
+## Rules: Do not set arraysize for array datatypes, and remove allowed when both min and max are set.
+Types.TestStruct:
+  type: struct
+  description: "A struct that defines all supported property datatypes"
+Types.TestStruct.BoolValue:
+  type: property
+  description: "Boolean property"
+  deprecation: ""
+  comment: "metadata test"
+  allowed: [true, false]
+  pattern: ""
+  datatype: boolean
+Types.TestStruct.StringValue:
+  type: property
+  description: "String property"
+  deprecation: ""
+  comment: "metadata test"
+  allowed: ["", "sample", "abc"]
+  pattern: "^[A-Za-z0-9_]*$"
+  datatype: string
+Types.TestStruct.Int8Value:
+  type: property
+  description: "Int8 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -128
+  max: 127
+  datatype: int8
+Types.TestStruct.Int16Value:
+  type: property
+  description: "Int16 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -32768
+  max: 32767
+  pattern: ""
+  datatype: int16
+Types.TestStruct.Int32Value:
+  type: property
+  description: "Int32 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -2147483648
+  max: 2147483647
+  pattern: ""
+  datatype: int32
+Types.TestStruct.Int64Value:
+  type: property
+  description: "Int64 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -9223372036854775808
+  max: 9223372036854775807
+  pattern: ""
+  datatype: int64
+Types.TestStruct.Uint8Value:
+  type: property
+  description: "Uint8 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: 0
+  max: 255
+  pattern: ""
+  datatype: uint8
+Types.TestStruct.Uint16Value:
+  type: property
+  description: "Uint16 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: 0
+  max: 65535
+  pattern: ""
+  datatype: uint16
+Types.TestStruct.Uint32Value:
+  type: property
+  description: "Uint32 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: 0
+  max: 4294967295
+  pattern: ""
+  datatype: uint32
+Types.TestStruct.Uint64Value:
+  type: property
+  description: "Uint64 property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: 0
+  max: 18446744073709551615
+  pattern: ""
+  datatype: uint64
+Types.TestStruct.FloatValue:
+  type: property
+  description: "Float property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -1000.0
+  max: 1000.0
+  pattern: ""
+  datatype: float
+Types.TestStruct.DoubleValue:
+  type: property
+  description: "Double property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  min: -1000000.0
+  max: 1000000.0
+  pattern: ""
+  datatype: double
+Types.TestStruct.BoolArrayValue:
+  type: property
+  description: "Boolean array property"
+  deprecation: ""
+  comment: "metadata test"
+  pattern: ""
+  datatype: boolean[]
+Types.TestStruct.StringArrayValue:
+  type: property
+  description: "String array property"
+  deprecation: ""
+  comment: "metadata test"
+  pattern: "^[A-Za-z0-9_]*$"
+  datatype: string[]
+Types.TestStruct.Int8ArrayValue:
+  type: property
+  description: "Int8 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: int8[]
+Types.TestStruct.Int16ArrayValue:
+  type: property
+  description: "Int16 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: int16[]
+Types.TestStruct.Int32ArrayValue:
+  type: property
+  description: "Int32 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: int32[]
+Types.TestStruct.Int64ArrayValue:
+  type: property
+  description: "Int64 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: int64[]
+Types.TestStruct.Uint8ArrayValue:
+  type: property
+  description: "Uint8 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: uint8[]
+Types.TestStruct.Uint16ArrayValue:
+  type: property
+  description: "Uint16 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""  
+  datatype: uint16[]
+Types.TestStruct.Uint32ArrayValue:
+  type: property
+  description: "Uint32 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: uint32[]
+Types.TestStruct.Uint64ArrayValue:
+  type: property
+  description: "Uint64 array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: uint64[]
+Types.TestStruct.FloatArrayValue:
+  type: property
+  description: "Float array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: float[]
+Types.TestStruct.DoubleArrayValue:
+  type: property
+  description: "Double array property"
+  deprecation: ""
+  comment: "metadata test"
+  unit: "ratio"
+  pattern: ""
+  datatype: double[]
+Types.TestStruct.LocationValue:
+  type: property
+  description: "Nested location struct property"
+  deprecation: ""
+  comment: "metadata test"
+  pattern: ""
+  datatype: Types.TestDataType_Location

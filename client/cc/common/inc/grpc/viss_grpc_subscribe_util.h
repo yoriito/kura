@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 
-#ifndef KURA_CLIENT_CC_COMMON_INC_GRPC_VISS_GRPC_SUBSCRIBE_UTIL_H_
-#define KURA_CLIENT_CC_COMMON_INC_GRPC_VISS_GRPC_SUBSCRIBE_UTIL_H_
+#ifndef COMMON_INC_GRPC_VISS_GRPC_SUBSCRIBE_UTIL_H_
+#define COMMON_INC_GRPC_VISS_GRPC_SUBSCRIBE_UTIL_H_
 
 //
-
-#include "databroker/filter/subscribe_filter.h"
 #include "yoriito/viss/v1/types/filter.pb.h"
+//
+#include "databroker/filter/subscribe_filter.h"
 
 namespace yoriito::databroker {
 class VissGrpcSubscribeUtil {
@@ -33,4 +33,4 @@ class VissGrpcSubscribeUtil {
 };
 }  // namespace yoriito::databroker
 
-#endif  // KURA_CLIENT_CC_COMMON_INC_GRPC_VISS_GRPC_SUBSCRIBE_UTIL_H_
+#endif  // COMMON_INC_GRPC_VISS_GRPC_SUBSCRIBE_UTIL_H_

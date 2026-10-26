@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-#ifndef KURA_CLIENT_CC_PRODUCER_INC_VISS_PRODUCER_FACTORY_H_
-#define KURA_CLIENT_CC_PRODUCER_INC_VISS_PRODUCER_FACTORY_H_
+#ifndef PRODUCER_INC_VISS_PRODUCER_FACTORY_H_
+#define PRODUCER_INC_VISS_PRODUCER_FACTORY_H_
 
 #include <memory>
 
-#include "viss_producer_impl.h"
+#include "producer/inc/viss_producer_impl.h"
 
 namespace yoriito::databroker {
 class VissProducerFactory {
@@ -31,4 +31,4 @@ class VissProducerFactory {
 };
 }  // namespace yoriito::databroker
 
-#endif  // KURA_CLIENT_CC_PRODUCER_INC_VISS_PRODUCER_FACTORY_H_
+#endif  // PRODUCER_INC_VISS_PRODUCER_FACTORY_H_

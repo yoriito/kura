@@ -15,23 +15,31 @@
 // limitations under the License.
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    tonic_build::configure()
+    tonic_prost_build::configure()
         .build_server(true)
         .protoc_arg("--experimental_allow_proto3_optional")
-        .compile(&["../proto/VISSv3.0.proto"], &["../proto"])?;
-    tonic_build::configure()
+        .compile_protos(&["../proto/VISSv3.0.proto"], &["../proto"])?;
+
+    let yoriito_viss_proto_dir = std::env::var("YORIITO_VISS_PROTO_DIR")
+        .unwrap_or_else(|_| "../external/yoriito-viss/proto".to_string());
+    println!("cargo:rerun-if-env-changed=YORIITO_VISS_PROTO_DIR");
+
+    let yoriito_viss_protos = vec![
+        format!("{yoriito_viss_proto_dir}/yoriito/viss/v1/types/error.proto"),
+        format!("{yoriito_viss_proto_dir}/yoriito/viss/v1/types/filter.proto"),
+        format!("{yoriito_viss_proto_dir}/yoriito/viss/v1/types/value.proto"),
+        format!("{yoriito_viss_proto_dir}/yoriito/viss/v1/common.proto"),
+        format!("{yoriito_viss_proto_dir}/yoriito/viss/v1/consumer.proto"),
+        format!("{yoriito_viss_proto_dir}/yoriito/viss/v1/producer.proto"),
+    ];
+
+    tonic_prost_build::configure()
         .build_server(true)
         .protoc_arg("--experimental_allow_proto3_optional")
-        .compile(
-            &[
-                "../external/yoriito-viss/proto/yoriito/viss/v1/types/error.proto",
-                "../external/yoriito-viss/proto/yoriito/viss/v1/types/filter.proto",
-                "../external/yoriito-viss/proto/yoriito/viss/v1/types/value.proto",
-                "../external/yoriito-viss/proto/yoriito/viss/v1/common.proto",
-                "../external/yoriito-viss/proto/yoriito/viss/v1/consumer.proto",
-                "../external/yoriito-viss/proto/yoriito/viss/v1/producer.proto",
-            ],
-            &["../external/yoriito-viss/proto"],
+        .compile_protos(
+            &yoriito_viss_protos,
+            std::slice::from_ref(&yoriito_viss_proto_dir),
         )?;
+
     Ok(())
 }

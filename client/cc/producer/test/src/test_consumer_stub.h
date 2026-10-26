@@ -19,14 +19,17 @@
 
 #include <string>
 
-#include "databroker_type.h"
-#include "result.h"
+#include "databroker/databroker_consumer.h"
+#include "yoriito/databroker_type.h"
+#include "yoriito/result.h"
 
 namespace yoriito::databroker::test_stub {
 class ConsumerStub {
  public:
-  Result<void> SetData(const std::string& path, yoriito::ValueType value);
-  Result<ValueType> GetData(const std::string& path);
+  Result<void> SetData(const std::string &path,
+                       const yoriito::ValueType &value);
+  Result<ValueType> GetData(const std::string &path);
+  Result<ConsumerGetDataPoint> GetDataPoint(const std::string &path);
 };
 }  // namespace yoriito::databroker::test_stub
 #endif  // KURA_CLIENT_CC_PRODUCER_TEST_SRC_TEST_CONSUMER_STUB_H_

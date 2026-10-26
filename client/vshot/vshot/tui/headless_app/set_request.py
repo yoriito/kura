@@ -96,7 +96,7 @@ class SetRequestBuilder(Widget):
             id=SetRequestBuilder._ID_PATH, help=path_input_widget_help, candidates=self.client.get_all_paths())
         self.path_input_widget.tooltip = path_input_widget_help
 
-        value_input_help: str = "Value to target path"
+        value_input_help: str = "Value to target path. For struct, pass JSON object. ex) {\"foo\":1}"
         self.value_input_widget: Input = Input(
             id=SetRequestBuilder._ID_VALUE, placeholder=value_input_help)
         self.value_input_widget.tooltip = value_input_help
